@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 12:57:25 2015
+# Generated Mon Dec  7 18:31:13 2015
 d = {}
 d[''] = {
     'number': 73,
@@ -9,6 +9,12 @@ d[''] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'hkl: h+k+l=2n',
+        'hk0: h=2n',
+        'h0l: h=2n',
+        '0kl: k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.5, 0.5]
@@ -30,6 +36,12 @@ d['ba-c'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'hkl: h+k+l=2n',
+        'hk0: h=2n',
+        'h0l: h=2n',
+        '0kl: k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.5, 0.5]

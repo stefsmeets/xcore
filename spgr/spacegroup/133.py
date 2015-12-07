@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 12:57:25 2015
+# Generated Mon Dec  7 18:31:14 2015
 d = {}
 d['1'] = {
     'number': 133,
@@ -9,6 +9,13 @@ d['1'] = {
     'order_p': 16,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hhl: l=2n',
+        'hk0: h+k=2n',
+        'h0l: h=2n',
+        'h-hl: l=2n',
+        '0kl: k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],
@@ -41,6 +48,13 @@ d['2'] = {
     'order_p': 16,
     'unique_axis': 'z',
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'hhl: l=2n',
+        'hk0: h+k=2n',
+        'h0l: h=2n',
+        'h-hl: l=2n',
+        '0kl: k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],

@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 12:57:25 2015
+# Generated Mon Dec  7 18:31:14 2015
 d = {}
 d['1'] = {
     'number': 86,
@@ -9,6 +9,10 @@ d['1'] = {
     'order_p': 8,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hk0: h+k=2n',
+        '00l: l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],
@@ -33,6 +37,10 @@ d['2'] = {
     'order_p': 8,
     'unique_axis': 'z',
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'hk0: h+k=2n',
+        '00l: l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],

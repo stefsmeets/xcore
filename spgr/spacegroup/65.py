@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 12:57:25 2015
+# Generated Mon Dec  7 18:31:13 2015
 d = {}
 d[''] = {
     'number': 65,
@@ -9,6 +9,9 @@ d[''] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'hkl: h+k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.5, 0.0]
@@ -30,6 +33,9 @@ d['cab'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'hkl: k+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.0, 0.5, 0.5]
@@ -51,6 +57,9 @@ d['bca'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'hkl: h+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.0, 0.5]

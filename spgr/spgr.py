@@ -56,6 +56,11 @@ def find_number(s, lines=lines):
         m = re.search(" "+s+"[: ]+", line)
         if m:
             return line
+    s2 = s[0] + "1" + s[1:] + "1"
+    for i, line in enumerate(lines):
+        m = re.search(" "+s2+"[: ]+", line)
+        if m:
+            return line
     raise ValueError("Cannot find space group {}".format(s))
 
 
@@ -69,7 +74,7 @@ def get_standard_setting(number, setting=None):
     return number, setting
 
 
-def get_symmetry(number, setting=None):
+def get_symmetry(number, setting):
     if not setting:
         number, setting = get_standard_setting(number)
 
@@ -81,8 +86,9 @@ def get_symmetry(number, setting=None):
 
 
 def get_spacegroup_info(string):
-    line = find_number(string)
-    if not line:
+    try:
+        line = find_number(string)
+    except ValueError:
         print "Could not find {}".format(string)
         return None
     number = line[:12].strip()
@@ -115,7 +121,7 @@ def get_spacegroup_info(string):
         raise ValueError(
             "This should not happen, does space group {} not exist?".format(number))
 
-    spgr = get_symmetry(number)
+    spgr = get_symmetry(number, setting)
     spgr["crystal_system"] = crystal_system
 
     if setting:
@@ -155,9 +161,13 @@ def main():
         print "Order    ", spgr["order"]
         print "Order P  ", spgr["order_p"]
         print
+        centering = spgr["hall"][0]
+        if centering == "-":
+            centering = spgr["hall"][1]
+
         cvecs = spgr["centering_vectors"]
         if len(cvecs) > 1:
-            print "Centering vectors"
+            print "Centering vectors ({})".format(centering)
             for vec in cvecs:
                 print "+({}  {}  {})".format(*vec)
             print
@@ -165,6 +175,12 @@ def main():
         print "Symmetry operations"
         for symop in spgr["symops"]:
             print symop
+
+        for symop in spgr["symops"]:
+            r,t = getsymm(symop)
+            # print r
+            print
+            print t[0][0], t[1][0], t[2][0],
 
 
 if __name__ == '__main__':

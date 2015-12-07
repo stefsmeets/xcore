@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 12:57:25 2015
+# Generated Mon Dec  7 18:31:12 2015
 d = {}
 d['1'] = {
     'number': 59,
@@ -9,6 +9,9 @@ d['1'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hk0: h+k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],
@@ -33,6 +36,9 @@ d['2'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'hk0: h+k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],
@@ -53,6 +59,9 @@ d['1cab'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'0kl: k+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],
@@ -77,6 +86,9 @@ d['2cab'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'0kl: k+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],
@@ -97,6 +109,9 @@ d['1bca'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'h0l: h+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],
@@ -121,6 +136,9 @@ d['2bca'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'h0l: h+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0]
     ],

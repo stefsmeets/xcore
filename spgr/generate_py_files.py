@@ -82,6 +82,22 @@ def generate_py_files():
             if save_symops:
                 symops.append(line)
 
+        spgr = '{}:{}'.format(number, setting)
+        cmd = [exe, spgr, '-Conditions']
+        p = sp.Popen(cmd, stdout=sp.PIPE)
+        out, err = p.communicate()
+
+        reflection_conditions = []
+        save_refl = False
+        for line in out.split('\n'):
+        	if "Reflection conditions" in line:
+        		save_refl = True
+        		continue
+        	if save_refl and not line.split():
+        		break
+        	if save_refl:
+        		reflection_conditions.append(repr(line.strip()))
+
         if not centering_vecs:
         	centering_vecs = [[0.0, 0.0, 0.0]]
         centering_vecs = [repr(vec) for vec in centering_vecs]
@@ -97,6 +113,9 @@ d[{setting}] = {{
     'order_p': {nsymp},
     'unique_axis': {uniq_axis},
     'centrosymmetric': {centrosymmetric},
+    'reflection_conditions': [
+    	{reflection_conditions}
+    ],
     'centering_vectors': [
         {centering_vectors}
     ],
@@ -112,9 +131,62 @@ d[{setting}] = {{
            nsymp=nsymp,
            uniq_axis=repr(uniq_axis),
            centrosymmetric=repr(centrosymm),
+           reflection_conditions=',\n        '.join(reflection_conditions),
            centering_vectors=',\n        '.join(centering_vecs),
            symops=',\n        '.join(symops)))
 
 
 if __name__ == '__main__':
     generate_py_files()
+
+
+# All reflection conditions
+  # h-hl: 2h-l=4n
+  # h-hl: 2h-l=6n
+  # hhl: 2h+l=4n
+  # hk-h: h=2n
+  # hk0: k=2n
+  # hkl: No Condition
+  # hk-k: h-2k=4n
+  # hkl: k+l=2n
+  # h0l: h=2n
+  # h00: h=4n
+  # h00: h=2n
+  # hkh: 2h+k=4n
+  # 00l: l=4n
+  # 00l: l=2n
+  # hk0: h=2n
+  # 00l: l=6n
+  # hhl: h=2n
+  # 0k0: k=4n
+  # 0k0: k=2n
+  # hk-k: h=2n
+  # h-hl: h=2n
+  # h-hl: 2h+l=4n
+  # h0l: h+l=2n
+  # 0kl: 2k-l=6n
+  # hkh: h=2n
+  # hkl: h+l=2n
+  # hk-h: 2h+k=4n
+  # h-hl: l=2n
+  # hkk: h+2k=4n
+  # hhl: 2h-l=4n
+  # 0kl: l=2n
+  # h-2hl: l=2n
+  # h0l: l=2n
+  # hkl: -h+k+l=3n
+  # hhl: l=2n
+  # hkl: h+k=2n
+  # 00l: l=3n
+  # hk-h: k=2n
+  # hkk: h=2n
+  # h0l: 2h+l=6n
+  # hk0: h+k=4n
+  # hkl: h+k+l=2n
+  # -2kkl: l=2n
+  # 0kl: k=2n
+  # hkh: k=2n
+  # 0kl: k+l=2n
+  # hk0: h+k=2n
+  # h0l: h+l=4n
+  # 0kl: k+l=4n

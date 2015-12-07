@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 12:57:23 2015
+# Generated Mon Dec  7 18:31:09 2015
 d = {}
 d['b1'] = {
     'number': 5,
@@ -9,6 +9,9 @@ d['b1'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hkl: h+k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.5, 0.0]
@@ -28,6 +31,9 @@ d['b2'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hkl: k+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.0, 0.5, 0.5]
@@ -47,6 +53,9 @@ d['b3'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hkl: h+k+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.5, 0.5]
@@ -66,6 +75,9 @@ d['c1'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hkl: k+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.0, 0.5, 0.5]
@@ -85,6 +97,9 @@ d['c2'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hkl: h+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.0, 0.5]
@@ -104,6 +119,9 @@ d['c3'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hkl: h+k+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.5, 0.5]
@@ -123,6 +141,9 @@ d['a1'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hkl: h+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.0, 0.5]
@@ -142,6 +163,9 @@ d['a2'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hkl: h+k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.5, 0.0]
@@ -161,6 +185,9 @@ d['a3'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
+    'reflection_conditions': [
+    	'hkl: h+k+l=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.5, 0.5]

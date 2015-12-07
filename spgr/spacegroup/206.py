@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 12:57:26 2015
+# Generated Mon Dec  7 18:31:16 2015
 d = {}
 d[''] = {
     'number': 206,
@@ -9,6 +9,12 @@ d[''] = {
     'order_p': 24,
     'unique_axis': None,
     'centrosymmetric': True,
+    'reflection_conditions': [
+    	'hkl: h+k+l=2n',
+        'hk0: h=2n',
+        'h0l: h=2n',
+        '0kl: k=2n'
+    ],
     'centering_vectors': [
         [0.0, 0.0, 0.0],
         [0.5, 0.5, 0.5]
