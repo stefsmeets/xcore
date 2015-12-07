@@ -146,6 +146,8 @@ def main():
         print "Point group ", spgr['point_group']
 
         print spgr["crystal_system"]
+        if spgr["centrosymmetric"]:
+            print "Centrosymmetric"
 
         if spgr['unique_axis']:
             print "Unique axis", spgr['unique_axis']
@@ -153,6 +155,14 @@ def main():
         print "Order    ", spgr["order"]
         print "Order P  ", spgr["order_p"]
         print
+        cvecs = spgr["centering_vectors"]
+        if len(cvecs) > 1:
+            print "Centering vectors"
+            for vec in cvecs:
+                print "+({}  {}  {})".format(*vec)
+            print
+
+        print "Symmetry operations"
         for symop in spgr["symops"]:
             print symop
 
@@ -161,13 +171,13 @@ if __name__ == '__main__':
     main()
 
     # for x in (seq 1 230)
- #       echo "$x",
- #       sginfo $x | grep -E "Triclinic|Monoclinic|Orthorhombic|Tetragonal|Trigonal|Hexagonal|Cubic"
- #   end
-
- #      for x in (seq 1 230)
- #       echo "$x",
- #       sginfo $x | grep -E "Space Group"
- #       sginfo $x | grep -E "Point Group"
- #       sginfo $x | grep -E "Laue  Group"
- #   end
+    #       echo "$x",
+    #       sginfo $x | grep -E "Triclinic|Monoclinic|Orthorhombic|Tetragonal|Trigonal|Hexagonal|Cubic"
+    #   end
+    #
+    # for x in (seq 1 230)
+    #       echo "$x",
+    #       sginfo $x | grep -E "Space Group"
+    #       sginfo $x | grep -E "Point Group"
+    #       sginfo $x | grep -E "Laue  Group"
+    #   end
