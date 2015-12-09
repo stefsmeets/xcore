@@ -469,10 +469,6 @@ def test_print_all():
         spgr.info()
 
 
-def generate_hkl_listing(spgr):
-    pass
-
-
 def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
     """Generate hkllisting up to the specified dspacing.
 
@@ -546,7 +542,7 @@ def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
     else:
         raise ValueError, "Could not find crystal system {}".format(system)
 
-    indices = np.zeros((0, 3), dtype=int)
+    indices = []
 
     for row in segments:
         loop_h = True
@@ -562,7 +558,7 @@ def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
             while loop_k:
                 while loop_h:
                     if dsp >= dmin:
-                        indices = np.concatenate((indices, [apex]))
+                        indices.append(apex)
                     index_new = apex + row[1, :]
 
                     dsp = uc.calc_dspacing(index_new, kind=system)
@@ -588,9 +584,8 @@ def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
                 loop_l = False
             loop_k = True
 
-    # TODO: for some reason H has dtype float?
-    assert indices.dtype.kind == 'i', "Wrong datatype, is {}, should be 'i'".format(
-        x.dtype.kind)
+    indices = np.array(indices)
+    assert indices.dtype.kind == 'i', "Wrong datatype {}, need 'i'".format(x.dtype.kind)
     return indices
 
 
@@ -612,7 +607,7 @@ if __name__ == '__main__':
 
     print x.dtype
 
-    x = filter_systematic_absences(x, spgr.reflection_conditions)
+    # x = filter_systematic_absences(x, spgr.reflection_conditions)
     # this works?!
 
     # import matplotlib.pyplot as plt
