@@ -352,6 +352,33 @@ class SpaceGroup(object):
         for rc in self.reflection_conditions:
             print rc
 
+    def is_valid_cell(parameters):
+        a,b,c,al,be,ga = parameters
+        if system == "Triclinic":
+            return True
+        elif system == "Monoclinic":
+            if self.unique_axis == "b":
+                return al == ga == 90.0
+            elif self.unique_axis == "a":
+                return be == ga == 90.0
+            elif self.unique_axis == "c":
+                return al == be == 90.0
+        elif system == "Orthorhombic":
+            return al == be == ga
+        elif system == "Tetragonal":
+            return (a == b) and (al == be == ga == 90.0)
+        elif system == "Trigonal":
+            if self.laue_group == "-3":
+                return (a == b) and (al == be == 90.0) and (ga == 120.0)
+            elif self.laue_group == "-3m":
+                return (a == b == c) and (al == be == ga)
+        elif system == "Hexagonal":
+            return (a == b) and (al == be == 90.0) and (ga == 120.0)
+        elif system == "Cubic":
+            return (a == b == c) and (al == be == ga == 90.0)
+        else:
+            raise ValueError("Unknown crystal system ".format(system))
+
 
 def is_absent(index, conditions):
     """Expects tuple/list of 3 elements
@@ -442,27 +469,161 @@ def test_print_all():
         spgr.info()
 
 
+def generate_hkl_listing(spgr):
+    pass
+
+
+def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
+    """Generate hkllisting up to the specified dspacing.
+
+    Based on the routine described by:
+    Le Page and Gabe, J. Appl. Cryst. 1979, 12, 464-466
+    """
+
+    lauegr = spgr.laue_group
+    system = spgr.crystal_system
+    uniq_axis = spgr.unique_axis
+    reflconds = spgr.reflection_conditions
+
+    if system == "Triclinic":  # "-1"
+        segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
+                             [[-1, 0, 1], [-1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
+                             [[-1, 1, 0], [-1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]],
+                             [[ 0, 1,-1], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]]])
+    elif system == "Monoclinic":  # "2/m"
+        if uniq_axis == "a":
+            segments = np.array([[[ 0, 0, 0], [ 0, 1, 0], [1, 0, 0], [ 0, 0, 1]],
+                                 [[ 0,-1, 1], [ 0,-1, 0], [1, 0, 0], [ 0, 0, 1]]])
+        elif uniq_axis == "b":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
+                                 [[-1, 0, 1], [-1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]]])
+        elif uniq_axis == "c":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 0, 1], [ 0, 1, 0]],
+                                 [[-1, 1, 0], [-1, 0, 0], [ 0, 0, 1], [ 0, 1, 0]]])
+    elif system == "Orthorhombic":  # mmm
+        segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]]])
+    elif system == "Tetragonal":
+        if lauegr == "4/mmm":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]]])
+        elif lauegr == "4/m":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
+                                 [[ 1, 2, 0], [ 1, 1, 0], [ 0, 1, 0], [ 0, 0, 1]]])
+    elif system == "Hexagonal":
+        if lauegr == "6/mmm":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]]])
+        elif lauegr == "6/m":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
+                                 [[ 1, 2, 0], [ 0, 1, 0], [ 1, 1, 0], [ 0, 0, 1]]])
+        elif lauegr == "-3m1":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
+                                 [[ 0, 1, 1], [ 0, 1, 0], [ 1, 1, 0], [ 0, 0, 1]]])
+        elif lauegr == "-31m":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
+                                 [[ 1, 1,-1], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0,-1]]])
+        elif lauegr == "-3":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
+                                 [[ 1, 2, 0], [ 1, 1, 0], [ 0, 1, 0], [ 0, 0, 1]],
+                                 [[ 0, 1, 1], [ 0, 1, 0], [-1, 1, 0], [ 0, 0, 1]]])
+    elif system == "Rhombohedral":
+        if lauegr == "-3m":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 0,-1], [ 1, 1, 1]],
+                                 [[ 1, 1, 0], [ 1, 0,-1], [ 0, 0,-1], [ 1, 1, 1]]])
+        elif lauegr == "-3":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 0,-1], [ 1, 1, 1]],
+                                 [[ 1, 1, 0], [ 1, 0,-1], [ 0, 0,-1], [ 1, 1, 1]],
+                                 [[ 0,-1,-2], [ 1, 0, 0], [ 1, 0,-1], [-1,-1,-1]],
+                                 [[ 1, 0,-2], [ 1, 0,-1], [ 0, 0,-1], [-1,-1,-1]]])
+    elif system == "Cubic":
+        # TODO: Paper states lauegr m3m and 3m, typo? difference to m-3m/-3m??
+        # if lauegr == "m3m":
+        if lauegr == "m-3m":
+            segments = np.array(
+                [[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 1, 1, 1]]])
+        # elif lauegr == "m3":
+        elif lauegr == "m-3":
+            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 1, 1, 1]],
+                                 [[ 1, 2, 0], [ 0, 1, 0], [ 1, 1, 0], [ 1, 1, 1]]])
+    else:
+        raise ValueError, "Could not find crystal system {}".format(system)
+
+    indices = np.zeros((0, 3), dtype=int)
+
+    for row in segments:
+        loop_h = True
+        loop_k = True
+        loop_l = True
+        apex = row[0, :]
+
+        index_stored = apex
+
+        dsp = uc.calc_dspacing(apex, kind=system)
+
+        while loop_l:
+            while loop_k:
+                while loop_h:
+                    if dsp >= dmin:
+                        indices = np.concatenate((indices, [apex]))
+                    index_new = apex + row[1, :]
+
+                    dsp = uc.calc_dspacing(index_new, kind=system)
+
+                    if dsp >= dmin:
+                        apex = index_new
+                    else:
+                        loop_h = False
+
+                apex[0] = index_stored[0]
+                apex += row[2, :]
+                index_new = apex
+                dsp = uc.calc_dspacing(index_new, kind=system)
+                if dsp < dmin:
+                    loop_k = False
+                loop_h = True
+
+            apex[1] = index_stored[1]
+            apex += row[3, :]
+            index_new = apex
+            dsp = uc.calc_dspacing(index_new, kind=system)
+            if dsp < dmin:
+                loop_l = False
+            loop_k = True
+
+    # TODO: for some reason H has dtype float?
+    assert indices.dtype.kind == 'i', "Wrong datatype, is {}, should be 'i'".format(
+        x.dtype.kind)
+    return indices
+
+
 if __name__ == '__main__':
     # main()
 
     # test_sysabs_against_cctbx()
-    test_print_all()
-
-    exit()
+    # test_print_all()
 
     spgr = sys.argv[1]
     spgr = get_spacegroup_info(spgr)
 
-    refconds = spgr["reflection_conditions"]
-    refconds = [ReflCond(s) for s in refconds]
+    from unitcell import UnitCell
+    uc = UnitCell(10, 10, 10, 90, 90, 90)
 
-    from sysabs import refset
+    x = generate_hkl_listing(uc, dmin=1.0, spgr=spgr)
+    # print x
+    print x.shape
 
-    print len(refset),
-    refset = filter_systematic_absences(refset, refconds)
-    print len(refset)
+    print x.dtype
 
+    x = filter_systematic_absences(x, spgr.reflection_conditions)
+    # this works?!
 
+    # import matplotlib.pyplot as plt
+    # plt.scatter(x[:,0], x[:,1], label="XY")
+    # plt.show()
+    # plt.scatter(x[:,1], x[:,2], label="YZ")
+    # plt.show()
+    # plt.scatter(x[:,2], x[:,0], label="ZX")
+    # plt.show()
+
+    np.savetxt('arr.out', x)
 
     # for x in (seq 1 230)
     #       echo "$x",
@@ -475,4 +636,3 @@ if __name__ == '__main__':
     #       sginfo $x | grep -E "Point Group"
     #       sginfo $x | grep -E "Laue  Group"
     #   end
-
