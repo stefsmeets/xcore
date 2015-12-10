@@ -3,19 +3,51 @@
 import numpy as np
 from math import radians, cos, sin
 
-from IPython.terminal.embed import InteractiveShellEmbed
-InteractiveShellEmbed.confirm_exit = False
-ipshell = InteractiveShellEmbed(banner1='')
+from spgr import SpaceGroup, get_spacegroup_info
 
-class UnitCell(object):
+try:
+    # raise ImportError
+    import tinyarray as ta
+except ImportError:
+    import numpy as ta
+    TINYARRAY = False
+else:
+    TINYARRAY = True
+
+__all__ = ["UnitCell", "get_unitcell"] 
+
+# from IPython.terminal.embed import InteractiveShellEmbed
+# InteractiveShellEmbed.confirm_exit = False
+# ipshell = InteractiveShellEmbed(banner1='')
+
+
+
+def get_unitcell(parameters, spgr):
+    spgr = get_spacegroup_info(spgr, as_dict=True)
+    cell = UnitCell(parameters, spgr)
+    return cell
+
+
+class UnitCell(SpaceGroup):
 
     """Class for unit cell/space group functions"""
 
-    def __init__(self, a, b, c, al=90.0, be=90.0, ga=90.0):
-        self.parameters = (float(a), float(b), float(c), float(al), float(be), float(ga))
+    def __init__(self, cell_params, kwargs):
+        if isinstance(spgr, str):
+            spgr = get_spacegroup_info(spgr, as_dict=True)
+        super(UnitCell, self).__init__(spgr)
+        
+        print cell_params
+        if len(cell_params) != 6:
+            cell_params = self.parse_cellparams(cell_params)
+        
+        self.parameters = tuple(float(par) for par in cell_params)
+
+        if not self.is_valid_cell():
+            print "\n >> Warning: Unit cell parameters do not fit with space group {}".format(self.space_group)
 
     def __repr__(self):
-        return str(self.parameters)
+        return str(self.parameters) + " - {}".format(self.hermann_mauguin)
 
     def __iter__(self):
         for par in self.parameters:
@@ -106,7 +138,6 @@ class UnitCell(object):
 
         return mat
 
-    @profile
     def calc_dspacing(self, idx, kind="Triclinic"):
         """Calc dspacing at given index (i.e. idx= (1,0,0)
 
@@ -120,28 +151,25 @@ class UnitCell(object):
         Tested: triclinic cell with dvalues from topas
         """
 
+        kind = self.crystal_system
         a, b, c, al, be, ga = self.parameters
         h = idx[0]
         k = idx[1]
         l = idx[2]
 
         if kind == 'Cubic':
-            print '\n** Warning: cubic dspacing calculation unverified!! **\n'
             idsq = (h**2 + k**2 + l**2) / a**2
 
         elif kind == 'Tetragonal':
-            print '\n** Warning: tetragonal dspacing calculation unverified!! **\n'
             idsq = (h**2 + k**2) / a**2 + l**2 / c**2
 
         elif kind == 'Orthorhombic':
             idsq = h**2 / a**2 + k**2 / b**2 + l**2 / c**2
 
         elif kind == 'Hexagonal':
-            print '\n** Warning: hexagonal dspacing calculation unverified!! **\n'
-            idsq = (4.0/3.0) * (h**2 + h*k + k**2) * (a**-2) + l**2 / c**2
+            idsq = (4.0/3.0) * (h**2 + h*k + k**2) / (a**2) + l**2 / c**2
 
         elif kind == 'Monoclinic':
-            print '\n** Warning: monoclinic dspacing calculation unverified!! **\n'
             be = radians(be)
             idsq = (1/sin(be)**2) * (h**2/a**2 + k**2 * sin(be)**2 /
                                      b**2 + l**2/c**2 - (2*h*l*cos(be)) / (a*c))
@@ -162,7 +190,7 @@ class UnitCell(object):
                 + 2*h*l*c*a*b**2 * (cos(al) * cos(ga) - cos(be))
             )
         else:
-            print "Unknown crystal system {}, fallback to Triclinic"
+            print "Unknown crystal system {}, fallback to Triclinic".format(kind)
             return self.calc_dspacing(idx, kind="Triclinic")
 
         if idsq == 0:
@@ -186,3 +214,91 @@ class UnitCell(object):
         self._volume = vol
         return vol
 
+
+    def is_valid_cell(self):
+        a,b,c,al,be,ga = self.parameters
+        system = self.crystal_system
+        if system == "Triclinic":
+            return True
+        elif system == "Monoclinic":
+            if self.unique_axis == "y":
+                return al == ga == 90.0
+            elif self.unique_axis == "x":
+                return be == ga == 90.0
+            elif self.unique_axis == "z":
+                return al == be == 90.0
+        elif system == "Orthorhombic":
+            return al == be == ga
+        elif system == "Tetragonal":
+            return (a == b) and (al == be == ga == 90.0)
+        elif system == "Trigonal":
+            if self.laue_group == "-3":
+                return (a == b) and (al == be == 90.0) and (ga == 120.0)
+            elif self.laue_group == "-3m":
+                return (a == b == c) and (al == be == ga)
+        elif system == "Hexagonal":
+            return (a == b) and (al == be == 90.0) and (ga == 120.0)
+        elif system == "Cubic":
+            return (a == b == c) and (al == be == ga == 90.0)
+        else:
+            raise ValueError("Unknown crystal system ".format(system))
+
+    def parse_cellparams(self, parameters):
+        system = self.crystal_system
+        if system == "Triclinic":
+            assert len(parameters) == 6, "Expect 6 cell parameters"
+        elif system == "Monoclinic":
+            assert len(parameters) == 4, "Expect 4 cell parameters"
+            a, b, c, angle = parameters
+            if self.unique_axis == "y":
+                parameters = [a, b, c, 90.0, angle, 90.0]
+            elif self.unique_axis == "x":
+                parameters = [a, b, c, angle, 90.0, 90.0]
+            elif self.unique_axis == "z":
+                parameters = [a, b, c, 90.0, 90.0, angle]
+        elif system == "Orthorhombic":
+            assert len(parameters) == 3, "Expect 3 cell parameters"
+            a, b, c = parameters
+            parameters = [a, b, c, 90.0, 90.0, 90.0]
+        elif system == "Tetragonal":
+            assert len(parameters) == 2, "Expect 2 cell parameters"
+            a, c = parameters
+            parameters = [a, a, c, 90.0, 90.0, 90.0]
+        elif system == "Trigonal":
+            if self.laue_group == "-3":
+                assert len(parameters) == 2, "Expect 2 cell parameters"
+                a, c = parameters
+                parameters = [a, a, c, 90.0, 90.0, 120.0]
+            elif self.laue_group == "-3m":
+                assert len(parameters) == 2, "Expect 2 cell parameters"
+                a, al = parameters
+                parameters = [a, a, a, al, al, al]
+        elif system == "Hexagonal":
+            assert len(parameters) == 2, "Expect 2 cell parameters"
+            a, c = parameters
+            parameters = [a, a, c, 90.0, 90.0, 120.0]
+        elif system == "Cubic":
+            assert len(parameters) == 1, "Expect 1 cell parameters"
+            a = parameters[0]
+            parameters = [a, a, a, 90.0, 90.0, 90.0]
+        else:
+            raise ValueError("Unknown crystal system ".format(system))
+
+        assert len(parameters) == 6, "Expect 6 cell parameters"
+        return parameters
+
+    def get_dmin(self, indices):
+        return np.min(self.calc_dspacing_np(indices))
+
+    def completeness(self, indices):
+        """Check completeness for indices data set"""
+        raise NotImplementedError
+
+        # Make indices unique set
+        merged = merge(indices, self.laue_group)
+        # Calculate dspacing of indices
+        dmin = self.get_dmin(indices)
+        # Calculate corresponding set
+        complete_set = generate_hkl_listing(self, dmin=dmin)
+        # Compare number of reflections in each
+        return float(len(complete_set) / len(indices)

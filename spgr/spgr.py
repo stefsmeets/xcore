@@ -12,6 +12,14 @@ f = open(os.path.join(os.path.dirname(__file__), 'spacegroups.txt'), 'r')
 spacegrouptxt = f.readlines()
 f.close()
 
+__all__ = ["SpaceGroup", 
+           "filter_systematic_absences", 
+           "get_spacegroup_info", 
+           "get_random_cell",
+           "generate_hkl_listing", 
+           "is_absent", 
+           "is_absent_np"]
+
 # from IPython.terminal.embed import InteractiveShellEmbed
 # InteractiveShellEmbed.confirm_exit = False
 # ipshell = InteractiveShellEmbed(banner1='')
@@ -59,6 +67,34 @@ reflection_conditions = {
     "No Condition": lambda h, k, l: True
 }
 
+# http://scripts.iucr.org/cgi-bin/paper?se0073
+laue_symmetry = {
+    # Triclinic
+    '-1': lambda (h, k, l): l >= 0,  # 1/2
+    # Monoclinic
+    '2/m': lambda (h, k, l): h >= 0 and k >= 0,  # 1/4
+    '2/m:b': lambda (h, k, l): k >= 0 and l >= 0,  # 1/4
+    '2/m:c': lambda (h, k, l): k >= 0 and l >= 0,  # 1/4
+    # Orthorhombic
+    'mmm': lambda (h, k, l): h >= 0 and k >= 0 and l >= 0,  # 1/8
+    # Tetragonal
+    '4/m': lambda (h, k, l): h >= 0 and k >= 0 and l >= 0,  # 1/8
+    '4/mmm': lambda (h, k, l): k >= h >= 0 and l >= 0,  # 1/16
+    # Trigonal, Rhombohedral setting
+    '-3:R': lambda (h, k, l): k >= 0 and l >= 0 and k >= h and l >= h,  # 1/6
+    '-3m:R': lambda (h, k, l): l >= k >= 0 and k >= h,  # 1/12
+    # Trigonal, Hexagonal setting
+    '-3:H': lambda (h, k, l): h >= 0 and k >= 0,  # 1/6
+    '-31m:H': lambda (h, k, l): k >= h >= 0,  # 1/12
+    '-3m1:H': lambda (h, k, l): h >= 0 and k >= 0 and l >= 0,  # 1/12
+    # Hexagonal
+    '6/m': lambda (h, k, l): h >= 0 and k >= 0 and l >= 0,  # 1/12
+    '6/mmm': lambda (h, k, l): k >= h >= 0 and l >= 0,  # 1/24
+    # Cubic
+    'm-3': lambda (h, k, l): k >= h and l >= h and h >= 0,  # 1/24
+    'm-3m': lambda (h, k, l): l >= k >= h >= 0  # 1/48
+}
+
 
 def find_number(s, spacegrouptxt=spacegrouptxt):
     if isinstance(s, int):
@@ -98,12 +134,51 @@ def get_symmetry(number, setting):
     return spgr.d[setting]
 
 
+def get_random_cell(spgr):
+    import random
+    a = float(random.randrange(500, 5000)) / 100
+    b = float(random.randrange(500, 5000)) / 100
+    c = float(random.randrange(500, 5000)) / 100
+    al = float(random.randrange(60, 120))
+    be = float(random.randrange(60, 120))
+    ga = float(random.randrange(60, 120))
+
+    system = spgr.crystal_system
+    lauegr = spgr.laue_group
+
+    if system == "Triclinic":
+        return (a, b, c, al, be, ga)
+    elif system == "Monoclinic":
+        return (a, b, c, be)
+    elif system == "Orthorhombic":
+        return (a, b, c)
+    elif system == "Tetragonal":
+        return (a, c)
+    elif system == "Trigonal":
+        if lauegr == "-3":
+            return (a, c)
+        elif lauegr == "-3m":
+            return (a, al)
+        else:
+            raise ValueError("Invalid laue group {}".format(lauegr))
+    elif system == "Hexagonal":
+        return (a, c)
+    elif system == "Cubic":
+        return (a,)
+    else:
+        raise ValueError("Invalid system {}".format(system))
+
+
+
 def get_spacegroup_info(string, as_dict=False):
-    try:
-        line = find_number(string)
-    except ValueError:
-        print "Could not find {}".format(string)
-        return None
+    if string == "random":
+        import random
+        line = random.choice(spacegrouptxt)
+    else:
+        try:
+            line = find_number(string)
+        except ValueError:
+            raise ValueError("Could not find space group {}".format(string))
     number = line[:12].strip()
     schoenflies = line[12:26].strip()
     hm = line[26:54].strip()
@@ -155,15 +230,6 @@ def get_spacegroup_info(string, as_dict=False):
         return SpaceGroup(spgr)
 
 
-def main():
-    for arg in sys.argv[1:]:
-        spgr = get_spacegroup_info(arg)
-        if not spgr:
-            continue
-        print "# {}\n".format(arg)
-        spgr.info()
-
-
 class CVec(tuple):
 
     """Small class for storing and representing Centering Vectors"""
@@ -175,6 +241,41 @@ class CVec(tuple):
         return "+({}  {}  {})".format(*self)
 
 
+def symm2str(r,t):
+    xyz = "xyz"
+    string_all = []
+    for i in range(3):
+        string_row = ""
+        for j in range(3):
+            rval = r[i,j]
+            if rval == -1:
+                string_row += "-{}".format(xyz[j])
+            if rval == 1:
+                if string_row != "":
+                    string_row += "+"
+                string_row += "{}".format(xyz[j])
+        tval = t[i,0]
+        if tval%1 == 0.5:
+            tval = "+1/2"
+        elif tval%1 == 0.25:
+            tval = "+1/4"
+        elif tval%1 == 0.75:
+            tval = "+3/4"
+        elif tval%1 == 1.0/3.0:
+            tval = "+1/3"
+        elif tval%1 == 2.0/3.0:
+            tval = "+2/3"
+        elif tval%1 == 1.0/6.0:
+            tval = "+1/6"
+        elif tval%1 == 5.0/6.0:
+            tval = "+5/6"
+        else:
+            tval = ""
+        string_row += "{}".format(tval)
+        string_all.append(string_row)
+    return ", ".join(string_all)
+
+
 class SymOp(object):
 
     """Generate symmetry operations from string"""
@@ -184,8 +285,11 @@ class SymOp(object):
         self._s = s
         self.r, self.t = self.getsymm(self._s)
 
+        string = symm2str(self.r, self.t)
+        assert string == s, "got {}, need {}".format(string, s)
+
     def __repr__(self):
-        return self._s
+        return "({})".format(self._s)
 
     def __get__(self):
         return self.r, self.t
@@ -226,6 +330,12 @@ class SymOp(object):
                         pass
             i += 1
         return rotmat, transvec
+
+    def inverse(self):
+        r = np.dot(self.r, -np.eye(3,3))
+        t = self.t
+        return SymOp(symm2str(r,t))
+
 
 
 class ReflCond(object):
@@ -283,6 +393,7 @@ class SpaceGroup(object):
         self.centering_vectors = [CVec(cv)
                                   for cv in kwargs["centering_vectors"]]
         self.symmetry_operations = [SymOp(op) for op in kwargs["symops"]]
+
         self.reflection_conditions = [
             ReflCond(rc) for rc in kwargs["reflection_conditions"]]
 
@@ -347,37 +458,33 @@ class SpaceGroup(object):
         print "\nSymmetry operations"
         for symop in self.symmetry_operations:
             print symop
+        if self.is_centrosymmetric:
+            print "Inversion symmetry"
+            for symop in self.symmetry_operations:
+                print symop.inverse()
 
         print "\nReflection conditions"
         for rc in self.reflection_conditions:
             print rc
 
-    def is_valid_cell(parameters):
-        a,b,c,al,be,ga = parameters
-        if system == "Triclinic":
-            return True
-        elif system == "Monoclinic":
-            if self.unique_axis == "b":
-                return al == ga == 90.0
-            elif self.unique_axis == "a":
-                return be == ga == 90.0
-            elif self.unique_axis == "c":
-                return al == be == 90.0
-        elif system == "Orthorhombic":
-            return al == be == ga
-        elif system == "Tetragonal":
-            return (a == b) and (al == be == ga == 90.0)
-        elif system == "Trigonal":
-            if self.laue_group == "-3":
-                return (a == b) and (al == be == 90.0) and (ga == 120.0)
-            elif self.laue_group == "-3m":
-                return (a == b == c) and (al == be == ga)
-        elif system == "Hexagonal":
-            return (a == b) and (al == be == 90.0) and (ga == 120.0)
-        elif system == "Cubic":
-            return (a == b == c) and (al == be == ga == 90.0)
-        else:
-            raise ValueError("Unknown crystal system ".format(system))
+    def is_absent(self, index):
+        """Expects tuple/list of 3 elements
+
+        return True/False"""
+        return any(c.is_absent(index) for c in self.reflection_conditions)
+    
+    def is_absent_np(self, index):
+        """Efficient function to run on (n by 3) numpy arrays
+
+        Return boolean array"""
+        h = index[:, 0]
+        k = index[:, 1]
+        l = index[:, 2]
+        return np.any([c.is_absent((h, k, l)) for c in self.reflection_conditions], axis=0)
+
+    def unique_set(self, index):
+        """Take list of reflections, use laue symmetry to merge to unique set"""
+        raise NotImplementedError
 
 
 def is_absent(index, conditions):
@@ -462,24 +569,24 @@ def test_sysabs_against_cctbx():
 
 def test_print_all():
     """Parse and print all space groups"""
-    for i, row in enumerate(lines):
+    for i, row in enumerate(spacegrouptxt):
         print "====="*16
         number = row[:12].strip()
         spgr = get_spacegroup_info(number)
         spgr.info()
 
 
-def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
+def generate_hkl_listing(cell, dmin=1.0):
     """Generate hkllisting up to the specified dspacing.
 
     Based on the routine described by:
     Le Page and Gabe, J. Appl. Cryst. 1979, 12, 464-466
     """
 
-    lauegr = spgr.laue_group
-    system = spgr.crystal_system
-    uniq_axis = spgr.unique_axis
-    reflconds = spgr.reflection_conditions
+    lauegr = cell.laue_group
+    system = cell.crystal_system
+    uniq_axis = cell.unique_axis
+    reflconds = cell.reflection_conditions
 
     if system == "Triclinic":  # "-1"
         segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
@@ -487,13 +594,13 @@ def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
                              [[-1, 1, 0], [-1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]],
                              [[ 0, 1,-1], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]]])
     elif system == "Monoclinic":  # "2/m"
-        if uniq_axis == "a":
+        if uniq_axis == "x":
             segments = np.array([[[ 0, 0, 0], [ 0, 1, 0], [1, 0, 0], [ 0, 0, 1]],
                                  [[ 0,-1, 1], [ 0,-1, 0], [1, 0, 0], [ 0, 0, 1]]])
-        elif uniq_axis == "b":
+        elif uniq_axis == "y":
             segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
                                  [[-1, 0, 1], [-1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]]])
-        elif uniq_axis == "c":
+        elif uniq_axis == "z":
             segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 0, 1], [ 0, 1, 0]],
                                  [[-1, 1, 0], [-1, 0, 0], [ 0, 0, 1], [ 0, 1, 0]]])
     elif system == "Orthorhombic":  # mmm
@@ -552,16 +659,19 @@ def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
 
         index_stored = apex
 
-        dsp = uc.calc_dspacing(apex, kind=system)
+        if sum(np.abs(apex)) == 0:
+            dsp = 0.0  # prevent RuntimeWarning divide by zero
+        else:
+            dsp = cell.calc_dspacing(apex)
 
         while loop_l:
             while loop_k:
                 while loop_h:
                     if dsp >= dmin:
-                        indices.append(apex)
+                        indices.append(list(apex))
                     index_new = apex + row[1, :]
 
-                    dsp = uc.calc_dspacing(index_new, kind=system)
+                    dsp = cell.calc_dspacing(index_new)
 
                     if dsp >= dmin:
                         apex = index_new
@@ -571,7 +681,7 @@ def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
                 apex[0] = index_stored[0]
                 apex += row[2, :]
                 index_new = apex
-                dsp = uc.calc_dspacing(index_new, kind=system)
+                dsp = cell.calc_dspacing(index_new)
                 if dsp < dmin:
                     loop_k = False
                 loop_h = True
@@ -579,7 +689,7 @@ def generate_hkl_listing(unit_cell, spgr, dmin=1.0):
             apex[1] = index_stored[1]
             apex += row[3, :]
             index_new = apex
-            dsp = uc.calc_dspacing(index_new, kind=system)
+            dsp = cell.calc_dspacing(index_new)
             if dsp < dmin:
                 loop_l = False
             loop_k = True
@@ -593,7 +703,9 @@ if __name__ == '__main__':
     # main()
 
     # test_sysabs_against_cctbx()
-    # test_print_all()
+    test_print_all()
+
+    exit()
 
     spgr = sys.argv[1]
     spgr = get_spacegroup_info(spgr)

@@ -28,7 +28,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'spgr = spgr.spgr:main',
+            'spgr = spgr.app:main',
         ]
     }
 
