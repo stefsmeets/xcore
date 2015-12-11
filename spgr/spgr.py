@@ -67,18 +67,18 @@ reflection_conditions = {
     "No Condition": lambda h, k, l: True
 }
 
-laue_symmetry = {
-    'triclinic' : lambda (h,k,l): (abs(h),k,l),
-    'monoclinic' : lambda (h,k,l): (abs(h),abs(k),l),
-    'monoclinicb' : lambda (h,k,l): (abs(h),abs(k),l),
-    'monoclinicc' : lambda (h,k,l): (abs(h), l,abs(l)),
-    'orthorhombic' : lambda (h,k,l): (abs(h),abs(k),abs(l))
-    #'tetragonal' : lambda h,k,l: raise ValueError,
-    #'hexagonal' : lambda h,k,l: raise ValueError,
-    #'rhombohedral1' : lambda h,k,l: raise ValueError,
-    #'rhombohedral2' : lambda h,k,l: raise ValueError,
-    #'cubic' : lambda h,k,l: raise ValueError
-}
+# laue_merge = {
+#     'triclinic' : lambda (h,k,l): (abs(h),k,l),
+#     'monoclinic' : lambda (h,k,l): (abs(h),abs(k),l),
+#     'monoclinicb' : lambda (h,k,l): (abs(h),abs(k),l),
+#     'monoclinicc' : lambda (h,k,l): (abs(h), l,abs(l)),
+#     'orthorhombic' : lambda (h,k,l): (abs(h),abs(k),abs(l))
+#     #'tetragonal' : lambda h,k,l: raise ValueError,
+#     #'hexagonal' : lambda h,k,l: raise ValueError,
+#     #'rhombohedral1' : lambda h,k,l: raise ValueError,
+#     #'rhombohedral2' : lambda h,k,l: raise ValueError,
+#     #'cubic' : lambda h,k,l: raise ValueError
+# }
 
 def asym_1((h,k,l)):
     ret = False
@@ -220,7 +220,7 @@ def asym_7b((h,k,l)):
     return ret
 
 # http://scripts.iucr.org/cgi-bin/paper?se0073
-laue_symmetry = {
+laue_asymmetry = {
     # Triclinic
     '-1': asym_1,  # 1/2
     # Monoclinic
@@ -754,7 +754,7 @@ def test_print_all():
         spgr.info()
 
 
-def generate_hkl_listing(cell, dmin=1.0):
+def generate_hkl_listing_old(cell, dmin=1.0):
     """Generate hkllisting up to the specified dspacing.
 
     Based on the routine described by:
@@ -904,10 +904,11 @@ def generate_hkl_listing(cell, dmin=1.0, full_sphere=False):
                          [[-1, 1, 0], [-1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]],
                          [[ 0, 1,-1], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]]])
 
-    if setting == "R":
-        lauegr += ":R"
-    elif setting == "H":
-        lauegr += ":H"
+    if system == "Trigonal":
+        if setting == "R":
+            lauegr += ":R"
+        else:
+            lauegr += ":H"
 
     if lauegr == "2/m":
         if uniq_axis == "y":
@@ -917,7 +918,7 @@ def generate_hkl_listing(cell, dmin=1.0, full_sphere=False):
         elif uniq_axis == "x":
             lauegr += ":a"
 
-    func = laue_symmetry[lauegr]
+    func = laue_asymmetry[lauegr]
     fraction = laue_fraction[lauegr]
 
     if full_sphere:
@@ -977,7 +978,7 @@ def generate_hkl_listing(cell, dmin=1.0, full_sphere=False):
             loop_k = True
 
     indices = np.array(indices[2:]) # ignore double [0, 0, 0]
-    print indices
+    # print indices
     # print "Generated {} indices, {} in asymmetric unit for laue group {} ({:.1f}%)".format(total, len(indices), lauegr, 100*len(indices)/float(total))
     print "Kept {} / {} indices for lauegr {} ({:.1f}%). Fraction {}".format(len(indices), 
                                                                              len(indices)+total,
@@ -987,6 +988,84 @@ def generate_hkl_listing(cell, dmin=1.0, full_sphere=False):
 
     assert indices.dtype.kind == 'i', "Wrong datatype {}, need 'i'".format(indices.dtype.kind)
     return indices
+
+def get_laue_symops(key):
+    from laue_symops import symops
+    return (SymOp(op) for op in symops[key])
+
+def get_merge_dict(indices, cell):
+    dmin = cell.get_dmin(indices)
+    unique_set = generate_hkl_listing(cell, dmin=dmin)
+
+    lauegr = cell.laue_group
+    setting = cell.setting
+    uniq_axis = cell.unique_axis
+
+    if lauegr == "2/m":
+        if uniq_axis == "y":
+            lauegr += ":b"
+        elif uniq_axis == "z":
+            lauegr += ":c"
+        elif uniq_axis == "x":
+            lauegr += ":a"
+    symops = get_laue_symops(lauegr)
+    
+    d = {}
+    for op in symops:
+        # print 
+        # print op
+        # print op.r
+        for idx in unique_set:
+            new = tuple(np.dot(idx, op.r))
+            if new not in d:
+                d[new] = tuple(idx)
+    return d
+
+def expand(indices, cell):
+    lauegr = cell.laue_group
+    setting = cell.setting
+    uniq_axis = cell.unique_axis
+
+    if lauegr == "2/m":
+        if uniq_axis == "y":
+            lauegr += ":b"
+        elif uniq_axis == "z":
+            lauegr += ":c"
+        elif uniq_axis == "x":
+            lauegr += ":a"
+    symops = get_laue_symops(lauegr)
+
+    ret = []
+    for op in symops:
+        for idx in indices:
+            new = tuple(np.dot(idx, op.r))
+            if new not in ret:
+                ret.append(idx)
+    return ret
+
+def merge(indices, cell):
+    from itertools import groupby
+    import pandas as pd
+
+    merge_dct = get_merge_dict(indices, cell)
+
+    df = pd.DataFrame(index=[tuple(idx) for idx in indices])
+
+    new = df.groupby(merge_dct).first()
+
+    print "Merged {} to {} reflections".format(len(indices), len(new))
+
+    return new
+
+def completeness(indices, cell):
+    merged = merge(indices, cell)
+
+    dmin = cell.get_dmin(indices)
+
+    complete_set = generate_hkl_listing(cell, dmin=dmin, full_sphere=True)
+    
+    return 100*len(indices) / float(len(complete_set))
+
 
 if __name__ == '__main__':
     # main()
@@ -1003,46 +1082,17 @@ if __name__ == '__main__':
 
     from unitcell import UnitCell
     cell = get_random_cell(spgr)
-    cell = (10,10,10,90,90,90)
     cell = UnitCell(cell, spgr.space_group)
 
+    cell.info()
+
+    z = generate_hkl_listing(cell, dmin=1.0)
+    full = generate_hkl_listing(cell, dmin=1.0, full_sphere=True)
+    new = merge(full, cell)
+
+    print "\nCompleteness {}".format(completeness(z, cell))
     print
-    print cell
-    print
-
-    import time
-
-    t0 = time.time()
-    # x = generate_hkl_listing(cell, dmin=1.0)
-    # x = cell.filter_systematic_absences(x)
-    t1 = time.time()
-
-    z = generate_hkl_listing3(cell, dmin=1.0)
-    full = generate_hkl_listing3(cell, dmin=1.0, full_sphere=True)
-    # z = cell.filter_systematic_absences(z)
-    t3 = time.time()
-
-    # print t1-t0, x.shape
-    # print t1-t0, x.shape
-    print t3-t1, z.shape
-    print "Got: {}, Full: {} ({:.1f}%)".format(len(z), len(full), 100*float(len(z))/len(full))
-
-    print max(z[:,0])
-    print max(z[:,1])
-    print max(z[:,2])
-
-    np.savetxt("arr.out", z, fmt="%4d")
-
-    # x = filter_systematic_absences(x, spgr.reflection_conditions)
-    # this works?!
-
-    # import matplotlib.pyplot as plt
-    # plt.scatter(x[:,0], x[:,1], label="XY")
-    # plt.show()
-    # plt.scatter(x[:,1], x[:,2], label="YZ")
-    # plt.show()
-    # plt.scatter(x[:,2], x[:,0], label="ZX")
-    # plt.show()
+    print "\nCompleteness {}".format(completeness(full, cell))
 
     # for x in (seq 1 230)
     #       echo "$x",

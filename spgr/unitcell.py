@@ -76,6 +76,15 @@ class UnitCell(SpaceGroup):
     def ga(self):
         return self.parameters[5]
 
+    def info(self):
+        print "Cell                    {}".format(self.name)
+        print "   a {:12.4f}       al {:12.2f}".format(self.a, self.al)
+        print "   b {:12.4f}       be {:12.2f}".format(self.b, self.be)
+        print "   c {:12.4f}       ga {:12.2f}".format(self.c, self.ga)
+        print "Vol. {:10.2f}".format(self.volume)
+        print
+
+
     def metric_tensor(self, inverse=False):
         """Returns the metric tensor
 
@@ -303,16 +312,3 @@ class UnitCell(SpaceGroup):
 
     def get_dmin(self, indices):
         return np.min(self.calc_dspacing_np(indices))
-
-    def completeness(self, indices):
-        """Check completeness for indices data set"""
-        raise NotImplementedError
-
-        # Make indices unique set
-        merged = merge(indices, self.laue_group)
-        # Calculate dspacing of indices
-        dmin = self.get_dmin(indices)
-        # Calculate corresponding set
-        complete_set = generate_hkl_listing(self, dmin=dmin)
-        # Compare number of reflections in each
-        return float(len(complete_set)) / len(indices)
