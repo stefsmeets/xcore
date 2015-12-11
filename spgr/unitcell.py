@@ -32,12 +32,11 @@ class UnitCell(SpaceGroup):
 
     """Class for unit cell/space group functions"""
 
-    def __init__(self, cell_params, kwargs):
+    def __init__(self, cell_params, spgr):
         if isinstance(spgr, str):
             spgr = get_spacegroup_info(spgr, as_dict=True)
         super(UnitCell, self).__init__(spgr)
         
-        print cell_params
         if len(cell_params) != 6:
             cell_params = self.parse_cellparams(cell_params)
         
@@ -47,7 +46,7 @@ class UnitCell(SpaceGroup):
             print "\n >> Warning: Unit cell parameters do not fit with space group {}".format(self.space_group)
 
     def __repr__(self):
-        return str(self.parameters) + " - {}".format(self.hermann_mauguin)
+        return str(self.parameters) + " - {}".format(self.name)
 
     def __iter__(self):
         for par in self.parameters:
@@ -138,7 +137,7 @@ class UnitCell(SpaceGroup):
 
         return mat
 
-    def calc_dspacing(self, idx, kind="Triclinic"):
+    def calc_dspacing(self, idx):
         """Calc dspacing at given index (i.e. idx= (1,0,0)
 
         Calculates d-spacing based on given parameters.
@@ -166,6 +165,15 @@ class UnitCell(SpaceGroup):
         elif kind == 'Orthorhombic':
             idsq = h**2 / a**2 + k**2 / b**2 + l**2 / c**2
 
+        elif kind == "Trigonal":
+            if self.setting == "R":
+                al = radians(al)
+                num = (h**2 + k**2 + l**2) * sin(al)**2 + 2*(h*k + k*l + h*l)*(cos(al)**2 - cos(al))
+                denom = a**2 * (1 - 3*cos(al)**2 + 2*cos(al)**3)
+                idsq = num / denom
+            else:
+                idsq = (4.0/3.0) * (h**2 + h*k + k**2) / (a**2) + l**2 / c**2
+
         elif kind == 'Hexagonal':
             idsq = (4.0/3.0) * (h**2 + h*k + k**2) / (a**2) + l**2 / c**2
 
@@ -190,14 +198,19 @@ class UnitCell(SpaceGroup):
                 + 2*h*l*c*a*b**2 * (cos(al) * cos(ga) - cos(be))
             )
         else:
-            print "Unknown crystal system {}, fallback to Triclinic".format(kind)
-            return self.calc_dspacing(idx, kind="Triclinic")
+            raise ValueError("Unknown crystal system {}, fallback to Triclinic".format(kind))
 
-        if idsq == 0:
+        # if idsq == 0:
             # prevent RuntimeWarning: divide by zero
-            return np.inf
-        else:
-            return idsq**-0.5
+            # return np.inf
+        # else:
+        return idsq**-0.5
+
+    def calc_dspacing_np(self, idx):
+        h = idx[:,0]
+        k = idx[:,1]
+        l = idx[:,2]
+        return self.calc_dspacing((h,k,l))
 
     @property
     def volume(self):
@@ -218,6 +231,7 @@ class UnitCell(SpaceGroup):
     def is_valid_cell(self):
         a,b,c,al,be,ga = self.parameters
         system = self.crystal_system
+        setting = self.setting
         if system == "Triclinic":
             return True
         elif system == "Monoclinic":
@@ -232,10 +246,10 @@ class UnitCell(SpaceGroup):
         elif system == "Tetragonal":
             return (a == b) and (al == be == ga == 90.0)
         elif system == "Trigonal":
-            if self.laue_group == "-3":
-                return (a == b) and (al == be == 90.0) and (ga == 120.0)
-            elif self.laue_group == "-3m":
+            if setting == "R":
                 return (a == b == c) and (al == be == ga)
+            else:
+                return (a == b) and (al == be == 90.0) and (ga == 120.0)
         elif system == "Hexagonal":
             return (a == b) and (al == be == 90.0) and (ga == 120.0)
         elif system == "Cubic":
@@ -265,14 +279,14 @@ class UnitCell(SpaceGroup):
             a, c = parameters
             parameters = [a, a, c, 90.0, 90.0, 90.0]
         elif system == "Trigonal":
-            if self.laue_group == "-3":
-                assert len(parameters) == 2, "Expect 2 cell parameters"
-                a, c = parameters
-                parameters = [a, a, c, 90.0, 90.0, 120.0]
-            elif self.laue_group == "-3m":
+            if self.setting == "R":
                 assert len(parameters) == 2, "Expect 2 cell parameters"
                 a, al = parameters
                 parameters = [a, a, a, al, al, al]
+            else:
+                assert len(parameters) == 2, "Expect 2 cell parameters"
+                a, c = parameters
+                parameters = [a, a, c, 90.0, 90.0, 120.0]
         elif system == "Hexagonal":
             assert len(parameters) == 2, "Expect 2 cell parameters"
             a, c = parameters
@@ -301,4 +315,4 @@ class UnitCell(SpaceGroup):
         # Calculate corresponding set
         complete_set = generate_hkl_listing(self, dmin=dmin)
         # Compare number of reflections in each
-        return float(len(complete_set) / len(indices)
+        return float(len(complete_set)) / len(indices)

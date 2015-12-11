@@ -1,50 +1,50 @@
    1        C1^1          P1                           P 1
    2        Ci^1          P-1                         -P 1
-   3:b      C2^1          P2:b = P121                  P 2y
+   3:b      C2^1          P2 = P2:b = P121             P 2y
    3:c      C2^1          P2:c = P112                  P 2
    3:a      C2^1          P2:a = P211                  P 2x
-   4:b      C2^2          P21:b = P1211                P 2yb
+   4:b      C2^2          P21 = P21:b = P1211          P 2yb
    4:c      C2^2          P21:c = P1121                P 2c
    4:a      C2^2          P21:a = P2111                P 2xa
-   5:b1     C2^3          C2:b1 = C121                 C 2y
-   5:b2     C2^3          C2:b2 = A121                 A 2y
-   5:b3     C2^3          C2:b3 = I121                 I 2y
+   5:b1     C2^3          C2 = C2:b1 = C121            C 2y
+   5:b2     C2^3          C2:b2 = A121 = A2            A 2y
+   5:b3     C2^3          C2:b3 = I121 = I2            I 2y
    5:c1     C2^3          C2:c1 = A112                 A 2
    5:c2     C2^3          C2:c2 = B112 = B2            B 2
    5:c3     C2^3          C2:c3 = I112                 I 2
    5:a1     C2^3          C2:a1 = B211                 B 2x
    5:a2     C2^3          C2:a2 = C211                 C 2x
    5:a3     C2^3          C2:a3 = I211                 I 2x
-   6:b      Cs^1          Pm:b = P1m1                  P -2y
+   6:b      Cs^1          Pm = Pm:b = P1m1             P -2y
    6:c      Cs^1          Pm:c = P11m                  P -2
    6:a      Cs^1          Pm:a = Pm11                  P -2x
-   7:b1     Cs^2          Pc:b1 = P1c1                 P -2yc
-   7:b2     Cs^2          Pc:b2 = P1n1                 P -2yac
-   7:b3     Cs^2          Pc:b3 = P1a1                 P -2ya
+   7:b1     Cs^2          Pc = Pc:b1 = P1c1            P -2yc
+   7:b2     Cs^2          Pc:b2 = P1n1 = Pn            P -2yac
+   7:b3     Cs^2          Pc:b3 = P1a1 = Pa            P -2ya
    7:c1     Cs^2          Pc:c1 = P11a                 P -2a
    7:c2     Cs^2          Pc:c2 = P11n                 P -2ab
    7:c3     Cs^2          Pc:c3 = P11b = Pb            P -2b
    7:a1     Cs^2          Pc:a1 = Pb11                 P -2xb
    7:a2     Cs^2          Pc:a2 = Pn11                 P -2xbc
    7:a3     Cs^2          Pc:a3 = Pc11                 P -2xc
-   8:b1     Cs^3          Cm:b1 = C1m1                 C -2y
-   8:b2     Cs^3          Cm:b2 = A1m1                 A -2y
-   8:b3     Cs^3          Cm:b3 = I1m1                 I -2y
+   8:b1     Cs^3          Cm = Cm:b1 = C1m1            C -2y
+   8:b2     Cs^3          Cm:b2 = A1m1 = Am            A -2y
+   8:b3     Cs^3          Cm:b3 = I1m1 = Im            I -2y
    8:c1     Cs^3          Cm:c1 = A11m                 A -2
    8:c2     Cs^3          Cm:c2 = B11m = Bm            B -2
    8:c3     Cs^3          Cm:c3 = I11m                 I -2
    8:a1     Cs^3          Cm:a1 = Bm11                 B -2x
    8:a2     Cs^3          Cm:a2 = Cm11                 C -2x
    8:a3     Cs^3          Cm:a3 = Im11                 I -2x
-   9:b1     Cs^4          Cc:b1 = C1c1                 C -2yc
-   9:b2     Cs^4          Cc:b2 = A1n1                 A -2yac
-   9:b3     Cs^4          Cc:b3 = I1a1                 I -2ya
-   9:-b1    Cs^4          Cc:-b1 = A1a1                A -2ya
-   9:-b2    Cs^4          Cc:-b2 = C1n1                C -2ybc
-   9:-b3    Cs^4          Cc:-b3 = I1c1                I -2yc
+   9:b1     Cs^4          Cc = Cc:b1 = C1c1            C -2yc
+   9:b2     Cs^4          Cc:b2 = A1n1 = An            A -2yac
+   9:b3     Cs^4          Cc:b3 = I1a1 = Ia            I -2ya
+   9:-b1    Cs^4          Cc:-b1 = A1a1 = Aa           A -2ya
+   9:-b2    Cs^4          Cc:-b2 = C1n1 = Cn           C -2ybc
+   9:-b3    Cs^4          Cc:-b3 = I1c1 = Ic           I -2yc
    9:c1     Cs^4          Cc:c1 = A11a                 A -2a
-   9:c2     Cs^4          Cc:c2 = B11n                 B -2bc
-   9:c3     Cs^4          Cc:c3 = I11b                 I -2b
+   9:c2     Cs^4          Cc:c2 = B11n = Bn            B -2bc
+   9:c3     Cs^4          Cc:c3 = I11b = Ib            I -2b
    9:-c1    Cs^4          Cc:-c1 = B11b = Bb           B -2b
    9:-c2    Cs^4          Cc:-c2 = A11n                A -2ac
    9:-c3    Cs^4          Cc:-c3 = I11a                I -2a
@@ -54,47 +54,47 @@
    9:-a1    Cs^4          Cc:-a1 = Cc11                C -2xc
    9:-a2    Cs^4          Cc:-a2 = Bn11                B -2xbc
    9:-a3    Cs^4          Cc:-a3 = Ib11                I -2xb
-  10:b      C2h^1         P2/m:b = P12/m1             -P 2y
+  10:b      C2h^1         P2/m = P2/m:b = P12/m1      -P 2y
   10:c      C2h^1         P2/m:c = P112/m             -P 2
   10:a      C2h^1         P2/m:a = P2/m11             -P 2x
-  11:b      C2h^2         P21/m:b = P121/m1           -P 2yb
+  11:b      C2h^2         P21/m = P21/m:b = P121/m1   -P 2yb
   11:c      C2h^2         P21/m:c = P1121/m           -P 2c
   11:a      C2h^2         P21/m:a = P21/m11           -P 2xa
-  12:b1     C2h^3         C2/m:b1 = C12/m1            -C 2y
-  12:b2     C2h^3         C2/m:b2 = A12/m1            -A 2y
-  12:b3     C2h^3         C2/m:b3 = I12/m1            -I 2y
+  12:b1     C2h^3         C2/m = C2/m:b1 = C12/m1     -C 2y
+  12:b2     C2h^3         C2/m:b2 = A12/m1 = A2/m     -A 2y
+  12:b3     C2h^3         C2/m:b3 = I12/m1 = I2/m     -I 2y
   12:c1     C2h^3         C2/m:c1 = A112/m            -A 2
   12:c2     C2h^3         C2/m:c2 = B112/m = B2/m     -B 2
   12:c3     C2h^3         C2/m:c3 = I112/m            -I 2
   12:a1     C2h^3         C2/m:a1 = B2/m11            -B 2x
   12:a2     C2h^3         C2/m:a2 = C2/m11            -C 2x
   12:a3     C2h^3         C2/m:a3 = I2/m11            -I 2x
-  13:b1     C2h^4         P2/c:b1 = P12/c1            -P 2yc
-  13:b2     C2h^4         P2/c:b2 = P12/n1            -P 2yac
-  13:b3     C2h^4         P2/c:b3 = P12/a1            -P 2ya
+  13:b1     C2h^4         P2/c = P2/c:b1 = P12/c1     -P 2yc
+  13:b2     C2h^4         P2/c:b2 = P12/n1 = P2/n     -P 2yac
+  13:b3     C2h^4         P2/c:b3 = P12/a1 = P2/a     -P 2ya
   13:c1     C2h^4         P2/c:c1 = P112/a            -P 2a
   13:c2     C2h^4         P2/c:c2 = P112/n            -P 2ab
   13:c3     C2h^4         P2/c:c3 = P112/b = P2/b     -P 2b
   13:a1     C2h^4         P2/c:a1 = P2/b11            -P 2xb
   13:a2     C2h^4         P2/c:a2 = P2/n11            -P 2xbc
   13:a3     C2h^4         P2/c:a3 = P2/c11            -P 2xc
-  14:b1     C2h^5         P21/c:b1 = P121/c1          -P 2ybc
-  14:b2     C2h^5         P21/c:b2 = P121/n1          -P 2yn
-  14:b3     C2h^5         P21/c:b3 = P121/a1          -P 2yab
+  14:b1     C2h^5         P21/c = P21/c:b1 = P121/c1  -P 2ybc
+  14:b2     C2h^5         P21/c:b2 = P121/n1 = P21/n  -P 2yn
+  14:b3     C2h^5         P21/c:b3 = P121/a1 = P21/a  -P 2yab
   14:c1     C2h^5         P21/c:c1 = P1121/a          -P 2ac
   14:c2     C2h^5         P21/c:c2 = P1121/n          -P 2n
   14:c3     C2h^5         P21/c:c3 = P1121/b = P21/b  -P 2bc
   14:a1     C2h^5         P21/c:a1 = P21/b11          -P 2xab
   14:a2     C2h^5         P21/c:a2 = P21/n11          -P 2xn
   14:a3     C2h^5         P21/c:a3 = P21/c11          -P 2xac
-  15:b1     C2h^6         C2/c:b1 = C12/c1            -C 2yc
-  15:b2     C2h^6         C2/c:b2 = A12/n1            -A 2yac
-  15:b3     C2h^6         C2/c:b3 = I12/a1            -I 2ya
-  15:-b1    C2h^6         C2/c:-b1 = A12/a1           -A 2ya
-  15:-b2    C2h^6         C2/c:-b2 = C12/n1           -C 2ybc
-  15:-b3    C2h^6         C2/c:-b3 = I12/c1           -I 2yc
+  15:b1     C2h^6         C2/c = C2/c:b1 = C12/c1     -C 2yc
+  15:b2     C2h^6         C2/c:b2 = A12/n1 = A2/n     -A 2yac
+  15:b3     C2h^6         C2/c:b3 = I12/a1 = I2/a     -I 2ya
+  15:-b1    C2h^6         C2/c:-b1 = A12/a1 = A2/a    -A 2ya
+  15:-b2    C2h^6         C2/c:-b2 = C12/n1 = C2/n    -C 2ybc
+  15:-b3    C2h^6         C2/c:-b3 = I12/c1 = I2/c    -I 2yc
   15:c1     C2h^6         C2/c:c1 = A112/a            -A 2a
-  15:c2     C2h^6         C2/c:c2 = B112/n            -B 2bc
+  15:c2     C2h^6         C2/c:c2 = B112/n = B2/n     -B 2bc
   15:c3     C2h^6         C2/c:c3 = I112/b            -I 2b
   15:-c1    C2h^6         C2/c:-c1 = B112/b = B2/b    -B 2b
   15:-c2    C2h^6         C2/c:-c2 = A112/n           -A 2ac

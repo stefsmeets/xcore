@@ -20,9 +20,9 @@ __all__ = ["SpaceGroup",
            "is_absent", 
            "is_absent_np"]
 
-# from IPython.terminal.embed import InteractiveShellEmbed
-# InteractiveShellEmbed.confirm_exit = False
-# ipshell = InteractiveShellEmbed(banner1='')
+from IPython.terminal.embed import InteractiveShellEmbed
+InteractiveShellEmbed.confirm_exit = False
+ipshell = InteractiveShellEmbed(banner1='')
 
 reflection_conditions = {
     "00l": lambda h, k, l: abs(h)+abs(k) == 0,
@@ -67,32 +67,203 @@ reflection_conditions = {
     "No Condition": lambda h, k, l: True
 }
 
+laue_symmetry = {
+    'triclinic' : lambda (h,k,l): (abs(h),k,l),
+    'monoclinic' : lambda (h,k,l): (abs(h),abs(k),l),
+    'monoclinicb' : lambda (h,k,l): (abs(h),abs(k),l),
+    'monoclinicc' : lambda (h,k,l): (abs(h), l,abs(l)),
+    'orthorhombic' : lambda (h,k,l): (abs(h),abs(k),abs(l))
+    #'tetragonal' : lambda h,k,l: raise ValueError,
+    #'hexagonal' : lambda h,k,l: raise ValueError,
+    #'rhombohedral1' : lambda h,k,l: raise ValueError,
+    #'rhombohedral2' : lambda h,k,l: raise ValueError,
+    #'cubic' : lambda h,k,l: raise ValueError
+}
+
+def asym_1((h,k,l)):
+    ret = False
+    if (h >= 0):
+        ret = True
+
+    if (k < 0) and (h == 0):
+        ret = False
+    if (l < 0) and (h == k == 0):
+        ret = False
+    return ret
+
+
+def asym_2a((h,k,l)):
+    ret = False
+    if (h >= 0) and (l >= 0):
+        ret = True
+    
+    if (l < 0) and (k == 0):
+        ret = False
+    return ret
+
+def asym_2b((h,k,l)):
+    ret = False
+    if (k >= 0) and (l >= 0):
+        ret = True
+
+    if (h < 0) and (l == 0):
+        ret = False
+    return ret
+
+def asym_2c((h,k,l)):
+    ret = False
+    if (k >= 0) and (l >= 0):
+        ret = True
+
+    if (h < 0) and (k == 0):
+        ret = False
+    return ret
+
+def asym_3((h,k,l)):
+    ret = False
+    if (h >= 0) and (k >= 0) and (l >= 0):
+        ret = True
+    return ret
+
+def asym_4a((h,k,l)):
+    ret = False
+    if (h >= 0) and (k >= 0) and (l >= 0):
+        ret = True
+
+    if (k > 0) and (h == 0):
+        ret = False
+    return ret
+
+def asym_4b((h,k,l)):
+    ret = False
+    if (k >= h >= 0) and (l >= 0):
+        ret = True
+    return ret
+
+def asym_5a((h,k,l)):
+    ret = False
+    if (k >= 0) and (l >= 0) and (h <= k) and (h <= l):
+        ret = True
+
+    if (h < k) and (h == l):
+        ret = False
+    if (l < 0) and (h ==0):
+        ret = False
+    return ret
+
+def asym_5b((h,k,l)):
+    ret = False
+    if (h >= 0) and (k >= 0):
+        ret = True
+
+    if (l < 0) and (k ==0):
+        ret = False
+    if (l <= 0) and (h == 0):
+        ret = False
+    return ret
+
+def asym_5c((h,k,l)):
+    ret = False
+    if (l >= k >= 0) and (k >= h):
+        ret = True
+
+    if (h < 0) and (abs(h) > l) and (l == 0):
+        ret = True
+    return ret
+
+def asym_5d((h,k,l)):
+    ret = False
+    if (k >= h >= 0):
+        ret = True
+
+    if (l < 0) and (h == 0):
+        ret = False
+    return ret
+
+def asym_5e((h,k,l)):
+    ret = False
+    if (h >= 0) and (k >= 0) and (l >= 0):
+        ret = True
+    
+    if (h < k) and (l == 0):
+        ret = False
+    return ret
+
+def asym_6a((h,k,l)):
+    ret = False
+    if (h >= 0) and (k >= 0) and (l >= 0):
+        ret = True
+
+    if (k > 0) and (h == 0):
+        ret = False
+    return ret
+
+def asym_6b((h,k,l)):
+    ret = False
+    if (k >= h >= 0) and (l >= 0):
+        ret = True
+    return ret
+
+def asym_7a((h,k,l)):
+    ret = False
+    if (k >= h >= 0) and (l >= h >= 0):
+        ret = True
+
+    if (h < k) and (h == l):
+        ret = False
+    return ret
+
+def asym_7b((h,k,l)):
+    ret = False
+    if (l >= k >= h >= 0):
+        ret = True
+    return ret
+
 # http://scripts.iucr.org/cgi-bin/paper?se0073
 laue_symmetry = {
     # Triclinic
-    '-1': lambda (h, k, l): l >= 0,  # 1/2
+    '-1': asym_1,  # 1/2
     # Monoclinic
-    '2/m': lambda (h, k, l): h >= 0 and k >= 0,  # 1/4
-    '2/m:b': lambda (h, k, l): k >= 0 and l >= 0,  # 1/4
-    '2/m:c': lambda (h, k, l): k >= 0 and l >= 0,  # 1/4
+    '2/m:a': asym_2a,  # 1/4
+    '2/m:b': asym_2b,  # 1/4
+    '2/m:c': asym_2c,  # 1/4
     # Orthorhombic
-    'mmm': lambda (h, k, l): h >= 0 and k >= 0 and l >= 0,  # 1/8
+    'mmm': asym_3,  # 1/8
     # Tetragonal
-    '4/m': lambda (h, k, l): h >= 0 and k >= 0 and l >= 0,  # 1/8
-    '4/mmm': lambda (h, k, l): k >= h >= 0 and l >= 0,  # 1/16
+    '4/m': asym_4a,  # 1/8
+    '4/mmm': asym_4b,  # 1/16
     # Trigonal, Rhombohedral setting
-    '-3:R': lambda (h, k, l): k >= 0 and l >= 0 and k >= h and l >= h,  # 1/6
-    '-3m:R': lambda (h, k, l): l >= k >= 0 and k >= h,  # 1/12
+    '-3:R': asym_5a,  # 1/6
+    '-3m:R': asym_5b,  # 1/12
     # Trigonal, Hexagonal setting
-    '-3:H': lambda (h, k, l): h >= 0 and k >= 0,  # 1/6
-    '-31m:H': lambda (h, k, l): k >= h >= 0,  # 1/12
-    '-3m1:H': lambda (h, k, l): h >= 0 and k >= 0 and l >= 0,  # 1/12
+    '-3:H': asym_5c,  # 1/6
+    '-31m:H': asym_5d,  # 1/12
+    '-3m1:H': asym_5e,  # 1/12
     # Hexagonal
-    '6/m': lambda (h, k, l): h >= 0 and k >= 0 and l >= 0,  # 1/12
-    '6/mmm': lambda (h, k, l): k >= h >= 0 and l >= 0,  # 1/24
+    '6/m': asym_6a,  # 1/12
+    '6/mmm': asym_6b,  # 1/24
     # Cubic
-    'm-3': lambda (h, k, l): k >= h and l >= h and h >= 0,  # 1/24
-    'm-3m': lambda (h, k, l): l >= k >= h >= 0  # 1/48
+    'm-3': asym_7a,  # 1/24
+    'm-3m': asym_7b  # 1/48
+}
+
+laue_fraction = {
+    '-1': "1/2",
+    '2/m:a': "1/4",
+    '2/m:b': "1/4",
+    '2/m:c': "1/4",
+    'mmm': "1/8",
+    '4/m': "1/8",
+    '4/mmm': "1/16",
+    '-3:R': "1/6",
+    '-3m:R': "1/12",
+    '-3:H': "1/6",
+    '-31m:H': "1/12",
+    '-3m1:H': "1/12",
+    '6/m': "1/12",
+    '6/mmm': "1/24",
+    'm-3': "1/24",
+    'm-3m': "1/48"
 }
 
 
@@ -103,11 +274,6 @@ def find_number(s, spacegrouptxt=spacegrouptxt):
         s, str), "Internal Error: variable s is of wrong type {}".format(type(s))
     for i, line in enumerate(spacegrouptxt):
         m = re.search(" "+s+"[: ]+", line)
-        if m:
-            return line
-    s2 = s[0] + "1" + s[1:] + "1"
-    for i, line in enumerate(spacegrouptxt):
-        m = re.search(" "+s2+"[: ]+", line)
         if m:
             return line
     raise ValueError("Cannot find space group {}".format(s))
@@ -136,15 +302,16 @@ def get_symmetry(number, setting):
 
 def get_random_cell(spgr):
     import random
-    a = float(random.randrange(500, 5000)) / 100
-    b = float(random.randrange(500, 5000)) / 100
-    c = float(random.randrange(500, 5000)) / 100
+    a = float(random.randrange(500, 2000)) / 100
+    b = float(random.randrange(500, 2000)) / 100
+    c = float(random.randrange(500, 2000)) / 100
     al = float(random.randrange(60, 120))
     be = float(random.randrange(60, 120))
     ga = float(random.randrange(60, 120))
 
     system = spgr.crystal_system
     lauegr = spgr.laue_group
+    setting = spgr.setting
 
     if system == "Triclinic":
         return (a, b, c, al, be, ga)
@@ -155,12 +322,10 @@ def get_random_cell(spgr):
     elif system == "Tetragonal":
         return (a, c)
     elif system == "Trigonal":
-        if lauegr == "-3":
-            return (a, c)
-        elif lauegr == "-3m":
+        if setting == "R":
             return (a, al)
         else:
-            raise ValueError("Invalid laue group {}".format(lauegr))
+            return (a, c)
     elif system == "Hexagonal":
         return (a, c)
     elif system == "Cubic":
@@ -390,6 +555,8 @@ class SpaceGroup(object):
         self.number = kwargs["number"]
         self.setting = kwargs["setting"]
 
+        self.name = self.hermann_mauguin.split(" = ")[0]
+
         self.centering_vectors = [CVec(cv)
                                   for cv in kwargs["centering_vectors"]]
         self.symmetry_operations = [SymOp(op) for op in kwargs["symops"]]
@@ -406,7 +573,7 @@ class SpaceGroup(object):
         assert self.is_centrosymmetric == kwargs["centrosymmetric"]
 
     def __repr__(self):
-        return self.space_group
+        return self.name
 
     @property
     def space_group(self):
@@ -437,7 +604,12 @@ class SpaceGroup(object):
 
     def info(self):
         print "Space group ", self
-        print "             {},  {},  {}".format(self.hermann_mauguin, self.schoenflies, self.hall)
+        print
+        print "    Number      ", self.space_group
+        print "    Schoenflies ", self.schoenflies
+        print "    Hall        ", self.hall
+        print "    H-M symbol  ", self.hermann_mauguin
+        print
         print "Laue  group ", self.laue_group
         print "Point group ", self.point_group
 
@@ -485,6 +657,12 @@ class SpaceGroup(object):
     def unique_set(self, index):
         """Take list of reflections, use laue symmetry to merge to unique set"""
         raise NotImplementedError
+
+    def filter_systematic_absences(self, indices):
+        """Takes a reflection list and filters reflections that are absent"""
+        conditions = self.reflection_conditions
+        sel = self.is_absent_np(indices)
+        return indices[~sel]  # use binary not operator ~
 
 
 def is_absent(index, conditions):
@@ -583,10 +761,14 @@ def generate_hkl_listing(cell, dmin=1.0):
     Le Page and Gabe, J. Appl. Cryst. 1979, 12, 464-466
     """
 
+    # if not cell.is_centrosymmetric:
+    #     raise RuntimeError("Only centric structures can be used")
+
     lauegr = cell.laue_group
     system = cell.crystal_system
     uniq_axis = cell.unique_axis
     reflconds = cell.reflection_conditions
+    setting = cell.setting
 
     if system == "Triclinic":  # "-1"
         segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
@@ -611,31 +793,33 @@ def generate_hkl_listing(cell, dmin=1.0):
         elif lauegr == "4/m":
             segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
                                  [[ 1, 2, 0], [ 1, 1, 0], [ 0, 1, 0], [ 0, 0, 1]]])
+    elif system == "Trigonal":
+        if setting == "R":
+            if lauegr == "-3m":
+                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 0,-1], [ 1, 1, 1]],
+                                     [[ 1, 1, 0], [ 1, 0,-1], [ 0, 0,-1], [ 1, 1, 1]]])
+            elif lauegr == "-3":
+                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 0,-1], [ 1, 1, 1]],
+                                     [[ 1, 1, 0], [ 1, 0,-1], [ 0, 0,-1], [ 1, 1, 1]],
+                                     [[ 0,-1,-2], [ 1, 0, 0], [ 1, 0,-1], [-1,-1,-1]],
+                                     [[ 1, 0,-2], [ 1, 0,-1], [ 0, 0,-1], [-1,-1,-1]]])
+        else:
+            if lauegr == "-3m1":
+                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
+                                     [[ 0, 1, 1], [ 0, 1, 0], [ 1, 1, 0], [ 0, 0, 1]]])
+            elif lauegr == "-31m":
+                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
+                                     [[ 1, 1,-1], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0,-1]]])
+            elif lauegr == "-3":
+                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
+                                     [[ 1, 2, 0], [ 1, 1, 0], [ 0, 1, 0], [ 0, 0, 1]],
+                                     [[ 0, 1, 1], [ 0, 1, 0], [-1, 1, 0], [ 0, 0, 1]]])
     elif system == "Hexagonal":
         if lauegr == "6/mmm":
             segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]]])
         elif lauegr == "6/m":
             segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
                                  [[ 1, 2, 0], [ 0, 1, 0], [ 1, 1, 0], [ 0, 0, 1]]])
-        elif lauegr == "-3m1":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
-                                 [[ 0, 1, 1], [ 0, 1, 0], [ 1, 1, 0], [ 0, 0, 1]]])
-        elif lauegr == "-31m":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
-                                 [[ 1, 1,-1], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0,-1]]])
-        elif lauegr == "-3":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
-                                 [[ 1, 2, 0], [ 1, 1, 0], [ 0, 1, 0], [ 0, 0, 1]],
-                                 [[ 0, 1, 1], [ 0, 1, 0], [-1, 1, 0], [ 0, 0, 1]]])
-    elif system == "Rhombohedral":
-        if lauegr == "-3m":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 0,-1], [ 1, 1, 1]],
-                                 [[ 1, 1, 0], [ 1, 0,-1], [ 0, 0,-1], [ 1, 1, 1]]])
-        elif lauegr == "-3":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 0,-1], [ 1, 1, 1]],
-                                 [[ 1, 1, 0], [ 1, 0,-1], [ 0, 0,-1], [ 1, 1, 1]],
-                                 [[ 0,-1,-2], [ 1, 0, 0], [ 1, 0,-1], [-1,-1,-1]],
-                                 [[ 1, 0,-2], [ 1, 0,-1], [ 0, 0,-1], [-1,-1,-1]]])
     elif system == "Cubic":
         # TODO: Paper states lauegr m3m and 3m, typo? difference to m-3m/-3m??
         # if lauegr == "m3m":
@@ -699,25 +883,155 @@ def generate_hkl_listing(cell, dmin=1.0):
     return indices
 
 
+def generate_hkl_listing(cell, dmin=1.0, full_sphere=False):
+    """Generate hkllisting up to the specified dspacing.
+
+    Based on the routine described by:
+    Le Page and Gabe, J. Appl. Cryst. 1979, 12, 464-466
+    """
+
+    # if not cell.is_centrosymmetric:
+    #     raise RuntimeError("Only centric structures can be used")
+
+    lauegr = cell.laue_group
+    system = cell.crystal_system
+    uniq_axis = cell.unique_axis
+    reflconds = cell.reflection_conditions
+    setting = cell.setting
+
+    segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
+                         [[-1, 0, 1], [-1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
+                         [[-1, 1, 0], [-1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]],
+                         [[ 0, 1,-1], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]]])
+
+    if setting == "R":
+        lauegr += ":R"
+    elif setting == "H":
+        lauegr += ":H"
+
+    if lauegr == "2/m":
+        if uniq_axis == "y":
+            lauegr += ":b"
+        elif uniq_axis == "z":
+            lauegr += ":c"
+        elif uniq_axis == "x":
+            lauegr += ":a"
+
+    func = laue_symmetry[lauegr]
+    fraction = laue_fraction[lauegr]
+
+    if full_sphere:
+        func = lambda (h,k,l): True
+
+    total = 0
+    indices = []
+
+    for row in segments:
+        loop_h = True
+        loop_k = True
+        loop_l = True
+        apex = row[0, :]
+
+        index_stored = apex
+
+        if sum(np.abs(apex)) == 0:
+            dsp = np.inf  # prevent RuntimeWarning divide by zero
+        else:
+            dsp = cell.calc_dspacing(apex)
+
+        while loop_l:
+            while loop_k:
+                while loop_h:
+                    if dsp >= dmin:
+                        if func(apex):
+                            indices.append(list(apex))
+                        else:
+                            total += 1
+                        if func(-apex):
+                            indices.append(list(-apex))
+                        else:
+                            total += 1
+                    index_new = apex + row[1, :]
+
+                    dsp = cell.calc_dspacing(index_new)
+
+                    if dsp >= dmin:
+                        apex = index_new
+                    else:
+                        loop_h = False
+
+                apex[0] = index_stored[0]
+                apex += row[2, :]
+                index_new = apex
+                dsp = cell.calc_dspacing(index_new)
+                if dsp < dmin:
+                    loop_k = False
+                loop_h = True
+
+            apex[1] = index_stored[1]
+            apex += row[3, :]
+            index_new = apex
+            dsp = cell.calc_dspacing(index_new)
+            if dsp < dmin:
+                loop_l = False
+            loop_k = True
+
+    indices = np.array(indices[2:]) # ignore double [0, 0, 0]
+    print indices
+    # print "Generated {} indices, {} in asymmetric unit for laue group {} ({:.1f}%)".format(total, len(indices), lauegr, 100*len(indices)/float(total))
+    print "Kept {} / {} indices for lauegr {} ({:.1f}%). Fraction {}".format(len(indices), 
+                                                                             len(indices)+total,
+                                                                             lauegr, 
+                                                                             100.0*float(len(indices))/(len(indices)+total), 
+                                                                             fraction)
+
+    assert indices.dtype.kind == 'i', "Wrong datatype {}, need 'i'".format(indices.dtype.kind)
+    return indices
+
 if __name__ == '__main__':
     # main()
 
     # test_sysabs_against_cctbx()
-    test_print_all()
+    # test_print_all()
 
-    exit()
+    # exit()
 
-    spgr = sys.argv[1]
-    spgr = get_spacegroup_info(spgr)
+    # arg = "P2/c:a1"
+    arg = "random"
+
+    spgr = get_spacegroup_info(arg)
 
     from unitcell import UnitCell
-    uc = UnitCell(10, 10, 10, 90, 90, 90)
+    cell = get_random_cell(spgr)
+    cell = (10,10,10,90,90,90)
+    cell = UnitCell(cell, spgr.space_group)
 
-    x = generate_hkl_listing(uc, dmin=1.0, spgr=spgr)
-    # print x
-    print x.shape
+    print
+    print cell
+    print
 
-    print x.dtype
+    import time
+
+    t0 = time.time()
+    # x = generate_hkl_listing(cell, dmin=1.0)
+    # x = cell.filter_systematic_absences(x)
+    t1 = time.time()
+
+    z = generate_hkl_listing3(cell, dmin=1.0)
+    full = generate_hkl_listing3(cell, dmin=1.0, full_sphere=True)
+    # z = cell.filter_systematic_absences(z)
+    t3 = time.time()
+
+    # print t1-t0, x.shape
+    # print t1-t0, x.shape
+    print t3-t1, z.shape
+    print "Got: {}, Full: {} ({:.1f}%)".format(len(z), len(full), 100*float(len(z))/len(full))
+
+    print max(z[:,0])
+    print max(z[:,1])
+    print max(z[:,2])
+
+    np.savetxt("arr.out", z, fmt="%4d")
 
     # x = filter_systematic_absences(x, spgr.reflection_conditions)
     # this works?!
@@ -729,8 +1043,6 @@ if __name__ == '__main__':
     # plt.show()
     # plt.scatter(x[:,2], x[:,0], label="ZX")
     # plt.show()
-
-    np.savetxt('arr.out', x)
 
     # for x in (seq 1 230)
     #       echo "$x",
