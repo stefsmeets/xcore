@@ -5,6 +5,8 @@ import sys
 import re
 
 import numpy as np
+import pandas as pd
+
 
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -12,13 +14,6 @@ f = open(os.path.join(os.path.dirname(__file__), 'spacegroups.txt'), 'r')
 spacegrouptxt = f.readlines()
 f.close()
 
-__all__ = ["SpaceGroup", 
-           "filter_systematic_absences", 
-           "get_spacegroup_info", 
-           "get_random_cell",
-           "generate_hkl_listing", 
-           "is_absent", 
-           "is_absent_np"]
 
 from IPython.terminal.embed import InteractiveShellEmbed
 InteractiveShellEmbed.confirm_exit = False
@@ -654,15 +649,27 @@ class SpaceGroup(object):
         l = index[:, 2]
         return np.any([c.is_absent((h, k, l)) for c in self.reflection_conditions], axis=0)
 
+    def is_absent_pd(self, index):
+        """Efficient function to run on pandas index objects
+
+        Return boolean array"""
+        return index.map(self.is_absent)
+
     def unique_set(self, index):
         """Take list of reflections, use laue symmetry to merge to unique set"""
         raise NotImplementedError
 
-    def filter_systematic_absences(self, indices):
+    def filter_systematic_absences(self, df):
         """Takes a reflection list and filters reflections that are absent"""
         conditions = self.reflection_conditions
-        sel = self.is_absent_np(indices)
-        return indices[~sel]  # use binary not operator ~
+        sel = self.is_absent_pd(df.index)
+        return df[~sel]  # use binary not operator ~
+
+    def merge(self, df):
+        return merge(df, self)
+
+    def completeness(self, df):
+        return completeness(df, self)
 
 
 def is_absent(index, conditions):
@@ -993,8 +1000,11 @@ def get_laue_symops(key):
     from laue_symops import symops
     return (SymOp(op) for op in symops[key])
 
-def get_merge_dict(indices, cell):
-    dmin = cell.get_dmin(indices)
+def get_merge_dct(df, cell):
+    if 'd' not in df:
+        df['d'] = df.index.map(cell.calc_dspacing)
+
+    dmin = df['d'].min()
     unique_set = generate_hkl_listing(cell, dmin=dmin)
 
     lauegr = cell.laue_group
@@ -1010,18 +1020,15 @@ def get_merge_dict(indices, cell):
             lauegr += ":a"
     symops = get_laue_symops(lauegr)
     
-    d = {}
+    merge_dct = {}
     for op in symops:
-        # print 
-        # print op
-        # print op.r
         for idx in unique_set:
             new = tuple(np.dot(idx, op.r))
-            if new not in d:
-                d[new] = tuple(idx)
-    return d
+            if new not in merge_dct:
+                merge_dct[new] = tuple(idx)
+    return merge_dct
 
-def expand(indices, cell):
+def expand(df, cell):
     lauegr = cell.laue_group
     setting = cell.setting
     uniq_axis = cell.unique_axis
@@ -1037,34 +1044,33 @@ def expand(indices, cell):
 
     ret = []
     for op in symops:
-        for idx in indices:
+        for idx in df.index:
             new = tuple(np.dot(idx, op.r))
             if new not in ret:
                 ret.append(idx)
     return ret
 
-def merge(indices, cell):
-    from itertools import groupby
-    import pandas as pd
+def merge(df, cell):
+    merge_dct = get_merge_dct(df, cell)
 
-    merge_dct = get_merge_dict(indices, cell)
+    new = df.groupby(merge_dct).mean()
 
-    df = pd.DataFrame(index=[tuple(idx) for idx in indices])
-
-    new = df.groupby(merge_dct).first()
-
-    print "Merged {} to {} reflections".format(len(indices), len(new))
-
+    print "Merged {} to {} reflections".format(len(df), len(new))
+    print df.shape, new.shape
     return new
 
-def completeness(indices, cell):
-    merged = merge(indices, cell)
+def completeness(df, cell):
+    merged = merge(df, cell)
 
-    dmin = cell.get_dmin(indices)
+    if 'd' not in df:
+        df['d'] = df.index.map(cell.calc_dspacing)
 
-    complete_set = generate_hkl_listing(cell, dmin=dmin, full_sphere=True)
+    dmin = df['d'].min()
+
+    unique_set = generate_hkl_listing(cell, dmin=dmin)
+    unique_set = cell.filter_systematic_absences(df)
     
-    return 100*len(indices) / float(len(complete_set))
+    return len(df) / float(len(unique_set))
 
 
 if __name__ == '__main__':

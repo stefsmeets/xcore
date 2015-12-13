@@ -14,12 +14,10 @@ except ImportError:
 else:
     TINYARRAY = True
 
-__all__ = ["UnitCell", "get_unitcell"] 
 
-# from IPython.terminal.embed import InteractiveShellEmbed
-# InteractiveShellEmbed.confirm_exit = False
-# ipshell = InteractiveShellEmbed(banner1='')
-
+from IPython.terminal.embed import InteractiveShellEmbed
+InteractiveShellEmbed.confirm_exit = False
+ipshell = InteractiveShellEmbed(banner1='')
 
 
 def get_unitcell(parameters, spgr):
@@ -311,4 +309,5 @@ class UnitCell(SpaceGroup):
         return parameters
 
     def get_dmin(self, indices):
+        ipshell();exit()
         return np.min(self.calc_dspacing_np(indices))

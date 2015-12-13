@@ -4,10 +4,89 @@ from spgr import *
 from unitcell import *
 
 import numpy as np
+import pandas as pd
 
 import argparse
 
 __version__ = "2015-12-10"
+
+
+def load_hkl(fn):
+    df = pd.read_table(fn, sep="\s+", index_col=(0,1,2), header=None)
+    df.index = pd.Index(df.index)
+    return df
+
+def write_hkl(df, cols=None, out=None, no_hkl=False, pre=None, post=None, data_fmt=None, hkl_fmt=None):
+    """Function for writing indices + selected columns to specified file/file object or terminal."""
+
+    if isinstance(pre, list):
+        if all('\n' in line for line in pre):
+            pre = ''.join(pre)
+        else:
+            pre = '\n'.join(pre)
+    elif isinstance(pre, str):
+        pre = '\n'.join(pre.strip('\n'))
+
+    if isinstance(post, list):
+        post = ''.join(post)
+
+    if not cols:
+        cols = df.columns
+
+    if isinstance(cols, str):
+        cols = (cols,)
+
+    if isinstance(out, str):
+        out = open(out, 'w')
+
+    cols = list(cols)
+
+    if not hkl_fmt:
+        if no_hkl:
+            hkl_fmt = ''
+        else:
+            hkl_fmt = '{:4d}{:4d}{:4d}'
+
+    if not data_fmt:
+        ifmt = '{:4d}'
+        dfmt = ' {:5d}'
+        ffmt = ' {:9.3f}'
+        bfmt = ' {:4}'
+
+        n = len(cols)
+        data_fmt = ''
+
+        for item in cols[:]:
+            if item == '*':
+                cols.remove('*')
+                data_fmt += '  *  '
+                continue
+
+            #tp = repr(type(df[item][0]))
+            tp = repr(df[item].dtype)
+            if 'int' in tp:
+                data_fmt += dfmt
+            elif 'float' in tp:
+                data_fmt += ffmt
+            elif 'bool' in tp:
+                data_fmt += bfmt
+            else:
+                raise TypeError, "No format associated with type {}".format(tp)
+    elif data_fmt == 'shelx':
+        data_fmt = '{:8.3f}{:8.3f}'
+
+    if pre:
+        print >> out, pre
+
+    print '>> Writing {} refs to file {}'.format(len(df), out.name if out else 'stdout')
+
+    last = 0
+    for row in df.reindex(columns=cols).itertuples():
+
+        print >> out, hkl_fmt.format(*row[0])+data_fmt.format(*row[1:])
+
+    if post:
+        print >> out, post
 
 
 def main():
@@ -99,13 +178,26 @@ def main():
                 np.savetxt(out, indices, fmt="%4d")
 
     if options.spgr:
+        spgr = options.spgr
+        cell = options.cell
+        cell = get_unitcell(cell, spgr)
         for arg in args:
+            print arg, spgr
+            df = load_hkl(arg)
+            columns = df.columns.tolist()
+            print df, columns
             if options.merge:
-                pass
+                df = cell.merge(df)
             if options.completeness:
-                pass
+                compl = cell.completeness(df)
+                print "Completeness: {:.1f}%".format(compl*100)
             if options.filter:
-                pass
+                df = cell.filter_systematic_absences(df)
+
+            root, ext = os.path.splitext(arg)
+            out = root+"_out"+ext
+            write_hkl(df, out=out, cols=columns)
+
 
 if __name__ == '__main__':
     main()
