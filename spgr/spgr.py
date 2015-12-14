@@ -890,7 +890,7 @@ def generate_hkl_listing_old(cell, dmin=1.0):
     return indices
 
 
-def generate_hkl_listing(cell, dmin=1.0, full_sphere=False):
+def generate_hkl_listing(cell, dmin=1.0, full_sphere=False, as_type='pd.Index'):
     """Generate hkllisting up to the specified dspacing.
 
     Based on the routine described by:
@@ -994,7 +994,12 @@ def generate_hkl_listing(cell, dmin=1.0, full_sphere=False):
                                                                              fraction)
 
     assert indices.dtype.kind == 'i', "Wrong datatype {}, need 'i'".format(indices.dtype.kind)
-    return indices
+    if as_type == "pd.Index":
+        return pd.Index([tuple(idx) for idx in indices])
+    if as_type == "pd.DataFrame":
+        return pd.DataFrame(index=[tuple(idx) for idx in indices])
+    else:
+        return indices
 
 def get_laue_symops(key):
     from laue_symops import symops
@@ -1056,7 +1061,6 @@ def merge(df, cell):
     new = df.groupby(merge_dct).mean()
 
     print "Merged {} to {} reflections".format(len(df), len(new))
-    print df.shape, new.shape
     return new
 
 def completeness(df, cell):
@@ -1092,8 +1096,8 @@ if __name__ == '__main__':
 
     cell.info()
 
-    z = generate_hkl_listing(cell, dmin=1.0)
-    full = generate_hkl_listing(cell, dmin=1.0, full_sphere=True)
+    z = generate_hkl_listing(cell, dmin=1.0, as_type="pd.DataFrame")
+    full = generate_hkl_listing(cell, dmin=1.0, full_sphere=True, as_type="pd.DataFrame")
     new = merge(full, cell)
 
     print "\nCompleteness {}".format(completeness(z, cell))
