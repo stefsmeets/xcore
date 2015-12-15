@@ -662,7 +662,11 @@ class SpaceGroup(object):
     def filter_systematic_absences(self, df):
         """Takes a reflection list and filters reflections that are absent"""
         conditions = self.reflection_conditions
-        sel = self.is_absent_pd(df.index)
+        try:
+            index = df.index
+        except AttributeError:
+            index = df
+        sel = self.is_absent_pd(index)
         return df[~sel]  # use binary not operator ~
 
     def merge(self, df):
@@ -1063,18 +1067,19 @@ def merge(df, cell):
     print "Merged {} to {} reflections".format(len(df), len(new))
     return new
 
-def completeness(df, cell):
-    merged = merge(df, cell)
-
-    if 'd' not in df:
-        df['d'] = df.index.map(cell.calc_dspacing)
-
-    dmin = df['d'].min()
+def completeness(df, cell, dmin=None):
+    if not dmin:
+        if 'd' not in df:
+            df['d'] = df.index.map(cell.calc_dspacing)
+        dmin = df['d'].min()
 
     unique_set = generate_hkl_listing(cell, dmin=dmin)
-    unique_set = cell.filter_systematic_absences(df)
-    
-    return len(df) / float(len(unique_set))
+    unique_set = cell.filter_systematic_absences(unique_set)
+
+    len_a = (df['d'] > dmin).sum()
+    len_b = len(unique_set)
+
+    return len_a / float(len_b)
 
 
 if __name__ == '__main__':

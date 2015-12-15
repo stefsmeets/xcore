@@ -12,9 +12,10 @@ __version__ = "2015-12-10"
 
 
 def load_hkl(fn):
-    df = pd.read_table(fn, sep="\s+", index_col=(0,1,2), header=None)
+    df = pd.read_table(fn, sep="\s+", index_col=(0, 1, 2), header=None)
     df.index = pd.Index(df.index)
     return df
+
 
 def write_hkl(df, cols=None, out=None, no_hkl=False, pre=None, post=None, data_fmt=None, hkl_fmt=None):
     """Function for writing indices + selected columns to specified file/file object or terminal."""
@@ -182,10 +183,10 @@ def main():
         cell = options.cell
         cell = get_unitcell(cell, spgr)
         for arg in args:
-            print arg, spgr
+            # print arg, spgr
             df = load_hkl(arg)
             columns = df.columns.tolist()
-            print df, columns
+            # print df, columns
             if options.merge:
                 df = cell.merge(df)
             if options.completeness:
