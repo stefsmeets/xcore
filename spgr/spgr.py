@@ -449,7 +449,7 @@ class SymOp(object):
         assert string == s, "got {}, need {}".format(string, s)
 
     def __repr__(self):
-        return "({})".format(self._s)
+        return "{}".format(self._s)
 
     def __get__(self):
         return self.r, self.t
@@ -991,11 +991,11 @@ def generate_hkl_listing(cell, dmin=1.0, full_sphere=False, as_type='pd.Index'):
     indices = np.array(indices[2:]) # ignore double [0, 0, 0]
     # print indices
     # print "Generated {} indices, {} in asymmetric unit for laue group {} ({:.1f}%)".format(total, len(indices), lauegr, 100*len(indices)/float(total))
-    print "Kept {} / {} indices for lauegr {} ({:.1f}%). Fraction {}".format(len(indices), 
-                                                                             len(indices)+total,
-                                                                             lauegr, 
-                                                                             100.0*float(len(indices))/(len(indices)+total), 
-                                                                             fraction)
+    # print "Kept {} / {} indices for lauegr {} ({:.1f}%). Fraction {}".format(len(indices), 
+                                                                             # len(indices)+total,
+                                                                             # lauegr, 
+                                                                             # 100.0*float(len(indices))/(len(indices)+total), 
+                                                                             # fraction)
 
     assert indices.dtype.kind == 'i', "Wrong datatype {}, need 'i'".format(indices.dtype.kind)
     if as_type == "pd.Index":

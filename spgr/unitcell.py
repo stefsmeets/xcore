@@ -207,11 +207,11 @@ class UnitCell(SpaceGroup):
         else:
             raise ValueError("Unknown crystal system {}, fallback to Triclinic".format(kind))
 
-        # if idsq == 0:
+        if idsq == 0:
             # prevent RuntimeWarning: divide by zero
-            # return np.inf
-        # else:
-        return idsq**-0.5
+            return np.inf
+        else:
+            return idsq**-0.5
 
     def calc_dspacing_np(self, idx):
         h = idx[:,0]
