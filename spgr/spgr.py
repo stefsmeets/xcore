@@ -550,7 +550,7 @@ class SpaceGroup(object):
         self.number = kwargs["number"]
         self.setting = kwargs["setting"]
 
-        self.name = self.hermann_mauguin.split(" = ")[0]
+        self.spgr_name = self.hermann_mauguin.split(" = ")[0]
 
         self.centering_vectors = [CVec(cv)
                                   for cv in kwargs["centering_vectors"]]
@@ -568,7 +568,7 @@ class SpaceGroup(object):
         assert self.is_centrosymmetric == kwargs["centrosymmetric"]
 
     def __repr__(self):
-        return self.name
+        return self.spgr_name
 
     @property
     def space_group(self):
@@ -894,7 +894,7 @@ def generate_hkl_listing_old(cell, dmin=1.0):
     return indices
 
 
-def generate_hkl_listing(cell, dmin=1.0, full_sphere=False, as_type='pd.Index'):
+def generate_hkl_listing(cell, dmin=1.0, full_sphere=False, as_type=None):
     """Generate hkllisting up to the specified dspacing.
 
     Based on the routine described by:

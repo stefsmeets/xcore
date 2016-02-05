@@ -172,11 +172,15 @@ def main():
                     options.dmin = 1/float(options.maxhkl)
 
                 indices = generate_hkl_listing(cell, dmin=options.dmin)
+                d = cell.calc_dspacing_np(indices)
+                i = d.argsort()[::-1]
+                d = d[i].reshape(-1, 1)
+                indices = indices[i]
                 if len(args) > 1:
                     out = 'out_{}.hkl'.format(cell.spgr)
                 else:
                     out = 'out.hkl'
-                np.savetxt(out, indices, fmt="%4d")
+                np.savetxt(out, np.hstack([indices, d]), fmt="%4d %4d %4d %10.4f")
 
     if options.spgr:
         spgr = options.spgr

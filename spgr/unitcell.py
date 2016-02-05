@@ -26,14 +26,23 @@ def get_unitcell(parameters, spgr):
     return cell
 
 
+def dict2uc(d):
+    cell_params = [d[key] for key in "a", "b", "c", "al", "be", "ga"]
+    spgr = d["spgr"]
+    name = d.get("name", "")
+    return UnitCell(cell_params=cell_params, spgr=spgr, name=name)
+
+
 class UnitCell(SpaceGroup):
 
     """Class for unit cell/space group functions"""
 
-    def __init__(self, cell_params, spgr):
+    def __init__(self, cell_params, spgr, name=""):
         if isinstance(spgr, str):
             spgr = get_spacegroup_info(spgr, as_dict=True)
         super(UnitCell, self).__init__(spgr)
+
+        self.name = name
         
         if len(cell_params) != 6:
             cell_params = self.parse_cellparams(cell_params)
@@ -44,7 +53,10 @@ class UnitCell(SpaceGroup):
             print "\n >> Warning: Unit cell parameters do not fit with space group {}".format(self.space_group)
 
     def __repr__(self):
-        return str(self.parameters) + " - {}".format(self.name)
+        if self.name:
+            return "{}: {} - {}".format(self.name, str(self.parameters), self.spgr_name)
+        else:
+            return "{} - {}".format(str(self.parameters), self.spgr_name)
 
     def __iter__(self):
         for par in self.parameters:
@@ -74,12 +86,23 @@ class UnitCell(SpaceGroup):
     def ga(self):
         return self.parameters[5]
 
+    def as_dict(self):
+        return {"name": self.name, 
+                "spgr": self.spgr_name, 
+                "a": self.a, 
+                "b": self.b, 
+                "c": self.c, 
+                "al": self.al, 
+                "be": self.be, 
+                "ga": self.ga }
+
     def info(self):
-        print "Cell                    {}".format(self.name)
+        print "Cell {}".format(self.name)
         print "   a {:12.4f}       al {:12.2f}".format(self.a, self.al)
         print "   b {:12.4f}       be {:12.2f}".format(self.b, self.be)
         print "   c {:12.4f}       ga {:12.2f}".format(self.c, self.ga)
         print "Vol. {:10.2f}".format(self.volume)
+        print "Spgr {}".format(self.spgr_name)
         print
 
 
@@ -207,11 +230,11 @@ class UnitCell(SpaceGroup):
         else:
             raise ValueError("Unknown crystal system {}, fallback to Triclinic".format(kind))
 
-        if idsq == 0:
+        # if idsq == 0:
             # prevent RuntimeWarning: divide by zero
-            return np.inf
-        else:
-            return idsq**-0.5
+            # return np.inf
+        # else:
+        return idsq**-0.5
 
     def calc_dspacing_np(self, idx):
         h = idx[:,0]
