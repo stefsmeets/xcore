@@ -496,6 +496,10 @@ class SymOp(object):
         t = self.t
         return SymOp(symm2str(r,t))
 
+    def with_cvec(self, cvec):
+        r = self.r
+        t = self.t + np.array(cvec).reshape(3,1)
+        return SymOp(symm2str(r,t))
 
 
 class ReflCond(object):
@@ -538,6 +542,9 @@ class SpaceGroup(object):
     def __init__(self, kwargs):
         super(SpaceGroup, self).__init__()
 
+        if isinstance(kwargs, str):
+            kwargs = get_spacegroup_info(kwargs, as_dict=True)
+
         self.hall = kwargs["hall"]
         self.hermann_mauguin = kwargs["hm"]
         self.schoenflies = kwargs["schoenflies"]
@@ -554,7 +561,7 @@ class SpaceGroup(object):
 
         self.centering_vectors = [CVec(cv)
                                   for cv in kwargs["centering_vectors"]]
-        self.symmetry_operations = [SymOp(op) for op in kwargs["symops"]]
+        self._symmetry_operations = [SymOp(op) for op in kwargs["symops"]]
 
         self.reflection_conditions = [
             ReflCond(rc) for rc in kwargs["reflection_conditions"]]
@@ -585,17 +592,33 @@ class SpaceGroup(object):
             return self.hall[0]
 
     @property
+    def symmetry_operations(self):
+        """Returns a generator"""
+        for cvec in self.centering_vectors:
+            for symop in self._symmetry_operations:
+                s = symop.with_cvec(cvec)
+                yield s
+            if self.is_centrosymmetric:
+                for symop in self._symmetry_operations:
+                    s = symop.with_cvec(cvec)
+                    yield s.inverse()
+
+    @property
     def is_centrosymmetric(self):
         return self.hall[0] == "-"
 
     @property
     def order_p(self):
         n = 2 if self.is_centrosymmetric else 1
-        return len(self.symmetry_operations) * n
+        return len(self._symmetry_operations) * n
 
     @property
     def order(self):
         return self.order_p * len(self.centering_vectors)
+
+    @property
+    def n_symop(self):
+        return self.order
 
     def info(self):
         print "Space group ", self
@@ -618,17 +641,18 @@ class SpaceGroup(object):
         print "Order    ", self.order
         print "Order P  ", self.order_p
 
-        print "\nCentering vectors ({})".format(self.centering)
+        # print "\nSymmetry operations"
+        print
         for cvec in self.centering_vectors:
-            print cvec
-
-        print "\nSymmetry operations"
-        for symop in self.symmetry_operations:
-            print symop
-        if self.is_centrosymmetric:
-            print "Inversion symmetry"
-            for symop in self.symmetry_operations:
-                print symop.inverse()
+            print "#", cvec
+            for symop in self._symmetry_operations:
+                s = symop.with_cvec(cvec)
+                print s
+            if self.is_centrosymmetric:
+                print "# Inversion symmetry"
+                for symop in self._symmetry_operations:
+                    s = symop.with_cvec(cvec)
+                    print s.inverse()
 
         print "\nReflection conditions"
         for rc in self.reflection_conditions:
@@ -1029,7 +1053,7 @@ def get_merge_dct(df, cell):
             lauegr += ":a"
     symops = get_laue_symops(lauegr)
     
-    merge_dct = {}
+    merge_dct = {(0, 0, 0): (0, 0, 0)}
     for op in symops:
         for idx in unique_set:
             new = tuple(np.dot(idx, op.r))
@@ -1073,7 +1097,7 @@ def completeness(df, cell, dmin=None):
             df['d'] = df.index.map(cell.calc_dspacing)
         dmin = df['d'].min()
 
-    unique_set = generate_hkl_listing(cell, dmin=dmin)
+    unique_set = generate_hkl_listing(cell, dmin=dmin, as_type='pd.Index')
     unique_set = cell.filter_systematic_absences(unique_set)
 
     len_a = (df['d'] > dmin).sum()
@@ -1093,7 +1117,7 @@ if __name__ == '__main__':
     # arg = "P2/c:a1"
     arg = "random"
 
-    spgr = get_spacegroup_info(arg)
+    spgr =  get_spacegroup(arg)
 
     from unitcell import UnitCell
     cell = get_random_cell(spgr)

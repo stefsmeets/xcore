@@ -127,7 +127,7 @@ def main():
 
     parser.add_argument("-m", "--merge",
                         action="store_true", dest="merge",
-                        help="Merge symmetry equivalent reflectiosn in data files")
+                        help="Merge symmetry equivalent reflections in data files")
 
     parser.add_argument("-p", "--completeness",
                         action="store_true", dest="completeness",
