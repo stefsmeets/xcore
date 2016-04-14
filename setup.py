@@ -5,11 +5,11 @@ from os import path
 
 setup(
     name="spgr",
-    version="0.1.0",
-    description="Simple python space group library",
+    version="0.2.0",
+    description="Simple python crystallography library",
 
     author="Stef Smeets",
-    author_email="stef.smeets@mat.ethz.ch",
+    author_email="stef.smeets@mmk.su.se",
     license="GPL",
     url="https://github.com/stefsmeets/spgr",
 
@@ -17,18 +17,19 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
 
-    packages=["spgr"],
+    packages=["spgr", "spgr.scattering", "spgr.spacegroup"],
 
-    install_requires=["numpy"],
+    install_requires=["numpy", "pandas"],
 
     package_data={
         "": ["LICENCE", "readme.md"],
-        "spgr": ["*.py"]
+        "spgr": ["*.py", "spacegroups.txt"]
     },
 
     entry_points={
         'console_scripts': [
-            'spgr = spgr.app:main',
+            'spgr    = spgr.app:main',
+            'cif2hkl = spgr.diffraction.cif2hkl_entry'
         ]
     }
 
