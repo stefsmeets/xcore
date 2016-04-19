@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-import re
 import pandas as pd
 import unitcell
 from multiplicity import calc_multiplicity
 
-_split_cif_line = re.compile(r'\s+(?=[^"\']*?(?:\(|$))')
+import shlex
 
 def parse_float(x):
     """Split numerical part from error"""
@@ -14,7 +13,7 @@ def parse_float(x):
     else:
         return x
 
-def read_cif(f):
+def read_cif(f, verbose=True):
     if isinstance(f, str):
         f = open(f, "r")
     d = {}
@@ -22,7 +21,7 @@ def read_cif(f):
     inrows = False
     inblock = False
     for line in f:
-        inp = re.split(_split_cif_line, line.strip())
+        inp = shlex.split(line)
         if not inp:
             continue
         if inp[0] == "loop_":
@@ -39,7 +38,7 @@ def read_cif(f):
                         inrows = False
                         inblock = False
                         break
-                    inp = re.split(_split_cif_line, line.strip())
+                    inp = shlex.split(line)
                     if not inp:
                         continue
                     if inp[0].startswith("_"):
@@ -50,7 +49,7 @@ def read_cif(f):
                         incols = False
                 while inrows == True:
                     if not inp:
-                        continue
+                        break
                     if inp[0].startswith("_"):
                         inrows = False
                         inblock = False
@@ -58,7 +57,7 @@ def read_cif(f):
                     elif inp[0] == "loop_":
                         incols == True
                         break
-                    assert len(inp) == len(cols), str(keys) + str(inp)
+                    assert len(inp) == len(cols), str(cols) + " : " + str(inp)
                     rows.append(inp)
                     
                     try:
@@ -68,16 +67,20 @@ def read_cif(f):
                         inrows = False
                         inblock = False
                         break
-                    inp = re.split(_split_cif_line, line.strip())
+                    inp = shlex.split(line)
                 for i, key in enumerate(cols):
                     vals = [row[i] for row in rows]
                     d[key] = vals
-            
-        if len(inp) == 2:
+        
+        if not inp:
+            continue
+        elif len(inp) == 2:
             key, value = inp
             d[key] = value
         elif inp[0].startswith("data_"):
             d["data_"] = inp[0][5:]
+        else:
+            raise IOError("Could not read line: {}".format(inp))
     
     cif2simple = {
     '_atom_site_label': "label",
@@ -87,6 +90,8 @@ def read_cif(f):
     '_atom_site_fract_y': "y",
     '_atom_site_fract_z': "z",
     '_atom_site_occupancy': "occ",
+    "_atom_site_adp_type": "adp_type",
+    '_atom_site_U_iso_or_equiv': "uiso",
     '_atom_site_B_iso_or_equiv': "biso" }
     
     a = parse_float( d.pop("_cell_length_a") )
@@ -95,7 +100,7 @@ def read_cif(f):
     al = parse_float( d.pop("_cell_angle_alpha") )
     be = parse_float( d.pop("_cell_angle_beta") )
     ga = parse_float( d.pop("_cell_angle_gamma") )
-    sg = d.pop("_symmetry_space_group_name_H-M")
+    sg = d.pop("_symmetry_space_group_name_H-M").replace(" ", "")
     name = d.pop("data_")
     
     cell = unitcell.UnitCell((a,b,c,al,be,ga), sg, name=name)
@@ -118,19 +123,26 @@ def read_cif(f):
     
     atoms = pd.DataFrame([list(row) for row in zip(*vals)], columns=[cif2simple[key] for key in cols])
     
-    for col in ["x", "y", "z", "occ", "biso"]:
-        atoms[col] = atoms[col].apply(parse_float)
+    for col in ["x", "y", "z", "occ", "biso", "uiso"]:
+        if col in atoms:
+            atoms[col] = atoms[col].apply(parse_float)
+    
+    if "uiso" in atoms:
+        atoms["biso"] = 8*np.pi**2*atoms["uiso"]
     
     if not "m" in atoms:
-        atoms["m"] = calc_multiplicity(atoms, cell)
+        atoms["m"] = atoms.apply(calc_multiplicity, args=(cell,), axis=1)
     else:
         atoms["m"] = atoms["m"].astype(int)
-        assert all(atoms["m"] == calc_multiplicity(atoms, cell)), "multiplicities from cif and calculated are different"
+        assert all(atoms["m"] == atoms.apply(calc_multiplicity, args=(cell,), axis=1)), "multiplicities from cif and calculated are different"
     
     atoms = atoms[["label", "symbol", "m", "x", "y", "z", "occ", "biso"]]
   
     cell.info()
-    print atoms
+    if verbose:
+        print atoms
+    else:
+        print "{} atoms loaded".format(len(atoms))
     
     return cell, atoms
 
