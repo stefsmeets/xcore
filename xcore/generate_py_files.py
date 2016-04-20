@@ -4,7 +4,7 @@ import os
 import subprocess as sp
 import time
 import re
-from spgr import lines
+from spacegroup import lines
 
 get_centering = re.compile("\((.*)\)")
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from spgr import *
+from spacegroup import *
 from unitcell import *
 
 import numpy as np

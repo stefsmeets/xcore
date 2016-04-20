@@ -289,7 +289,7 @@ def get_symmetry(number, setting):
         number, setting = get_standard_setting(number)
 
     import importlib
-    drc = 'spacegroup'
+    drc = 'spacegroup_tables'
     fn = '{}.{}'.format(drc, number)
     spgr = importlib.import_module(fn, package='.')
     return spgr.d[setting]
@@ -1088,7 +1088,7 @@ def merge(df, cell):
 
     new = df.groupby(merge_dct).mean()
 
-    print "Merged {} to {} reflections".format(len(df), len(new))
+    print " >> Merged {} to {} reflections".format(len(df), len(new))
     return new
 
 def completeness(df, cell, dmin=None):
@@ -1107,40 +1107,4 @@ def completeness(df, cell, dmin=None):
 
 
 if __name__ == '__main__':
-    # main()
-
-    # test_sysabs_against_cctbx()
-    # test_print_all()
-
-    # exit()
-
-    # arg = "P2/c:a1"
-    arg = "random"
-
-    spgr =  get_spacegroup(arg)
-
-    from unitcell import UnitCell
-    cell = get_random_cell(spgr)
-    cell = UnitCell(cell, spgr.space_group)
-
-    cell.info()
-
-    z = generate_hkl_listing(cell, dmin=1.0, as_type="pd.DataFrame")
-    full = generate_hkl_listing(cell, dmin=1.0, full_sphere=True, as_type="pd.DataFrame")
-    new = merge(full, cell)
-
-    print "\nCompleteness {}".format(completeness(z, cell))
-    print
-    print "\nCompleteness {}".format(completeness(full, cell))
-
-    # for x in (seq 1 230)
-    #       echo "$x",
-    #       sginfo $x | grep -E "Triclinic|Monoclinic|Orthorhombic|Tetragonal|Trigonal|Hexagonal|Cubic"
-    #   end
-    #
-    # for x in (seq 1 230)
-    #       echo "$x",
-    #       sginfo $x | grep -E "Space Group"
-    #       sginfo $x | grep -E "Point Group"
-    #       sginfo $x | grep -E "Laue  Group"
-    #   end
+    pass

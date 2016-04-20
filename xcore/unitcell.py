@@ -3,8 +3,6 @@
 import numpy as np
 from math import radians, cos, sin
 
-from spgr import SpaceGroup, get_spacegroup_info
-
 try:
     # raise ImportError
     import tinyarray as ta
@@ -13,6 +11,9 @@ except ImportError:
     TINYARRAY = False
 else:
     TINYARRAY = True
+
+import spacegroup
+from spacegroup import SpaceGroup, get_spacegroup_info
 
 
 from IPython.terminal.embed import InteractiveShellEmbed
@@ -334,3 +335,21 @@ class UnitCell(SpaceGroup):
     def get_dmin(self, indices):
         ipshell();exit()
         return np.min(self.calc_dspacing_np(indices))
+if __name__ == '__main__':
+    arg = "random"
+
+    spgr =  spacegroup.get_spacegroup(arg)
+
+    from unitcell import UnitCell
+    cell = spacegroup.get_random_cell(spgr)
+    cell = UnitCell(cell, spgr.space_group)
+
+    cell.info()
+
+    z = spacegroup.generate_hkl_listing(cell, dmin=1.0, as_type="pd.DataFrame")
+    full = spacegroup.generate_hkl_listing(cell, dmin=1.0, full_sphere=True, as_type="pd.DataFrame")
+    new = spacegroup.merge(full, cell)
+
+    print "\nCompleteness {}".format(spacegroup.completeness(z, cell))
+    print
+    print "\nCompleteness {}".format(spacegroup.completeness(full, cell))

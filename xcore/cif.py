@@ -2,6 +2,7 @@
 
 import pandas as pd
 import unitcell
+import numpy as np
 from multiplicity import calc_multiplicity
 
 import shlex
@@ -13,6 +14,17 @@ def parse_float(x):
     else:
         return x
 
+def line_iterator(f):
+    for line in f:
+        line = line.strip()
+        if line.startswith("#"):
+            continue
+        inp = shlex.split(line)
+        yield inp
+    # stopiteration indicates end of file
+    # return None to cleanly excit loop
+    yield None
+
 def read_cif(f, verbose=True):
     if isinstance(f, str):
         f = open(f, "r")
@@ -20,8 +32,8 @@ def read_cif(f, verbose=True):
     incols = False
     inrows = False
     inblock = False
-    for line in f:
-        inp = shlex.split(line)
+    fiter = line_iterator(f)
+    for inp in fiter:
         if not inp:
             continue
         if inp[0] == "loop_":
@@ -32,13 +44,12 @@ def read_cif(f, verbose=True):
                 rows = []
                 while incols == True:
                     try:
-                        line = f.next()
+                        inp = fiter.next()
                     except StopIteration:
                         incols = False
                         inrows = False
                         inblock = False
                         break
-                    inp = shlex.split(line)
                     if not inp:
                         continue
                     if inp[0].startswith("_"):
@@ -61,24 +72,23 @@ def read_cif(f, verbose=True):
                     rows.append(inp)
                     
                     try:
-                        line = f.next()
+                        inp = fiter.next()
                     except StopIteration:
                         incols = False
                         inrows = False
                         inblock = False
                         break
-                    inp = shlex.split(line)
                 for i, key in enumerate(cols):
                     vals = [row[i] for row in rows]
                     d[key] = vals
         
         if not inp:
             continue
+        elif inp[0].startswith("data_"):
+            d["data_"] = inp[0][5:]
         elif len(inp) == 2:
             key, value = inp
             d[key] = value
-        elif inp[0].startswith("data_"):
-            d["data_"] = inp[0][5:]
         else:
             raise IOError("Could not read line: {}".format(inp))
     
@@ -139,6 +149,7 @@ def read_cif(f, verbose=True):
     atoms = atoms[["label", "symbol", "m", "x", "y", "z", "occ", "biso"]]
   
     cell.info()
+
     if verbose:
         print atoms
     else:
@@ -153,10 +164,14 @@ def write_cif(cell, atoms):
 	except:
 		raise NotImplementedError
 
-if __name__ == '__main__':
-	import sys
-	for arg in sys.argv[1:]:
-		cell, atoms = read_cif(arg)
-		cell.info()
-		print atoms
 
+def cif2hkl_entry():
+    import sys
+    for arg in sys.argv[1:]:
+        cell, atoms = read_cif(arg)
+        cell.info()
+        print atoms
+
+
+if __name__ == '__main__':
+    cif2hkl_entry()

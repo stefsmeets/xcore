@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from spgr import generate_hkl_listing
+from spacegroup import generate_hkl_listing
 import numpy as np
 import pandas as pd
 
