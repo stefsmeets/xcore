@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 18:31:12 2015
+# Generated Mon Apr 25 10:54:32 2016
 d = {}
 d['1'] = {
     'number': 50,
@@ -9,15 +9,15 @@ d['1'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hk0: h+k=2n',
+    'reflection_conditions': (
+        'hk0: h+k=2n',
         'h0l: h=2n',
-        '0kl: k=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+        '0kl: k=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x+1/2, -y+1/2, -z',
         '-x, -y, z',
@@ -25,8 +25,23 @@ d['1'] = {
         '-x, y, -z',
         'x+1/2, y+1/2, -z',
         '-x+1/2, y+1/2, z',
-        'x+1/2, -y+1/2, z'
-    ]
+        'x+1/2, -y+1/2, z',
+    ),
+    'wyckoff_positions' : (
+        (2, '1/4,1/4,0'),
+        (2, '-1/4,1/4,0'),
+        (2, '-1/4,1/4,1/2'),
+        (2, '1/4,1/4,1/2'),
+        (4, '0,0,0'),
+        (4, '0,0,1/2'),
+        (4, 'x,1/4,0'),
+        (4, 'x,1/4,1/2'),
+        (4, '1/4,y,0'),
+        (4, '1/4,y,1/2'),
+        (4, '1/4,1/4,z'),
+        (4, '1/4,-1/4,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['2'] = {
@@ -38,20 +53,35 @@ d['2'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
-    'reflection_conditions': [
-    	'hk0: h+k=2n',
+    'reflection_conditions': (
+        'hk0: h+k=2n',
         'h0l: h=2n',
-        '0kl: k=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+        '0kl: k=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x+1/2, -y+1/2, z',
         'x, -y+1/2, -z',
-        '-x+1/2, y, -z'
-    ]
+        '-x+1/2, y, -z',
+    ),
+    'wyckoff_positions' : (
+        (2, '1/4,1/4,0'),
+        (2, '-1/4,1/4,0'),
+        (2, '-1/4,1/4,1/2'),
+        (2, '1/4,1/4,1/2'),
+        (4, '0,0,0'),
+        (4, '0,0,1/2'),
+        (4, 'x,1/4,0'),
+        (4, 'x,1/4,1/2'),
+        (4, '1/4,y,0'),
+        (4, '1/4,y,1/2'),
+        (4, '1/4,1/4,z'),
+        (4, '1/4,-1/4,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['1cab'] = {
@@ -63,15 +93,15 @@ d['1cab'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hk0: k=2n',
+    'reflection_conditions': (
+        'hk0: k=2n',
         'h0l: l=2n',
-        '0kl: k+l=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+        '0kl: k+l=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x, -y+1/2, -z+1/2',
         '-x, -y, z',
@@ -79,8 +109,23 @@ d['1cab'] = {
         '-x, y, -z',
         'x, y+1/2, -z+1/2',
         '-x, y+1/2, z+1/2',
-        'x, -y+1/2, z+1/2'
-    ]
+        'x, -y+1/2, z+1/2',
+    ),
+    'wyckoff_positions' : (
+        (2, '1/4,1/4,0'),
+        (2, '-1/4,1/4,0'),
+        (2, '-1/4,1/4,1/2'),
+        (2, '1/4,1/4,1/2'),
+        (4, '0,0,0'),
+        (4, '0,0,1/2'),
+        (4, 'x,1/4,0'),
+        (4, 'x,1/4,1/2'),
+        (4, '1/4,y,0'),
+        (4, '1/4,y,1/2'),
+        (4, '1/4,1/4,z'),
+        (4, '1/4,-1/4,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['2cab'] = {
@@ -92,20 +137,35 @@ d['2cab'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
-    'reflection_conditions': [
-    	'hk0: k=2n',
+    'reflection_conditions': (
+        'hk0: k=2n',
         'h0l: l=2n',
-        '0kl: k+l=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+        '0kl: k+l=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x, -y+1/2, z',
         'x, -y+1/2, -z+1/2',
-        '-x, y, -z+1/2'
-    ]
+        '-x, y, -z+1/2',
+    ),
+    'wyckoff_positions' : (
+        (2, '1/4,1/4,0'),
+        (2, '-1/4,1/4,0'),
+        (2, '-1/4,1/4,1/2'),
+        (2, '1/4,1/4,1/2'),
+        (4, '0,0,0'),
+        (4, '0,0,1/2'),
+        (4, 'x,1/4,0'),
+        (4, 'x,1/4,1/2'),
+        (4, '1/4,y,0'),
+        (4, '1/4,y,1/2'),
+        (4, '1/4,1/4,z'),
+        (4, '1/4,-1/4,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['1bca'] = {
@@ -117,15 +177,15 @@ d['1bca'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hk0: h=2n',
+    'reflection_conditions': (
+        'hk0: h=2n',
         'h0l: h+l=2n',
-        '0kl: l=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+        '0kl: l=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x+1/2, -y, -z+1/2',
         '-x, -y, z',
@@ -133,8 +193,23 @@ d['1bca'] = {
         '-x, y, -z',
         'x+1/2, y, -z+1/2',
         '-x+1/2, y, z+1/2',
-        'x+1/2, -y, z+1/2'
-    ]
+        'x+1/2, -y, z+1/2',
+    ),
+    'wyckoff_positions' : (
+        (2, '1/4,1/4,0'),
+        (2, '-1/4,1/4,0'),
+        (2, '-1/4,1/4,1/2'),
+        (2, '1/4,1/4,1/2'),
+        (4, '0,0,0'),
+        (4, '0,0,1/2'),
+        (4, 'x,1/4,0'),
+        (4, 'x,1/4,1/2'),
+        (4, '1/4,y,0'),
+        (4, '1/4,y,1/2'),
+        (4, '1/4,1/4,z'),
+        (4, '1/4,-1/4,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['2bca'] = {
@@ -146,18 +221,33 @@ d['2bca'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
-    'reflection_conditions': [
-    	'hk0: h=2n',
+    'reflection_conditions': (
+        'hk0: h=2n',
         'h0l: h+l=2n',
-        '0kl: l=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+        '0kl: l=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x+1/2, -y, z',
         'x, -y, -z+1/2',
-        '-x+1/2, y, -z+1/2'
-    ]
+        '-x+1/2, y, -z+1/2',
+    ),
+    'wyckoff_positions' : (
+        (2, '1/4,1/4,0'),
+        (2, '-1/4,1/4,0'),
+        (2, '-1/4,1/4,1/2'),
+        (2, '1/4,1/4,1/2'),
+        (4, '0,0,0'),
+        (4, '0,0,1/2'),
+        (4, 'x,1/4,0'),
+        (4, 'x,1/4,1/2'),
+        (4, '1/4,y,0'),
+        (4, '1/4,y,1/2'),
+        (4, '1/4,1/4,z'),
+        (4, '1/4,-1/4,z'),
+        (8, 'x, y, z'),
+    )
 }

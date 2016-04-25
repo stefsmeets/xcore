@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 18:31:11 2015
+# Generated Mon Apr 25 10:54:31 2016
 d = {}
 d[''] = {
     'number': 43,
@@ -9,24 +9,29 @@ d[''] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: h+k=2n',
+    'reflection_conditions': (
+        'hkl: h+k=2n',
         'hkl: h+l=2n',
         'h0l: h+l=4n',
-        '0kl: k+l=4n'
-    ],
-    'centering_vectors': [
+        '0kl: k+l=4n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
         [0.0, 0.5, 0.5],
         [0.5, 0.0, 0.5],
-        [0.5, 0.5, 0.0]
-    ],
-    'symops': [
+        [0.5, 0.5, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x, -y, z',
         '-x+1/4, y+1/4, z+1/4',
-        'x+1/4, -y+1/4, z+1/4'
-    ]
+        'x+1/4, -y+1/4, z+1/4',
+    ),
+    'wyckoff_positions' : (
+        '0,0,z',
+        8,
+        (16, 'x, y, z'),
+    )
 }
 
 d['cab'] = {
@@ -38,24 +43,29 @@ d['cab'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: h+k=2n',
+    'reflection_conditions': (
+        'hkl: h+k=2n',
         'hkl: h+l=2n',
         'hk0: h+k=4n',
-        'h0l: h+l=4n'
-    ],
-    'centering_vectors': [
+        'h0l: h+l=4n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
         [0.0, 0.5, 0.5],
         [0.5, 0.0, 0.5],
-        [0.5, 0.5, 0.0]
-    ],
-    'symops': [
+        [0.5, 0.5, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         'x, -y, -z',
         'x+1/4, y+1/4, -z+1/4',
-        'x+1/4, -y+1/4, z+1/4'
-    ]
+        'x+1/4, -y+1/4, z+1/4',
+    ),
+    'wyckoff_positions' : (
+        '0,0,z',
+        8,
+        (16, 'x, y, z'),
+    )
 }
 
 d['bca'] = {
@@ -67,22 +77,27 @@ d['bca'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: h+k=2n',
+    'reflection_conditions': (
+        'hkl: h+k=2n',
         'hkl: h+l=2n',
         'hk0: h+k=4n',
-        '0kl: k+l=4n'
-    ],
-    'centering_vectors': [
+        '0kl: k+l=4n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
         [0.0, 0.5, 0.5],
         [0.5, 0.0, 0.5],
-        [0.5, 0.5, 0.0]
-    ],
-    'symops': [
+        [0.5, 0.5, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x, y, -z',
         'x+1/4, y+1/4, -z+1/4',
-        '-x+1/4, y+1/4, z+1/4'
-    ]
+        '-x+1/4, y+1/4, z+1/4',
+    ),
+    'wyckoff_positions' : (
+        '0,0,z',
+        8,
+        (16, 'x, y, z'),
+    )
 }

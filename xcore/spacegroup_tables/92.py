@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 18:31:14 2015
+# Generated Mon Apr 25 10:54:39 2016
 d = {}
 d[''] = {
     'number': 92,
@@ -9,15 +9,15 @@ d[''] = {
     'order_p': 8,
     'unique_axis': 'z',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'h00: h=2n',
+    'reflection_conditions': (
+        'h00: h=2n',
         '0k0: k=2n',
-        '00l: l=4n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+        '00l: l=4n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-y+1/2, x+1/2, z+1/4',
         '-x, -y, z+1/2',
@@ -25,6 +25,11 @@ d[''] = {
         'x+1/2, -y+1/2, -z+3/4',
         '-x+1/2, y+1/2, -z+1/4',
         'y, x, -z',
-        '-y, -x, -z+1/2'
-    ]
+        '-y, -x, -z+1/2',
+    ),
+    'wyckoff_positions' : (
+        '1/2*x+1/2*y,1/2*x+1/2*y,0',
+        4,
+        (8, 'x, y, z'),
+    )
 }

@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 18:31:16 2015
+# Generated Mon Apr 25 10:54:46 2016
 d = {}
 d['1'] = {
     'number': 203,
@@ -9,20 +9,20 @@ d['1'] = {
     'order_p': 24,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: h+k=2n',
+    'reflection_conditions': (
+        'hkl: h+k=2n',
         'hkl: h+l=2n',
         'hk0: h+k=4n',
         'h0l: h+l=4n',
-        '0kl: k+l=4n'
-    ],
-    'centering_vectors': [
+        '0kl: k+l=4n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
         [0.0, 0.5, 0.5],
         [0.5, 0.0, 0.5],
-        [0.5, 0.5, 0.0]
-    ],
-    'symops': [
+        [0.5, 0.5, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x+1/4, -y+1/4, -z+1/4',
         'z, x, y',
@@ -46,8 +46,17 @@ d['1'] = {
         '-x, y, -z',
         'x+1/4, y+1/4, -z+1/4',
         '-x+1/4, y+1/4, z+1/4',
-        'x+1/4, -y+1/4, z+1/4'
-    ]
+        'x+1/4, -y+1/4, z+1/4',
+    ),
+    'wyckoff_positions' : (
+        (8, '1/8,1/8,1/8'),
+        (8, '-3/8,-3/8,-3/8'),
+        (16, '0,0,0'),
+        (16, '1/2,1/2,1/2'),
+        (32, '1/3*x+1/3*y+1/3*z,1/3*x+1/3*y+1/3*z,1/3*x+1/3*y+1/3*z'),
+        (48, 'x,1/8,1/8'),
+        (96, 'x, y, z'),
+    )
 }
 
 d['2'] = {
@@ -59,20 +68,20 @@ d['2'] = {
     'order_p': 24,
     'unique_axis': None,
     'centrosymmetric': True,
-    'reflection_conditions': [
-    	'hkl: h+k=2n',
+    'reflection_conditions': (
+        'hkl: h+k=2n',
         'hkl: h+l=2n',
         'hk0: h+k=4n',
         'h0l: h+l=4n',
-        '0kl: k+l=4n'
-    ],
-    'centering_vectors': [
+        '0kl: k+l=4n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
         [0.0, 0.5, 0.5],
         [0.5, 0.0, 0.5],
-        [0.5, 0.5, 0.0]
-    ],
-    'symops': [
+        [0.5, 0.5, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         'z, x, y',
         'y, z, x',
@@ -84,6 +93,15 @@ d['2'] = {
         'y, -z+1/4, -x+1/4',
         '-x+1/4, -y+1/4, z',
         'x, -y+1/4, -z+1/4',
-        '-x+1/4, y, -z+1/4'
-    ]
+        '-x+1/4, y, -z+1/4',
+    ),
+    'wyckoff_positions' : (
+        (8, '1/8,1/8,1/8'),
+        (8, '-3/8,-3/8,-3/8'),
+        (16, '0,0,0'),
+        (16, '1/2,1/2,1/2'),
+        (32, '1/3*x+1/3*y+1/3*z,1/3*x+1/3*y+1/3*z,1/3*x+1/3*y+1/3*z'),
+        (48, 'x,1/8,1/8'),
+        (96, 'x, y, z'),
+    )
 }

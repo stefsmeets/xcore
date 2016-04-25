@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 18:31:11 2015
+# Generated Mon Apr 25 10:54:30 2016
 d = {}
 d[''] = {
     'number': 38,
@@ -9,19 +9,27 @@ d[''] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: k+l=2n'
-    ],
-    'centering_vectors': [
+    'reflection_conditions': (
+        'hkl: k+l=2n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
-        [0.0, 0.5, 0.5]
-    ],
-    'symops': [
+        [0.0, 0.5, 0.5],
+    ),
+    'symops': (
         'x, y, z',
         '-x, -y, z',
         '-x, y, z',
-        'x, -y, z'
-    ]
+        'x, -y, z',
+    ),
+    'wyckoff_positions' : (
+        (2, '0,0,z'),
+        (2, '1/2,0,z'),
+        (4, 'x,0,z'),
+        (4, '0,y,z'),
+        (4, '1/2,y,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['ba-c'] = {
@@ -33,19 +41,27 @@ d['ba-c'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: h+l=2n'
-    ],
-    'centering_vectors': [
+    'reflection_conditions': (
+        'hkl: h+l=2n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
-        [0.5, 0.0, 0.5]
-    ],
-    'symops': [
+        [0.5, 0.0, 0.5],
+    ),
+    'symops': (
         'x, y, z',
         '-x, -y, z',
         '-x, y, z',
-        'x, -y, z'
-    ]
+        'x, -y, z',
+    ),
+    'wyckoff_positions' : (
+        (2, '0,0,z'),
+        (2, '1/2,0,z'),
+        (4, 'x,0,z'),
+        (4, '0,y,z'),
+        (4, '1/2,y,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['cab'] = {
@@ -57,19 +73,27 @@ d['cab'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: h+l=2n'
-    ],
-    'centering_vectors': [
+    'reflection_conditions': (
+        'hkl: h+l=2n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
-        [0.5, 0.0, 0.5]
-    ],
-    'symops': [
+        [0.5, 0.0, 0.5],
+    ),
+    'symops': (
         'x, y, z',
         'x, -y, -z',
         'x, y, -z',
-        'x, -y, z'
-    ]
+        'x, -y, z',
+    ),
+    'wyckoff_positions' : (
+        (2, '0,0,z'),
+        (2, '1/2,0,z'),
+        (4, 'x,0,z'),
+        (4, '0,y,z'),
+        (4, '1/2,y,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['-cba'] = {
@@ -81,19 +105,27 @@ d['-cba'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: h+k=2n'
-    ],
-    'centering_vectors': [
+    'reflection_conditions': (
+        'hkl: h+k=2n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
-        [0.5, 0.5, 0.0]
-    ],
-    'symops': [
+        [0.5, 0.5, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         'x, -y, -z',
         'x, y, -z',
-        'x, -y, z'
-    ]
+        'x, -y, z',
+    ),
+    'wyckoff_positions' : (
+        (2, '0,0,z'),
+        (2, '1/2,0,z'),
+        (4, 'x,0,z'),
+        (4, '0,y,z'),
+        (4, '1/2,y,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['bca'] = {
@@ -105,19 +137,27 @@ d['bca'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: h+k=2n'
-    ],
-    'centering_vectors': [
+    'reflection_conditions': (
+        'hkl: h+k=2n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
-        [0.5, 0.5, 0.0]
-    ],
-    'symops': [
+        [0.5, 0.5, 0.0],
+    ),
+    'symops': (
         'x, y, z',
         '-x, y, -z',
         'x, y, -z',
-        '-x, y, z'
-    ]
+        '-x, y, z',
+    ),
+    'wyckoff_positions' : (
+        (2, '0,0,z'),
+        (2, '1/2,0,z'),
+        (4, 'x,0,z'),
+        (4, '0,y,z'),
+        (4, '1/2,y,z'),
+        (8, 'x, y, z'),
+    )
 }
 
 d['a-cb'] = {
@@ -129,17 +169,25 @@ d['a-cb'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: k+l=2n'
-    ],
-    'centering_vectors': [
+    'reflection_conditions': (
+        'hkl: k+l=2n',
+    ),
+    'centering_vectors': (
         [0.0, 0.0, 0.0],
-        [0.0, 0.5, 0.5]
-    ],
-    'symops': [
+        [0.0, 0.5, 0.5],
+    ),
+    'symops': (
         'x, y, z',
         '-x, y, -z',
         'x, y, -z',
-        '-x, y, z'
-    ]
+        '-x, y, z',
+    ),
+    'wyckoff_positions' : (
+        (2, '0,0,z'),
+        (2, '1/2,0,z'),
+        (4, 'x,0,z'),
+        (4, '0,y,z'),
+        (4, '1/2,y,z'),
+        (8, 'x, y, z'),
+    )
 }

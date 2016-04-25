@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 18:31:09 2015
+# Generated Mon Apr 25 10:54:22 2016
 d = {}
 d['b1'] = {
     'number': 7,
@@ -9,16 +9,19 @@ d['b1'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'h0l: l=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'h0l: l=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        'x, -y, z+1/2'
-    ]
+        'x, -y, z+1/2',
+    ),
+    'wyckoff_positions' : (
+        (2, 'x, y, z'),
+    )
 }
 
 d['b2'] = {
@@ -30,16 +33,19 @@ d['b2'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'h0l: h+l=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'h0l: h+l=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        'x+1/2, -y, z+1/2'
-    ]
+        'x+1/2, -y, z+1/2',
+    ),
+    'wyckoff_positions' : (
+        (2, 'x, y, z'),
+    )
 }
 
 d['b3'] = {
@@ -51,16 +57,19 @@ d['b3'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'h0l: h=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'h0l: h=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        'x+1/2, -y, z'
-    ]
+        'x+1/2, -y, z',
+    ),
+    'wyckoff_positions' : (
+        (2, 'x, y, z'),
+    )
 }
 
 d['c1'] = {
@@ -72,16 +81,19 @@ d['c1'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hk0: h=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'hk0: h=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        'x+1/2, y, -z'
-    ]
+        'x+1/2, y, -z',
+    ),
+    'wyckoff_positions' : (
+        (2, 'x, y, z'),
+    )
 }
 
 d['c2'] = {
@@ -93,16 +105,19 @@ d['c2'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hk0: h+k=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'hk0: h+k=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        'x+1/2, y+1/2, -z'
-    ]
+        'x+1/2, y+1/2, -z',
+    ),
+    'wyckoff_positions' : (
+        (2, 'x, y, z'),
+    )
 }
 
 d['c3'] = {
@@ -114,16 +129,19 @@ d['c3'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hk0: k=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'hk0: k=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        'x, y+1/2, -z'
-    ]
+        'x, y+1/2, -z',
+    ),
+    'wyckoff_positions' : (
+        (2, 'x, y, z'),
+    )
 }
 
 d['a1'] = {
@@ -135,16 +153,19 @@ d['a1'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'0kl: k=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        '0kl: k=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        '-x, y+1/2, z'
-    ]
+        '-x, y+1/2, z',
+    ),
+    'wyckoff_positions' : (
+        (2, 'x, y, z'),
+    )
 }
 
 d['a2'] = {
@@ -156,16 +177,19 @@ d['a2'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'0kl: k+l=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        '0kl: k+l=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        '-x, y+1/2, z+1/2'
-    ]
+        '-x, y+1/2, z+1/2',
+    ),
+    'wyckoff_positions' : (
+        (2, 'x, y, z'),
+    )
 }
 
 d['a3'] = {
@@ -177,14 +201,17 @@ d['a3'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'0kl: l=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        '0kl: l=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        '-x, y, z+1/2'
-    ]
+        '-x, y, z+1/2',
+    ),
+    'wyckoff_positions' : (
+        (2, 'x, y, z'),
+    )
 }

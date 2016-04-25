@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 18:31:09 2015
+# Generated Mon Apr 25 10:54:22 2016
 d = {}
 d['b'] = {
     'number': 6,
@@ -9,16 +9,21 @@ d['b'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: No Condition'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'hkl: No Condition',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        'x, -y, z'
-    ]
+        'x, -y, z',
+    ),
+    'wyckoff_positions' : (
+        (1, 'x,0,z'),
+        (1, 'x,1/2,z'),
+        (2, 'x, y, z'),
+    )
 }
 
 d['c'] = {
@@ -30,16 +35,21 @@ d['c'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: No Condition'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'hkl: No Condition',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        'x, y, -z'
-    ]
+        'x, y, -z',
+    ),
+    'wyckoff_positions' : (
+        (1, 'x,0,z'),
+        (1, 'x,1/2,z'),
+        (2, 'x, y, z'),
+    )
 }
 
 d['a'] = {
@@ -51,14 +61,19 @@ d['a'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'hkl: No Condition'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'hkl: No Condition',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        '-x, y, z'
-    ]
+        '-x, y, z',
+    ),
+    'wyckoff_positions' : (
+        (1, 'x,0,z'),
+        (1, 'x,1/2,z'),
+        (2, 'x, y, z'),
+    )
 }

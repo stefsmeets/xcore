@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 18:31:09 2015
+# Generated Mon Apr 25 10:54:24 2016
 d = {}
 d['b'] = {
     'number': 11,
@@ -9,16 +9,24 @@ d['b'] = {
     'order_p': 4,
     'unique_axis': 'y',
     'centrosymmetric': True,
-    'reflection_conditions': [
-    	'0k0: k=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        '0k0: k=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        '-x, y+1/2, -z'
-    ]
+        '-x, y+1/2, -z',
+    ),
+    'wyckoff_positions' : (
+        (2, '0,0,0'),
+        (2, '1/2,0,0'),
+        (2, '0,0,1/2'),
+        (2, '1/2,0,1/2'),
+        (2, 'x,1/4,z'),
+        (4, 'x, y, z'),
+    )
 }
 
 d['c'] = {
@@ -30,16 +38,24 @@ d['c'] = {
     'order_p': 4,
     'unique_axis': 'z',
     'centrosymmetric': True,
-    'reflection_conditions': [
-    	'00l: l=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        '00l: l=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        '-x, -y, z+1/2'
-    ]
+        '-x, -y, z+1/2',
+    ),
+    'wyckoff_positions' : (
+        (2, '0,0,0'),
+        (2, '1/2,0,0'),
+        (2, '0,0,1/2'),
+        (2, '1/2,0,1/2'),
+        (2, 'x,1/4,z'),
+        (4, 'x, y, z'),
+    )
 }
 
 d['a'] = {
@@ -51,14 +67,22 @@ d['a'] = {
     'order_p': 4,
     'unique_axis': 'x',
     'centrosymmetric': True,
-    'reflection_conditions': [
-    	'h00: h=2n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, 0.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        'h00: h=2n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, 0.0],
+    ),
+    'symops': (
         'x, y, z',
-        'x+1/2, -y, -z'
-    ]
+        'x+1/2, -y, -z',
+    ),
+    'wyckoff_positions' : (
+        (2, '0,0,0'),
+        (2, '1/2,0,0'),
+        (2, '0,0,1/2'),
+        (2, '1/2,0,1/2'),
+        (2, 'x,1/4,z'),
+        (4, 'x, y, z'),
+    )
 }

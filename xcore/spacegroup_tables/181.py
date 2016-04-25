@@ -1,4 +1,4 @@
-# Generated Mon Dec  7 18:31:15 2015
+# Generated Mon Apr 25 10:54:45 2016
 d = {}
 d[''] = {
     'number': 181,
@@ -9,13 +9,13 @@ d[''] = {
     'order_p': 12,
     'unique_axis': 'z',
     'centrosymmetric': False,
-    'reflection_conditions': [
-    	'00l: l=3n'
-    ],
-    'centering_vectors': [
-        [0.0, 0.0, -1.0]
-    ],
-    'symops': [
+    'reflection_conditions': (
+        '00l: l=3n',
+    ),
+    'centering_vectors': (
+        [0.0, 0.0, -1.0],
+    ),
+    'symops': (
         'x, y, z',
         'x-y, x, z+2/3',
         '-y, x-y, z+1/3',
@@ -27,6 +27,9 @@ d[''] = {
         'y, x, -z+1/3',
         '-y, -x, -z+1/3',
         '-x+y, y, -z',
-        'x, x-y, -z+2/3'
-    ]
+        'x, x-y, -z+2/3',
+    ),
+    'wyckoff_positions' : (
+        (12, 'x, y, z'),
+    )
 }

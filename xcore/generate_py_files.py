@@ -4,7 +4,9 @@ import os
 import subprocess as sp
 import time
 import re
-from spacegroup import lines
+from spacegroup import spacegrouptxt
+
+from wyckoff import general_position_multiplicities, wyckofftable
 
 get_centering = re.compile("\((.*)\)")
 
@@ -26,7 +28,9 @@ def generate_py_files():
     exe = 'sginfo'
     drc = "spacegroup"
     last_number = 0
-    for row in lines:
+    for i, row in enumerate(spacegrouptxt):
+        # if i == 10:
+            # exit()
         number = row[:12].strip()
 
         try:
@@ -53,6 +57,7 @@ def generate_py_files():
         save_symops = False
         uniq_axis = None
         for line in out.split('\n'):
+            line = line.strip()
             if line.startswith('Point Group'):
                 pgr = line.split()[-1]
             if line.startswith('Laue  Group'):
@@ -87,6 +92,12 @@ def generate_py_files():
         p = sp.Popen(cmd, stdout=sp.PIPE)
         out, err = p.communicate()
 
+        print "number", number
+        mult = general_position_multiplicities[int(number)]
+        wyckoffraw = wyckofftable.get(int(number), ())
+
+        wyckoff_positions = reversed([repr((mult, "x, y, z"))] + [repr(w) for w in wyckoffraw])
+
         reflection_conditions = []
         save_refl = False
         for line in out.split('\n'):
@@ -113,15 +124,18 @@ d[{setting}] = {{
     'order_p': {nsymp},
     'unique_axis': {uniq_axis},
     'centrosymmetric': {centrosymmetric},
-    'reflection_conditions': [
-    	{reflection_conditions}
-    ],
-    'centering_vectors': [
-        {centering_vectors}
-    ],
-    'symops': [
-        {symops}
-    ]
+    'reflection_conditions': (
+        {reflection_conditions},
+    ),
+    'centering_vectors': (
+        {centering_vectors},
+    ),
+    'symops': (
+        {symops},
+    ),
+    'wyckoff_positions' : (
+        {wyckoff_positions},
+    )
 }}
 """.format(number=number,
            setting=repr(setting),
@@ -133,7 +147,8 @@ d[{setting}] = {{
            centrosymmetric=repr(centrosymm),
            reflection_conditions=',\n        '.join(reflection_conditions),
            centering_vectors=',\n        '.join(centering_vecs),
-           symops=',\n        '.join(symops)))
+           symops=',\n        '.join(symops),
+           wyckoff_positions=',\n        '.join(wyckoff_positions)))
 
 
 if __name__ == '__main__':

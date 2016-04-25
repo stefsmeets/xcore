@@ -289,7 +289,8 @@ def get_symmetry(number, setting):
         number, setting = get_standard_setting(number)
 
     import importlib
-    drc = 'spacegroup_tables'
+    drc = 'spacegroup'
+    # drc = 'spacegroup_tables'
     fn = '{}.{}'.format(drc, number)
     spgr = importlib.import_module(fn, package='.')
     return spgr.d[setting]
@@ -432,8 +433,45 @@ def symm2str(r,t):
         else:
             tval = ""
         string_row += "{}".format(tval)
+        if string_row == "":
+            string_row = "0"
         string_all.append(string_row)
     return ", ".join(string_all)
+
+def str2symm(s):
+    """Parses symmetry strings and returns a rotation matrix and translation vector."""
+    rotmat = np.zeros([3, 3], dtype=int)
+    transvec = np.zeros([3, 1], dtype=float)
+    split = s.split(',')
+    i = 0       # determines the row in the matrix
+    for symeq in split:
+        # separate x,y,z,+,-,float,int,fraction
+        q = re.findall('[\+\-xXyYzZ]|[0-9]*[\.\/][0-9]+|[0-9]', symeq)
+        coefficient = 1
+        for r in q:
+            if r == '-':
+                coefficient = -1
+            elif r == '+':
+                coefficient = 1
+            elif r.lower() == 'x':
+                rotmat[i, 0] += coefficient
+            elif r.lower() == 'y':
+                rotmat[i, 1] += coefficient
+            elif r.lower() == 'z':
+                rotmat[i, 2] += coefficient
+            elif '/' in r:          # check for fraction
+                frac = re.findall('[0-9]+', r)
+                num = float(frac[0])
+                denom = float(frac[1])
+                transvec[i, 0] = num/denom
+            else:
+                try:                # check for float or integer
+                    r = float(r)
+                    transvec[i, 0] = coefficient*r
+                except:
+                    pass
+        i += 1
+    return rotmat, transvec
 
 
 class SymOp(object):
@@ -443,7 +481,7 @@ class SymOp(object):
     def __init__(self, s):
         super(SymOp, self).__init__()
         self._s = s
-        self.r, self.t = self.getsymm(self._s)
+        self.r, self.t = str2symm(self._s)
 
         string = symm2str(self.r, self.t)
         assert string == s, "got {}, need {}".format(string, s)
@@ -455,41 +493,9 @@ class SymOp(object):
         return self.r, self.t
 
     def getsymm(self, op=None):
-        """Parses symmetry strings and returns a rotation matrix and translation vector."""
-        rotmat = np.zeros([3, 3], dtype=int)
-        transvec = np.zeros([3, 1], dtype=float)
         if not op:
             op = self._s
-        split = op.split(',')
-        i = 0       # determines the row in the matrix
-        for symeq in split:
-            # separate x,y,z,+,-,float,int,fraction
-            q = re.findall('[\+\-xXyYzZ]|[0-9]*[\.\/][0-9]+|[0-9]', symeq)
-            coefficient = 1
-            for r in q:
-                if r == '-':
-                    coefficient = -1
-                elif r == '+':
-                    coefficient = 1
-                elif r.lower() == 'x':
-                    rotmat[i, 0] += coefficient
-                elif r.lower() == 'y':
-                    rotmat[i, 1] += coefficient
-                elif r.lower() == 'z':
-                    rotmat[i, 2] += coefficient
-                elif '/' in r:          # check for fraction
-                    frac = re.findall('[0-9]+', r)
-                    num = float(frac[0])
-                    denom = float(frac[1])
-                    transvec[i, 0] = num/denom
-                else:
-                    try:                # check for float or integer
-                        r = float(r)
-                        transvec[i, 0] = coefficient*r
-                    except:
-                        pass
-            i += 1
-        return rotmat, transvec
+        return str2symm(op)
 
     def inverse(self):
         r = np.dot(self.r, -np.eye(3,3))
@@ -500,6 +506,52 @@ class SymOp(object):
         r = self.r
         t = self.t + np.array(cvec).reshape(3,1)
         return SymOp(symm2str(r,t))
+
+
+def parse_wyckoff_positions(wyckoff_positions, spgr):
+    letters = "abcdefghijklmnopqrstuvwxyz@"
+    ret = []
+    for i, wyckoff_raw in enumerate(wyckoff_positions):
+        letter = letters[i]
+        ret.append(WyckoffPosition(wyckoff_raw, spgr.symmetry_operations, letter=letter))
+
+    return ret
+
+
+class WyckoffPosition(object):
+
+    def __init__(self, wyckoff_raw, symops, letter="?"):
+        super(WyckoffPosition, self).__init__()
+
+        self.multiplicity = int(wyckoff_raw[0])
+        pos_r, pos_t = str2symm(wyckoff_raw[1])
+        self.letter = letter
+
+        # print pos_r, pos_t
+
+        self.special_positions = []
+        self.lst = []
+        for symop in symops:
+            # print symop.r, symop.t
+            new_r = np.dot(pos_r, symop.r)
+            new_t = pos_t + symop.t
+
+            new = symm2str(new_r, new_t)
+
+            if new not in self.lst:
+                self.lst.append(new)
+                self.special_positions.append((new_r, new_t))
+
+    def __repr__(self):
+        # include wyckof letter, and multiplicity here
+        return "{} {}: {}".format(self.multiplicity, self.letter, "  |  ".join(self.lst))
+
+    def is_special(self, coord):
+        for i, (r, t) in enumerate(self.special_positions):
+            x = np.dot(r, coord)+t.reshape(3,)
+            if np.all(coord == x):
+                return self.lst[i]
+        return False
 
 
 class ReflCond(object):
@@ -568,11 +620,18 @@ class SpaceGroup(object):
 
         self.unique_axis = kwargs["unique_axis"]
 
+        self.wyckoff_positions = parse_wyckoff_positions(kwargs["wyckoff_positions"], self)
+
         assert self.order_p == kwargs["order_p"], "{} {} {}".format(
             self.space_group, self.order_p, kwargs["order_p"])
         assert self.order == kwargs["order"], "{} {} {}".format(
             self.space_group, self.order, kwargs["order"])
         assert self.is_centrosymmetric == kwargs["centrosymmetric"]
+
+        coord = np.array((0, 0.12, 0.5))
+        sp, m = self.is_special(coord)
+        print coord, sp, m
+
 
     def __repr__(self):
         return self.spgr_name
@@ -658,6 +717,10 @@ class SpaceGroup(object):
         for rc in self.reflection_conditions:
             print rc
 
+        print "\nWyckoff positions (experimental, standard setting only!)"
+        for wyck in self.wyckoff_positions:
+            print wyck
+
     def is_absent(self, index):
         """Expects tuple/list of 3 elements
 
@@ -678,6 +741,13 @@ class SpaceGroup(object):
 
         Return boolean array"""
         return index.map(self.is_absent)
+
+    def is_special(self, coord):
+        for wp in self.wyckoff_positions:
+            is_special = wp.is_special(coord)
+            if is_special:
+                return is_special, wp.multiplicity
+        return False
 
     def unique_set(self, index):
         """Take list of reflections, use laue symmetry to merge to unique set"""
