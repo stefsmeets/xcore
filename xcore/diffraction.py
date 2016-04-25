@@ -88,8 +88,8 @@ def calc_structure_factors(cell, atoms, table="xray"):
 
 
 def cif2hkl(fn):
-    import cif
-    cell, atoms = cif.read_cif(fn)
+    import formats
+    cell, atoms = formats.read_cif(fn)
     df =  calc_structure_factors(cell, atoms)
 
     print df

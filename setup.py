@@ -29,7 +29,7 @@ setup(
     entry_points={
         'console_scripts': [
             'spgr    = xcore.app:main',
-            'cif2hkl = xcore.cif:cif2hkl_entry'
+            'cif2hkl = xcore.formats:cif2hkl_entry'
         ]
     }
 
