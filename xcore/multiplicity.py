@@ -8,7 +8,7 @@ def unique_rows(a):
     unique_a = np.unique(a.view([('', a.dtype)]*a.shape[1]))
     return unique_a.view(a.dtype).reshape((unique_a.shape[0], a.shape[1]))
 
-def calc_multiplicity(atoms, spgr, precision=3):
+def calc_multiplicity(atoms, spgr, precision=5):
     # checking if it is a dataframe, so we have more than 1 atom
     # a single atom is supplied as a series object
     if isinstance(atoms, pd.DataFrame):

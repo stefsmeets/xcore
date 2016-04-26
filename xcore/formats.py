@@ -20,6 +20,8 @@ def line_iterator(f):
         if line.startswith("#"):
             continue
         inp = shlex.split(line)
+        if not inp:
+            continue
         yield inp
     # stopiteration indicates end of file
     # return None to cleanly excit loop
@@ -81,7 +83,8 @@ def read_cif(f, verbose=True):
                 for i, key in enumerate(cols):
                     vals = [row[i] for row in rows]
                     d[key] = vals
-        
+
+
         if not inp:
             continue
         elif inp[0].startswith("data_"):
@@ -90,7 +93,7 @@ def read_cif(f, verbose=True):
             key, value = inp
             d[key] = value
         else:
-            raise IOError("Could not read line: {}".format(inp))
+            raise IOError("{} -> Could not read line: {}".format(f.name, inp))
     
     cif2simple = {
     '_atom_site_label': "label",
@@ -103,7 +106,7 @@ def read_cif(f, verbose=True):
     "_atom_site_adp_type": "adp_type",
     '_atom_site_U_iso_or_equiv': "uiso",
     '_atom_site_B_iso_or_equiv': "biso" }
-    
+
     a = parse_float( d.pop("_cell_length_a") )
     b = parse_float( d.pop("_cell_length_b") )
     c = parse_float( d.pop("_cell_length_c") )
@@ -144,7 +147,15 @@ def read_cif(f, verbose=True):
         atoms["m"] = atoms.apply(calc_multiplicity, args=(cell,), axis=1)
     else:
         atoms["m"] = atoms["m"].astype(int)
-        assert all(atoms["m"] == atoms.apply(calc_multiplicity, args=(cell,), axis=1)), "multiplicities from cif and calculated are different"
+        if not all(atoms["m"] == atoms.apply(calc_multiplicity, args=(cell,), axis=1)):
+            mults = atoms.apply(calc_multiplicity, args=(cell,), axis=1)
+            sel = atoms["m"] != mults
+            print "From cif:",
+            print atoms[sel]
+            print 
+            print "Calculated\n"
+            print mults[sel]
+            raise AssertionError("{} -> multiplicities from cif and calculated are different".format(f.name))
     
     atoms = atoms[["label", "symbol", "m", "x", "y", "z", "occ", "biso"]]
   
