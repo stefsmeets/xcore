@@ -289,8 +289,7 @@ def get_symmetry(number, setting):
         number, setting = get_standard_setting(number)
 
     import importlib
-    drc = 'spacegroup'
-    # drc = 'spacegroup_tables'
+    drc = 'spacegroup_tables'
     fn = '{}.{}'.format(drc, number)
     spgr = importlib.import_module(fn, package='.')
     return spgr.d[setting]
@@ -628,9 +627,9 @@ class SpaceGroup(object):
             self.space_group, self.order, kwargs["order"])
         assert self.is_centrosymmetric == kwargs["centrosymmetric"]
 
-        coord = np.array((0, 0.12, 0.5))
-        sp, m = self.is_special(coord)
-        print coord, sp, m
+        # coord = np.array((0, 0.12, 0.5))
+        # sp, m = self.is_special(coord)
+        # print coord, sp, m
 
 
     def __repr__(self):
@@ -1103,11 +1102,20 @@ def get_laue_symops(key):
     from laue_symops import symops
     return (SymOp(op) for op in symops[key])
 
-def get_merge_dct(df, cell):
-    if 'd' not in df:
-        df['d'] = df.index.map(cell.calc_dspacing)
+def get_merge_dct(cell, dmin=1.0):
+    if isinstance(dmin, pd.DataFrame):
+        df = dmin
+        if 'd' not in df:
+            df['d'] = df.index.map(cell.calc_dspacing)
+        dmin = df['d'].min()
 
-    dmin = df['d'].min()
+    try:
+        if dmin > cell.merge_dct_dmin:
+            # print "Returning merge_dct saved on cell ({} > {})".format(dmin, cell.merge_dct_dmin)
+            return cell.merge_dct
+    except AttributeError:
+        pass
+
     unique_set = generate_hkl_listing(cell, dmin=dmin)
 
     lauegr = cell.laue_group
@@ -1129,6 +1137,17 @@ def get_merge_dct(df, cell):
             new = tuple(np.dot(idx, op.r))
             if new not in merge_dct:
                 merge_dct[new] = tuple(idx)
+
+    try:
+        if dmin < cell.merge_dct_dmin:
+            print "Saving new merge_dct on cell (dmin: {} < {})".format(dmin, cell.merge_dct_dmin)
+            cell.merge_dct = merge_dct
+            cell.merge_dct_dmin = dmin
+    except AttributeError:
+        print "Saving new merge_dct on cell (dmin: {})".format(dmin)
+        cell.merge_dct_dmin = dmin
+        cell.merge_dct = merge_dct
+
     return merge_dct
 
 def expand(df, cell):
@@ -1154,7 +1173,7 @@ def expand(df, cell):
     return ret
 
 def merge(df, cell):
-    merge_dct = get_merge_dct(df, cell)
+    merge_dct = get_merge_dct(cell, dmin=df)
 
     new = df.groupby(merge_dct).mean()
 
