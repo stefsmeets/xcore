@@ -19,6 +19,9 @@ from IPython.terminal.embed import InteractiveShellEmbed
 InteractiveShellEmbed.confirm_exit = False
 ipshell = InteractiveShellEmbed(banner1='')
 
+ABSENT = -1
+CENTRIC = 1
+
 reflection_conditions = {
     "00l": lambda h, k, l: abs(h)+abs(k) == 0,
     "0k0": lambda h, k, l: abs(h)+abs(l) == 0,
@@ -762,8 +765,8 @@ class SpaceGroup(object):
         sel = self.is_absent_pd(index)
         return df[~sel]  # use binary not operator ~
 
-    def merge(self, df):
-        return merge(df, self)
+    def merge(self, df, remove_sysabs=True):
+        return merge(df, self, remove_sysabs=remove_sysabs)
 
     def completeness(self, df):
         return completeness(df, self)
@@ -1103,6 +1106,7 @@ def get_laue_symops(key):
     return (SymOp(op) for op in symops[key])
 
 def get_merge_dct(cell, dmin=1.0):
+    raise DeprecationWarning, "New merging algorithm no longer uses get_merge_dct, will be removed soon."
     if isinstance(dmin, pd.DataFrame):
         df = dmin
         if 'd' not in df:
@@ -1172,18 +1176,85 @@ def expand(df, cell):
                 ret.append(idx)
     return ret
 
-def merge(df, cell):
-    merge_dct = get_merge_dct(cell, dmin=df)
 
-    new = df.groupby(merge_dct).mean()
+def is_centric_or_absent(idx, stacked_symops, transops):
+    ret = 0
+    u,v,w = idx
+    for i,k,l in np.dot(idx, stacked_symops[1:]):
+        if i != u or k != v or l != w:
+            if -i == u and -k == v and -l == w:
+                ret = 1
+        else:
+            for t in transops:
+                if 12*(t[0]*u+t[1]*v+t[2]*w) % 12.0 != 0:
+                    return -1
+    return ret
 
-    print " >> Merged {} to {} reflections".format(len(df), len(new))
-    return new
+
+def standardize_indices(df, cell):
+    """
+    Standardizes reflection indices
+    From Siena Computing School 2005, Reciprocal Space Tutorial (G. Sheldrick)
+    http://www.iucr.org/resources/commissions/crystallographic-computing/schools
+        /siena-2005-crystallographic-computing-school/speakers-notes
+    """
+    stacked_symops = np.stack([s.r for s in cell.symmetry_operations])
+    
+    if not esd in df:
+        df["esd"] = 1.0
+
+    m = np.dot(np.array(df.index.tolist()), stacked_symops)
+    m = np.hstack([m, -m])
+    i = np.lexsort(m.transpose((2,0,1)))
+    merged =  m[np.arange(len(m)), i[:,-1]] # there must be a better way to index this, but this works and is quite fast
+
+    df["h"] = merged[:,0]
+    df["k"] = merged[:,1]
+    df["l"] = merged[:,2]
+
+    return df
+
+
+def merge(df, cell, remove_sysabs=True):
+    """
+    Merges equivalent reflections
+    From Siena Computing School 2005, Reciprocal Space Tutorial (G. Sheldrick)
+    http://www.iucr.org/resources/commissions/crystallographic-computing/schools
+        /siena-2005-crystallographic-computing-school/speakers-notes
+
+    Merges 400k reflections in about 0.8 seconds
+    """
+
+    df = standardize_indices(df, cell)
+    
+    hkl = ["h","k","l"]
+    symops = list(cell.symmetry_operations)
+    stacked_symops = np.stack([s.r for s in symops])
+    transops = [s.t.reshape(-1,) for s in symops]
+
+    gb = df.groupby(hkl)
+    df["sqrt"] = 1/df.esd**2
+    merged = gb.agg({"F":(np.mean)})
+
+    merged["esd"] = 1/np.sqrt(gb.agg({"sqrt":np.sum})["sqrt"])
+
+    if remove_sysabs:
+        merged["flag"] = merged.index.map(lambda x: is_centric_or_absent(x, stacked_symops, transops))
+        ncentric = np.sum(merged["flag"] == CENTRIC)
+        nabsent  = np.sum(merged["flag"] == ABSENT)
+        nmerged  = np.sum(merged["flag"] != ABSENT)
+        merged[merged.flag != ABSENT]
+        print " >> Merged {} to {} reflections (centric: {}, absent: {})".format(len(df), nmerged, ncentric, nabsent)
+    else:
+        print " >> Merged {} to {} reflections".format(len(df), len(merged))
+
+    return merged
+
 
 def completeness(df, cell, dmin=None):
+    if 'd' not in df:
+        df['d'] = df.index.map(cell.calc_dspacing)
     if not dmin:
-        if 'd' not in df:
-            df['d'] = df.index.map(cell.calc_dspacing)
         dmin = df['d'].min()
 
     unique_set = generate_hkl_listing(cell, dmin=dmin, as_type='pd.Index')

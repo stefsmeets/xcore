@@ -12,8 +12,8 @@ __version__ = "2015-12-10"
 
 
 def load_hkl(fn):
-    df = pd.read_table(fn, sep="\s+", index_col=(0, 1, 2), header=None)
-    df.index = pd.Index(df.index)
+    df = pd.read_table(fn, sep="\s+", index_col=(0, 1, 2), header=None, names=("h", "k", "l", "F", "esd"))
+    # df.index = pd.Index(df.index) # 08-09-2016 - Do not merge MultiIndex
     return df
 
 
@@ -192,12 +192,10 @@ def main():
             columns = df.columns.tolist()
             # print df, columns
             if options.merge:
-                df = cell.merge(df)
+                df = cell.merge(df, remove_sysabs=options.filter)
             if options.completeness:
                 compl = cell.completeness(df)
                 print "Completeness: {:.1f}%".format(compl*100)
-            if options.filter:
-                df = cell.filter_systematic_absences(df)
 
             root, ext = os.path.splitext(arg)
             out = root+"_out"+ext
