@@ -271,10 +271,10 @@ End
     
     data = "# Data goes here\n# ...\n# ...\n# ..."
     if df is not None:
-        if not key in df and "inty" in df:
-            df["amplitude"] = df["inty"] ** 0.5
+        if key == "amplitude" and key not in df and "inty" in df:
+            df[key] = df["inty"] ** 0.5
         if key in df:
-            data = "\n".join(["{:4d} {:4d} {:4d} {:12.4f}".format(h, k, l, row["amplitude"]) for (h, k, l), row in merged.iterrows()])
+            data = "\n".join(["{:4d} {:4d} {:4d} {:12.4f}".format(h, k, l, row["amplitude"]) for (h, k, l), row in df.iterrows()])
         else:
             print " >> Data format not understood, provide a df with amplitude/inty"
                              

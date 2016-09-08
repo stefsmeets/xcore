@@ -404,7 +404,7 @@ class CVec(tuple):
         return "+({}  {}  {})".format(*self)
 
 
-def symm2str(r,t):
+def symm2str(r,t=np.zeros([3, 1], dtype=float)):
     xyz = "xyz"
     string_all = []
     for i in range(3):
@@ -719,9 +719,9 @@ class SpaceGroup(object):
         for rc in self.reflection_conditions:
             print rc
 
-        print "\nWyckoff positions (experimental, standard setting only!)"
-        for wyck in self.wyckoff_positions:
-            print wyck
+        # print "\nWyckoff positions (experimental, standard setting only!)"
+        # for wyck in self.wyckoff_positions:
+        #     print wyck
 
     def is_absent(self, index):
         """Expects tuple/list of 3 elements
@@ -745,6 +745,7 @@ class SpaceGroup(object):
         return index.map(self.is_absent)
 
     def is_special(self, coord):
+        raise NotImplementedError
         for wp in self.wyckoff_positions:
             is_special = wp.is_special(coord)
             if is_special:
@@ -1200,7 +1201,7 @@ def standardize_indices(df, cell):
     """
     stacked_symops = np.stack([s.r for s in cell.symmetry_operations])
     
-    if not esd in df:
+    if not "esd" in df:
         df["esd"] = 1.0
 
     m = np.dot(np.array(df.index.tolist()), stacked_symops)
@@ -1243,7 +1244,7 @@ def merge(df, cell, remove_sysabs=True):
         ncentric = np.sum(merged["flag"] == CENTRIC)
         nabsent  = np.sum(merged["flag"] == ABSENT)
         nmerged  = np.sum(merged["flag"] != ABSENT)
-        merged[merged.flag != ABSENT]
+        merged = merged[merged.flag != ABSENT]
         print " >> Merged {} to {} reflections (centric: {}, absent: {})".format(len(df), nmerged, ncentric, nabsent)
     else:
         print " >> Merged {} to {} reflections".format(len(df), len(merged))

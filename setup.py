@@ -5,7 +5,7 @@ from os import path
 
 setup(
     name="xcore",
-    version="0.3.0",
+    version="0.4.0",
     description="Simple python crystallography library",
 
     author="Stef Smeets",

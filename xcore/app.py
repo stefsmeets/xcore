@@ -79,7 +79,7 @@ def write_hkl(df, cols=None, out=None, no_hkl=False, pre=None, post=None, data_f
     if pre:
         print >> out, pre
 
-    print '>> Writing {} refs to file {}'.format(len(df), out.name if out else 'stdout')
+    print ' >> Writing {} refs to file {}'.format(len(df), out.name if out else 'stdout')
 
     last = 0
     for row in df.reindex(columns=cols).itertuples():
@@ -103,7 +103,7 @@ def main():
 
     parser.add_argument("args",
                         type=str, metavar="spgr", nargs='*',
-                        help="Space group")
+                        help="Filenames or space group")
 
     parser.add_argument("-l", "--hkllisting",
                         action="store_true", dest="hkllisting",
@@ -151,21 +151,24 @@ def main():
     args = options.args
 
     if not options.spgr:
+
         for arg in args:
             spgr = get_spacegroup_info(arg)
             if not spgr:
                 continue
             print "# {}\n".format(arg)
+    
+            if options.cell:
+                cell = options.cell
+                if cell[0] < 0:
+                    cell = get_random_cell(spgr)
+                cell = get_unitcell(cell, spgr.space_group)
+                cell.info()
+    
             spgr.info()
 
             if options.hkllisting:
-                if options.cell:
-                    cell = options.cell
-                    if cell[0] < 0:
-                        cell = get_random_cell(spgr)
-                    cell = get_unitcell(cell, spgr.space_group)
-                    print "\nUnit cell:", cell
-                elif options.maxhkl:
+                if not options.cell and options.maxhkl:
                     # bit hacky, but works! :)
                     cell = (1, 1, 1, 90, 90, 90)
                     cell = get_unitcell(cell, spgr.space_group)
@@ -195,7 +198,7 @@ def main():
                 df = cell.merge(df, remove_sysabs=options.filter)
             if options.completeness:
                 compl = cell.completeness(df)
-                print "Completeness: {:.1f}%".format(compl*100)
+                print "Completeness: {:.2%} up to {:.2f} Angstrom".format(compl, df["d"].min())
 
             root, ext = os.path.splitext(arg)
             out = root+"_out"+ext

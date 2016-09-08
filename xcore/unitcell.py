@@ -168,7 +168,7 @@ class UnitCell(SpaceGroup):
 
         return mat
 
-    def calc_dspacing(self, idx):
+    def _calc_dspacing(self, idx):
         """Calc dspacing at given index (i.e. idx= (1,0,0)
 
         Calculates d-spacing based on given parameters.
@@ -231,17 +231,24 @@ class UnitCell(SpaceGroup):
         else:
             raise ValueError("Unknown crystal system {}, fallback to Triclinic".format(kind))
 
-        # if idsq == 0:
+        return idsq
+
+    def calc_dspacing(self, idx):
+        """When passing a single index [h, k, l]"""
+        idsq = self._calc_dspacing(idx)
+        if idsq == 0:
             # prevent RuntimeWarning: divide by zero
-            # return np.inf
-        # else:
-        return idsq**-0.5
+            return np.inf
+        else:
+            return idsq**-0.5
 
     def calc_dspacing_np(self, idx):
+        """When passing a numpy array [[h, k, l], [...], ...]"""
         h = idx[:,0]
         k = idx[:,1]
         l = idx[:,2]
-        return self.calc_dspacing((h,k,l))
+        idsq = self._calc_dspacing((h,k,l))
+         return idsq**-0.5
 
     @property
     def volume(self):
@@ -335,6 +342,8 @@ class UnitCell(SpaceGroup):
     def get_dmin(self, indices):
         ipshell();exit()
         return np.min(self.calc_dspacing_np(indices))
+
+
 if __name__ == '__main__':
     arg = "random"
 
