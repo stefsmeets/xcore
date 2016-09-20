@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+
 import pandas as pd
 import unitcell
 import numpy as np
@@ -325,10 +327,19 @@ def make_focus_entry():
 
 def cif2hkl_entry():
     import sys
+    from diffraction import calc_structure_factors
     for arg in sys.argv[1:]:
         cell, atoms = read_cif(arg)
         cell.info()
         print atoms
+
+        df = calc_structure_factors(cell, atoms, table="xray")
+
+        root, ext = os.path.splitext(arg)
+        outfile = root + ".hkl"
+        
+        with open(outfile, "w") as f:
+            print >> f, df.to_string(header=False, index=False)
 
 
 if __name__ == '__main__':
