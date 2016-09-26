@@ -248,7 +248,7 @@ class UnitCell(SpaceGroup):
         k = idx[:,1]
         l = idx[:,2]
         idsq = self._calc_dspacing((h,k,l))
-         return idsq**-0.5
+        return idsq**-0.5
 
     @property
     def volume(self):
@@ -264,7 +264,6 @@ class UnitCell(SpaceGroup):
              ** .5)
         self._volume = vol
         return vol
-
 
     def is_valid_cell(self):
         a,b,c,al,be,ga = self.parameters
