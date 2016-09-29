@@ -180,7 +180,7 @@ def write_cif(cell, atoms):
 
 
 def read_hkl(fn):
-    df = pd.read_table(fn, sep="\s*", engine="python", index_col=[0,1,2], header=None, names="h k l inty sigma".split())
+    df = pd.read_table(fn, sep="\s*", engine="python", index_col=[0,1,2], header=None, names="h k l inty esd".split())
     df.index = pd.Index(df.index)
     return df
 
@@ -190,8 +190,8 @@ def write_hkl(df, out=None):
         out = open(out, "w")
     if not "sigma" in df:
         df["sigma"] = 1.0
-    for row in (h, k, l), row in merged.iterrows():
-        print >> out, "{:4d} {:4d} {:4d} {:12.4f} {:12.4f}".format(h, k, l, row["inty"], row["sigma"])
+    for (h, k, l), row in df.iterrows():
+        print >> out, "{:4d} {:4d} {:4d} {:12.4f} {:12.4f}".format(h, k, l, row["inty"], row["esd"])
 
 
 def write_focus_inp(cell, df=None, out="foc.inp", key="amplitude"):

@@ -12,7 +12,11 @@ __version__ = "2015-12-10"
 
 
 def load_hkl(fn):
-    df = pd.read_table(fn, sep="\s+", index_col=(0, 1, 2), header=None, names=("h", "k", "l", "F", "esd"))
+    df = pd.read_table(fn, sep="\s+", header=None)
+    
+    df.columns = ("h", "k", "l", "F", "esd", "frame")[:df.columns.size]
+    df = df.set_index(["h", "k", "l"])
+
     # df.index = pd.Index(df.index) # 08-09-2016 - Do not merge MultiIndex
     return df
 
@@ -51,10 +55,9 @@ def write_hkl(df, cols=None, out=None, no_hkl=False, pre=None, post=None, data_f
     if not data_fmt:
         ifmt = '{:4d}'
         dfmt = ' {:5d}'
-        ffmt = ' {:9.3f}'
+        ffmt = ' {:12.3f}'
         bfmt = ' {:4}'
 
-        n = len(cols)
         data_fmt = ''
 
         for item in cols[:]:
@@ -81,7 +84,6 @@ def write_hkl(df, cols=None, out=None, no_hkl=False, pre=None, post=None, data_f
 
     print ' >> Writing {} refs to file {}'.format(len(df), out.name if out else 'stdout')
 
-    last = 0
     for row in df.reindex(columns=cols).itertuples():
 
         print >> out, hkl_fmt.format(*row[0])+data_fmt.format(*row[1:])
@@ -192,7 +194,8 @@ def main():
         for arg in args:
             # print arg, spgr
             df = load_hkl(arg)
-            columns = df.columns.tolist()
+
+            # columns = df.columns.tolist()
             # print df, columns
             if options.merge:
                 df = cell.merge(df, remove_sysabs=options.filter)
@@ -202,7 +205,7 @@ def main():
 
             root, ext = os.path.splitext(arg)
             out = root+"_out"+ext
-            write_hkl(df, out=out, cols=columns)
+            write_hkl(df, out=out)
 
 
 if __name__ == '__main__':
