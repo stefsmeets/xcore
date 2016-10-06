@@ -766,8 +766,8 @@ class SpaceGroup(object):
         sel = self.is_absent_pd(index)
         return df[~sel]  # use binary not operator ~
 
-    def merge(self, df, remove_sysabs=True):
-        return merge(df, self, remove_sysabs=remove_sysabs)
+    def merge(self, df, remove_sysabs=True, key="F"):
+        return merge(df, self, remove_sysabs=remove_sysabs, key=key)
 
     def completeness(self, df):
         return completeness(df, self)
@@ -1179,6 +1179,19 @@ def expand(df, cell):
 
 
 def is_centric_or_absent(idx, stacked_symops, transops):
+    """This fails for a large number of space groups:
+        Cc, C2/c, C2221, I212121, Pmc21, Pca21, Pmn21, Pna21, Cmc21, Ccc2, Abm2, 
+        Ama2, Aba2, Fdd2, Iba2, Ima2, Pmma, Pnna, Pmna, Pcca, Pbam, Pccn, Pbcm, Pnnm,
+        Pmmn:1, Pbcn, Pbca, Pnma, Cmcm, Cmca, Cccm, Cmma, Ccca:1, Fddd:1, Ibam, Ibca,
+        Imma, I41, I41/a:1, I4122, P42cm, P42nm, P42mc, P42bc, I4cm, I41md, I41cd, 
+        I-4c2, I-42d, P4/mbm, P4/mnc, P4/nmm:1, P4/ncc:1, P42/mmc, P42/mcm, P42/nbc:1, 
+        P42/nnm:1, P42/mbc, P42/mnm, P42/nmc:1, P42/ncm:1, I4/mcm, I41/amd:1, I41/acd:1, 
+        R3:H, R-3:H, P3112, R32:H, R3m:H, R3c:H, R-3m:H, R-3c:H, P6522, P6222, P63cm,
+        P63mc, P63/mcm, P63/mmc, I213, Pn-3:1, Fd-3:1, Pa-3, Ia-3, P4232, F4132, P4332,
+        P4132, I4132, F-43c, I-43d, Pm-3n, Pn-3m:1, Fm-3c, Fd-3m:1, Fd-3c:1, Ia-3d
+
+        And is slower than cell.is_absent_pd()
+    """
     ret = 0
     u,v,w = idx
     for i,k,l in np.dot(idx, stacked_symops[1:]):
@@ -1216,7 +1229,7 @@ def standardize_indices(df, cell):
     return df
 
 
-def merge(df, cell, remove_sysabs=True):
+def merge(df, cell, remove_sysabs=True, key="F"):
     """
     Merges equivalent reflections
     From Siena Computing School 2005, Reciprocal Space Tutorial (G. Sheldrick)
@@ -1235,17 +1248,22 @@ def merge(df, cell, remove_sysabs=True):
 
     gb = df.groupby(hkl)
     df["sqrt"] = 1/df.esd**2
-    merged = gb.agg({"F":(np.mean)})
+    merged = gb.agg({key:(np.mean)})
 
     merged["esd"] = 1/np.sqrt(gb.agg({"sqrt":np.sum})["sqrt"])
 
     if remove_sysabs:
-        merged["flag"] = merged.index.map(lambda x: is_centric_or_absent(x, stacked_symops, transops))
-        ncentric = np.sum(merged["flag"] == CENTRIC)
-        nabsent  = np.sum(merged["flag"] == ABSENT)
-        nmerged  = np.sum(merged["flag"] != ABSENT)
-        merged = merged[merged.flag != ABSENT]
-        print " >> Merged {} to {} reflections (centric: {}, absent: {})".format(len(df), nmerged, ncentric, nabsent)
+        # merged["flag"] = merged.index.map(lambda x: is_centric_or_absent(x, stacked_symops, transops))
+        # ncentric = np.sum(merged["flag"] == CENTRIC)
+        # nabsent  = np.sum(merged["flag"] == ABSENT)
+        # nmerged  = np.sum(merged["flag"] != ABSENT)
+        # merged = merged[merged.flag != ABSENT]
+        # print " >> Merged {} to {} reflections (centric: {}, absent: {})".format(len(df), nmerged, ncentric, nabsent)
+
+        merged["flag"] = cell.is_absent_pd(merged.index)
+        nabsent = merged["flag"].sum()
+        merged = merged[merged["flag"] == False]
+        print " >> Merged {} to {} reflections (absent: {})".format(len(df), len(merged), nabsent)
     else:
         print " >> Merged {} to {} reflections".format(len(df), len(merged))
 

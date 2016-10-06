@@ -337,10 +337,7 @@ def cif2hkl_entry():
 
         root, ext = os.path.splitext(arg)
         outfile = root + ".hkl"
-        
-        with open(outfile, "w") as f:
-            print >> f, df.to_string(header=False, index=False)
-
+        np.savetxt(outfile, df.as_matrix(), fmt="%4d%4d%4d %12.4f %12.4f")
 
 if __name__ == '__main__':
     cif2hkl_entry()

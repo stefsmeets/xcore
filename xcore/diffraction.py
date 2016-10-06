@@ -64,21 +64,21 @@ def calc_structure_factors(cell, atoms, table="xray"):
     for element in elements:
         df[element] = calc_formfactor(element, df["sitl"], table=table)
 
-    df["F"] = 0
+    df["Fcalc"] = 0
     
     for i, row in atoms.iterrows():
     #     print row.label, row.symbol, row.x, row.y, row.z, row.occ, row.m
         for i, symop in enumerate(cell.symmetry_operations):
             x, y, z = np.dot(symop.r, [row.x, row.y, row.z]) + symop.t.reshape(3,)
             n = row.occ * row.m / cell.order
-            df["F"] += n * df[row.symbol] * np.exp(-row.biso * df.sitl**2) * np.exp(1j*2*np.pi*(x * df.h + y * df.k + z * df.l))
+            df["Fcalc"] += n * df[row.symbol] * np.exp(-row.biso * df.sitl**2) * np.exp(1j*2*np.pi*(x * df.h + y * df.k + z * df.l))
             
     for element in elements:
         del df[element]
     
-    df["amplitude"] = (df["F"].real**2 + df["F"].imag**2)**0.5
-    df["phase"] = np.arctan2(df["F"].imag, df["F"].real)
-    del df["F"]
+    df["amplitude"] = (df["Fcalc"].real**2 + df["Fcalc"].imag**2)**0.5
+    df["phase"] = np.arctan2(df["Fcalc"].imag, df["Fcalc"].real)
+    del df["Fcalc"]
     del df["sitl"]
     df.phase = df.phase.round(4)
     df.amplitude = df.amplitude.round(4)
