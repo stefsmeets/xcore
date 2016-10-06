@@ -1,4 +1,4 @@
-# Generated Mon Apr 25 10:54:29 2016
+# Generated Thu Oct 06 10:30:25 2016
 d = {}
 d[''] = {
     'number': 36,
@@ -24,8 +24,7 @@ d[''] = {
         'x, -y, z+1/2',
     ),
     'wyckoff_positions' : (
-        '0,y,z',
-        4,
+        (4, '0,y,z'),
         (8, 'x, y, z'),
     )
 }
@@ -54,8 +53,7 @@ d['ba-c'] = {
         'x, -y, z',
     ),
     'wyckoff_positions' : (
-        '0,y,z',
-        4,
+        (4, '0,y,z'),
         (8, 'x, y, z'),
     )
 }
@@ -84,8 +82,7 @@ d['cab'] = {
         'x, -y, z',
     ),
     'wyckoff_positions' : (
-        '0,y,z',
-        4,
+        (4, '0,y,z'),
         (8, 'x, y, z'),
     )
 }
@@ -114,8 +111,7 @@ d['-cba'] = {
         'x+1/2, -y, z',
     ),
     'wyckoff_positions' : (
-        '0,y,z',
-        4,
+        (4, '0,y,z'),
         (8, 'x, y, z'),
     )
 }
@@ -144,8 +140,7 @@ d['bca'] = {
         '-x, y+1/2, z',
     ),
     'wyckoff_positions' : (
-        '0,y,z',
-        4,
+        (4, '0,y,z'),
         (8, 'x, y, z'),
     )
 }
@@ -174,8 +169,7 @@ d['a-cb'] = {
         '-x, y, z',
     ),
     'wyckoff_positions' : (
-        '0,y,z',
-        4,
+        (4, '0,y,z'),
         (8, 'x, y, z'),
     )
 }

@@ -26,7 +26,7 @@ def get_transvec(string):
 
 def generate_py_files():
     exe = 'sginfo'
-    drc = "spacegroup"
+    drc = "spacegroup_tables"
     last_number = 0
     for i, row in enumerate(spacegrouptxt):
         # if i == 10:

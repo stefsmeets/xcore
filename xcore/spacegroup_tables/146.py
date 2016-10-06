@@ -1,4 +1,4 @@
-# Generated Mon Apr 25 10:54:42 2016
+# Generated Thu Oct 06 10:30:38 2016
 d = {}
 d['H'] = {
     'number': 146,
@@ -23,8 +23,7 @@ d['H'] = {
         '-x+y, -x, z',
     ),
     'wyckoff_positions' : (
-        '0,0,z',
-        3,
+        (3, '0,0,z'),
         (9, 'x, y, z'),
     )
 }
@@ -50,8 +49,7 @@ d['R'] = {
         'y, z, x',
     ),
     'wyckoff_positions' : (
-        '0,0,z',
-        3,
+        (3, '0,0,z'),
         (9, 'x, y, z'),
     )
 }

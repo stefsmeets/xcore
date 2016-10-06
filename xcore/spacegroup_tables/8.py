@@ -1,4 +1,4 @@
-# Generated Mon Apr 25 10:54:22 2016
+# Generated Thu Oct 06 10:30:18 2016
 d = {}
 d['b1'] = {
     'number': 8,
@@ -21,8 +21,7 @@ d['b1'] = {
         'x, -y, z',
     ),
     'wyckoff_positions' : (
-        'x,0,z',
-        2,
+        (2, 'x,0,z'),
         (4, 'x, y, z'),
     )
 }
@@ -48,8 +47,7 @@ d['b2'] = {
         'x, -y, z',
     ),
     'wyckoff_positions' : (
-        'x,0,z',
-        2,
+        (2, 'x,0,z'),
         (4, 'x, y, z'),
     )
 }
@@ -75,8 +73,7 @@ d['b3'] = {
         'x, -y, z',
     ),
     'wyckoff_positions' : (
-        'x,0,z',
-        2,
+        (2, 'x,0,z'),
         (4, 'x, y, z'),
     )
 }
@@ -102,8 +99,7 @@ d['c1'] = {
         'x, y, -z',
     ),
     'wyckoff_positions' : (
-        'x,0,z',
-        2,
+        (2, 'x,0,z'),
         (4, 'x, y, z'),
     )
 }
@@ -129,8 +125,7 @@ d['c2'] = {
         'x, y, -z',
     ),
     'wyckoff_positions' : (
-        'x,0,z',
-        2,
+        (2, 'x,0,z'),
         (4, 'x, y, z'),
     )
 }
@@ -156,8 +151,7 @@ d['c3'] = {
         'x, y, -z',
     ),
     'wyckoff_positions' : (
-        'x,0,z',
-        2,
+        (2, 'x,0,z'),
         (4, 'x, y, z'),
     )
 }
@@ -183,8 +177,7 @@ d['a1'] = {
         '-x, y, z',
     ),
     'wyckoff_positions' : (
-        'x,0,z',
-        2,
+        (2, 'x,0,z'),
         (4, 'x, y, z'),
     )
 }
@@ -210,8 +203,7 @@ d['a2'] = {
         '-x, y, z',
     ),
     'wyckoff_positions' : (
-        'x,0,z',
-        2,
+        (2, 'x,0,z'),
         (4, 'x, y, z'),
     )
 }
@@ -237,8 +229,7 @@ d['a3'] = {
         '-x, y, z',
     ),
     'wyckoff_positions' : (
-        'x,0,z',
-        2,
+        (2, 'x,0,z'),
         (4, 'x, y, z'),
     )
 }
