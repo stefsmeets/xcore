@@ -1,4 +1,4 @@
-# Generated Thu Oct 06 10:30:38 2016
+# Generated Thu Oct 06 17:12:32 2016
 d = {}
 d[''] = {
     'number': 147,
@@ -9,8 +9,18 @@ d[''] = {
     'order_p': 6,
     'unique_axis': 'z',
     'centrosymmetric': True,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: No Condition',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=1',
+        '00l: e=3',
+    ),
+    'phase_restrictions': (
+        'hkl: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],

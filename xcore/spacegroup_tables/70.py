@@ -1,4 +1,4 @@
-# Generated Thu Oct 06 10:30:33 2016
+# Generated Thu Oct 06 17:12:27 2016
 d = {}
 d['1'] = {
     'number': 70,
@@ -9,12 +9,27 @@ d['1'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k=2n',
         'hkl: h+l=2n',
         'hk0: h+k=4n',
         'h0l: h+l=4n',
         '0kl: k+l=4n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=4',
+        'hk0: e=8',
+        'h0l: e=8',
+        '0kl: e=8',
+        'h00: e=16',
+        '0k0: e=16',
+        '00l: e=16',
+    ),
+    'phase_restrictions': (
+        'hkl: 45 deg (h+k+l)',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -53,12 +68,27 @@ d['2'] = {
     'order_p': 8,
     'unique_axis': None,
     'centrosymmetric': True,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k=2n',
         'hkl: h+l=2n',
         'hk0: h+k=4n',
         'h0l: h+l=4n',
         '0kl: k+l=4n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=4',
+        'hk0: e=8',
+        'h0l: e=8',
+        '0kl: e=8',
+        'h00: e=16',
+        '0k0: e=16',
+        '00l: e=16',
+    ),
+    'phase_restrictions': (
+        'hkl: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],

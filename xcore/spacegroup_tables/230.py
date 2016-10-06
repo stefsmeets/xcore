@@ -1,4 +1,4 @@
-# Generated Thu Oct 06 10:30:44 2016
+# Generated Thu Oct 06 17:12:37 2016
 d = {}
 d[''] = {
     'number': 230,
@@ -9,6 +9,9 @@ d[''] = {
     'order_p': 48,
     'unique_axis': None,
     'centrosymmetric': True,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k+l=2n',
         'hhl: 2h+l=4n',
@@ -20,6 +23,34 @@ d[''] = {
         'hk-h: 2h+k=4n',
         'h-hl: 2h-l=4n',
         '0kl: k=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'hhl: e=4',
+        'hkh: e=4',
+        'hkk: e=4',
+        'hk0: e=4',
+        'hk-k: e=4',
+        'h0l: e=4',
+        'hk-h: e=4',
+        'h-hl: e=4',
+        '0kl: e=4',
+        'hhh: e=12',
+        'hh0: e=8',
+        'hh-h: e=12',
+        'h0h: e=8',
+        'h00: e=16',
+        'h0-h: e=8',
+        'h-hh: e=12',
+        'h-h0: e=8',
+        'h-h-h: e=12',
+        '0kk: e=8',
+        '0k0: e=16',
+        '0k-k: e=8',
+        '00l: e=16',
+    ),
+    'phase_restrictions': (
+        'hkl: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],

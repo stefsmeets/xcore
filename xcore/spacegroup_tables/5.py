@@ -1,4 +1,4 @@
-# Generated Thu Oct 06 10:30:17 2016
+# Generated Thu Oct 06 17:12:10 2016
 d = {}
 d['b1'] = {
     'number': 5,
@@ -9,8 +9,18 @@ d['b1'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': True,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        '0k0: e=4',
+    ),
+    'phase_restrictions': (
+        'h0l: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -36,8 +46,18 @@ d['b2'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': True,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        '0k0: e=4',
+    ),
+    'phase_restrictions': (
+        'h0l: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -63,8 +83,18 @@ d['b3'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': True,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        '0k0: e=4',
+    ),
+    'phase_restrictions': (
+        'h0l: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -90,8 +120,18 @@ d['c1'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': True,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        '00l: e=4',
+    ),
+    'phase_restrictions': (
+        'hk0: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -117,8 +157,18 @@ d['c2'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': True,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        '00l: e=4',
+    ),
+    'phase_restrictions': (
+        'hk0: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -144,8 +194,18 @@ d['c3'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': True,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        '00l: e=4',
+    ),
+    'phase_restrictions': (
+        'hk0: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -171,8 +231,18 @@ d['a1'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': True,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'h00: e=4',
+    ),
+    'phase_restrictions': (
+        '0kl: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -198,8 +268,18 @@ d['a2'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': True,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'h00: e=4',
+    ),
+    'phase_restrictions': (
+        '0kl: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -225,8 +305,18 @@ d['a3'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': True,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'h00: e=4',
+    ),
+    'phase_restrictions': (
+        '0kl: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],

@@ -56,33 +56,45 @@ def generate_py_files():
         centrosymm = False
         save_symops = False
         uniq_axis = None
+        chiral_spgr = False
+        enantiomorphic = False
+        off_origin = False
+        obverse = False
         for line in out.split('\n'):
             line = line.strip()
             if line.startswith('Point Group'):
                 pgr = line.split()[-1]
-            if line.startswith('Laue  Group'):
+            elif line.startswith('Laue  Group'):
                 lauegr = line.split()[-1]
-            if line.startswith('Order   '):
+            elif line.startswith('Order   '):
                 nsym = int(line.split()[-1])
-            if line.startswith('Order P '):
+            elif line.startswith('Order P '):
                 nsymp = int(line.split()[-1])
-            if line.startswith('Unique'):
+            elif line.startswith('Unique'):
                 uniq_axis = line.split()[-1]
+            elif line.startswith("Chiral space group"):
+                chiral_spgr = True
+            elif line.startswith("Enantiomorphic"):
+                enantiomorphic = True
+            elif line.startswith("Obverse"):
+                obverse = True
+            elif line.startswith("Note: Inversion operation off origin"):
+                off_origin = True
 
             m = re.search(get_centering, line)
             if m:
-            	centering = get_transvec(m.group())
-            	if centering not in centering_vecs:
-	            	centering_vecs.append(centering)
+                centering = get_transvec(m.group())
+                if centering not in centering_vecs:
+                    centering_vecs.append(centering)
             if "Inversion-Flag = 1" in line:
-            	centrosymm = True
+                centrosymm = True
 
             if '(0 0 0)' in line or line.startswith('x, y, z'):
                 save_symops = True
             if save_symops and line.startswith('#'):
                 save_symops = False
             if save_symops and not line:
-            	save_symops = False
+                save_symops = False
 
             if save_symops:
                 symops.append(line)
@@ -99,18 +111,42 @@ def generate_py_files():
         wyckoff_positions = reversed([repr((mult, "x, y, z"))] + [repr(w) for w in wyckoffraw])
 
         reflection_conditions = []
-        save_refl = False
+        phase_restrictions = []
+        enhanced_reflections = []
+        save_refl_cond = False
+        save_refl_phase = False
+        save_refl_enh = False
         for line in out.split('\n'):
-        	if "Reflection conditions" in line:
-        		save_refl = True
-        		continue
-        	if save_refl and not line.split():
-        		break
-        	if save_refl:
-        		reflection_conditions.append(repr(line.strip()))
+            if line.startswith("Reflection conditions"):
+                save_refl_cond = True
+                continue
+            if line.startswith("Reflections with phase restriction"):
+                save_refl_phase = True
+                continue
+            if line.startswith("Systematically enhanced reflections"):
+                save_refl_enh = True
+                continue
+            
+            if not line.split():
+                save_refl_cond = False
+                save_refl_phase = False
+                save_refl_enh = False
+            
+            if save_refl_phase:
+                phase_restrictions.append(repr(line.strip()))
+            if save_refl_cond:
+                reflection_conditions.append(repr(line.strip()))
+            if save_refl_enh:
+                if len(line.split("=")[-1]) <=4:
+                    enhanced_reflections.append(repr(line.strip()))
+                else:
+                    print "skip", line
+
+        if len(phase_restrictions) == 0:
+            phase_restrictions = ["'hkl: No Condition'"]
 
         if not centering_vecs:
-        	centering_vecs = [[0.0, 0.0, 0.0]]
+            centering_vecs = [[0.0, 0.0, 0.0]]
         centering_vecs = [repr(vec) for vec in centering_vecs]
 
         symops = [repr(symop) for symop in symops]
@@ -124,8 +160,17 @@ d[{setting}] = {{
     'order_p': {nsymp},
     'unique_axis': {uniq_axis},
     'centrosymmetric': {centrosymmetric},
+    'enantiomorphic': {enantiomorphic},
+    'chiral': {chiral},
+    'obverse': {obverse},
     'reflection_conditions': (
         {reflection_conditions},
+    ),
+    'enhanced_reflections': (
+        {enhanced_reflections},
+    ),
+    'phase_restrictions': (
+        {phase_restrictions},
     ),
     'centering_vectors': (
         {centering_vectors},
@@ -145,7 +190,12 @@ d[{setting}] = {{
            nsymp=nsymp,
            uniq_axis=repr(uniq_axis),
            centrosymmetric=repr(centrosymm),
+           enantiomorphic=repr(enantiomorphic),
+           chiral=repr(chiral_spgr),
+           obverse=repr(obverse),
            reflection_conditions=',\n        '.join(reflection_conditions),
+           enhanced_reflections=',\n        '.join(enhanced_reflections),
+           phase_restrictions=',\n        '.join(phase_restrictions),
            centering_vectors=',\n        '.join(centering_vecs),
            symops=',\n        '.join(symops),
            wyckoff_positions=',\n        '.join(wyckoff_positions)))

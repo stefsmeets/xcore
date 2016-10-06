@@ -1,4 +1,4 @@
-# Generated Thu Oct 06 10:30:18 2016
+# Generated Thu Oct 06 17:12:11 2016
 d = {}
 d['b1'] = {
     'number': 8,
@@ -9,8 +9,18 @@ d['b1'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'h0l: e=4',
+    ),
+    'phase_restrictions': (
+        '0k0: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -35,8 +45,18 @@ d['b2'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'h0l: e=4',
+    ),
+    'phase_restrictions': (
+        '0k0: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -61,8 +81,18 @@ d['b3'] = {
     'order_p': 2,
     'unique_axis': 'y',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'h0l: e=4',
+    ),
+    'phase_restrictions': (
+        '0k0: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -87,8 +117,18 @@ d['c1'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'hk0: e=4',
+    ),
+    'phase_restrictions': (
+        '00l: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -113,8 +153,18 @@ d['c2'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'hk0: e=4',
+    ),
+    'phase_restrictions': (
+        '00l: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -139,8 +189,18 @@ d['c3'] = {
     'order_p': 2,
     'unique_axis': 'z',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'hk0: e=4',
+    ),
+    'phase_restrictions': (
+        '00l: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -165,8 +225,18 @@ d['a1'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        '0kl: e=4',
+    ),
+    'phase_restrictions': (
+        'h00: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -191,8 +261,18 @@ d['a2'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        '0kl: e=4',
+    ),
+    'phase_restrictions': (
+        'h00: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -217,8 +297,18 @@ d['a3'] = {
     'order_p': 2,
     'unique_axis': 'x',
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        '0kl: e=4',
+    ),
+    'phase_restrictions': (
+        'h00: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],

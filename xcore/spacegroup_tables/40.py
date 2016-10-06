@@ -1,4 +1,4 @@
-# Generated Thu Oct 06 10:30:26 2016
+# Generated Thu Oct 06 17:12:19 2016
 d = {}
 d[''] = {
     'number': 40,
@@ -9,9 +9,21 @@ d[''] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: k+l=2n',
         'h0l: h+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'h0l: e=4',
+        '0kl: e=4',
+        '00l: e=8',
+    ),
+    'phase_restrictions': (
+        'hk0: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -39,9 +51,21 @@ d['ba-c'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+l=2n',
         '0kl: k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'h0l: e=4',
+        '0kl: e=4',
+        '00l: e=8',
+    ),
+    'phase_restrictions': (
+        'hk0: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -69,9 +93,21 @@ d['cab'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+l=2n',
         'hk0: h+k=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'hk0: e=4',
+        'h0l: e=4',
+        'h00: e=8',
+    ),
+    'phase_restrictions': (
+        '0kl: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -99,9 +135,21 @@ d['-cba'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k=2n',
         'h0l: h+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'hk0: e=4',
+        'h0l: e=4',
+        'h00: e=8',
+    ),
+    'phase_restrictions': (
+        '0kl: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -129,9 +177,21 @@ d['bca'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: h+k=2n',
         '0kl: k+l=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'hk0: e=4',
+        '0kl: e=4',
+        '0k0: e=8',
+    ),
+    'phase_restrictions': (
+        'h0l: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
@@ -159,9 +219,21 @@ d['a-cb'] = {
     'order_p': 4,
     'unique_axis': None,
     'centrosymmetric': False,
+    'enantiomorphic': False,
+    'chiral': False,
+    'obverse': False,
     'reflection_conditions': (
         'hkl: k+l=2n',
         'hk0: h+k=2n',
+    ),
+    'enhanced_reflections': (
+        'hkl: e=2',
+        'hk0: e=4',
+        '0kl: e=4',
+        '0k0: e=8',
+    ),
+    'phase_restrictions': (
+        'h0l: 0 deg',
     ),
     'centering_vectors': (
         [0.0, 0.0, 0.0],
