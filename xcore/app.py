@@ -147,10 +147,42 @@ def main():
                         spgr=None,
                         merge=False,
                         completeness=False,
-                        filtersymequiv=False)
+                        filtersymequiv=False,
+                        sysabs_selfcheck=False)
 
     options = parser.parse_args()
     args = options.args
+
+    if options.sysabs_selfcheck:
+        for s in range(1, 231):
+            spgr = get_spacegroup_info(s)
+            cell = get_random_cell(spgr)
+
+            print spgr, cell
+
+            cell = get_unitcell(cell, spgr.space_group)
+            indices = generate_hkl_listing(cell, dmin=options.dmin)
+            d = cell.calc_dspacing_np(indices)
+            i = d.argsort()[::-1]
+            d = d[i].reshape(-1, 1)
+            indices = indices[i]
+            df = pd.DataFrame(np.hstack([indices, d]), columns=("h","k","l","inty"))
+            df.h = df.h.astype(int)
+            df.k = df.k.astype(int)
+            df.l = df.l.astype(int)
+            df = df.set_index(["h","k","l"])
+
+            df["flag2"] = spgr.is_absent_pd(df.index)
+
+            from cctbx import crystal
+            cs = crystal.symmetry( unit_cell = cell.parameters, space_group_symbol = spgr.spgr_name)
+            sg = cs.space_group()
+            df["flag3"] = [sg.is_sys_absent(j) for j in df.index]
+            
+            if not np.all((df.flag2 == True) == (df.flag3 == True)):
+                print " ** Systematic absences mismatch 32 ** "
+            
+            df = cell.merge(df, remove_sysabs=True, key="inty")
 
     if not options.spgr:
 
@@ -194,6 +226,11 @@ def main():
         for arg in args:
             # print arg, spgr
             df = load_hkl(arg)
+
+            if options.dmin:
+                d =  df.index.map(cell.calc_dspacing)
+                sel = d > options.dmin
+                df = df[sel]
 
             # columns = df.columns.tolist()
             # print df, columns
