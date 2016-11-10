@@ -7,6 +7,7 @@ import re
 import numpy as np
 import pandas as pd
 
+import sglite
 
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -264,38 +265,53 @@ laue_fraction = {
     'm-3m': "1/48"
 }
 
+map_pointgroup2lauegroup = {
+"C1" : ( "1"    , "-1"     ,  "Triclinic"),
+"Ci" : ( "-1"   , "-1"     ,  "Triclinic"),
+"C2" : ( "2"    , "2/m"    ,  "Monoclinic"),
+"Cs" : ( "m"    , "2/m"    ,  "Monoclinic"),
+"C2h": ( "2/m"  , "2/m"    ,  "Monoclinic"),
+"C2v": ( "mm2"  , "mmm"    ,  "Orthorhombic"),
+"D2" : ( "222"  , "mmm"    ,  "Orthorhombic"),
+"D2h": ( "mmm"  , "mmm"    ,  "Orthorhombic"),
+"C3" : ( "3"    , "-3"     ,  "Trigonal"),
+"C3i": ( "-3"   , "-3"     ,  "Trigonal"),
+"C3v": ( "3m"   , "-3m"    ,  "Trigonal"),
+"D3" : ( "32"   , "-3m"    ,  "Trigonal"),
+"D3d": ( "-3m"  , "-3m"    ,  "Trigonal"),
+"C4" : ( "4"    , "4/m"    ,  "Tetragonal"),
+"S4" : ( "-4"   , "4/m"    ,  "Tetragonal"),
+"C4h": ( "4/m"  , "4/m"    ,  "Tetragonal"),
+"C4v": ( "4mm"  , "4/mmm"  ,  "Tetragonal"),
+"D2d": ( "-42m" , "4/mmm"  ,  "Tetragonal"),
+"D4" : ( "422"  , "4/mmm"  ,  "Tetragonal"),
+"D4h": ( "4/mmm", "4/mmm"  ,  "Tetragonal"),
+"C6" : ( "6"    , "6/m"    ,  "Hexagonal"),
+"C3h": ( "-6"   , "6/m"    ,  "Hexagonal"),
+"C6h": ( "6/m"  , "6/m"    ,  "Hexagonal"),
+"D6" : ( "622"  , "6/mmm"  ,  "Hexagonal"),
+"C6v": ( "6mm"  , "6/mmm"  ,  "Hexagonal"),
+"D6h": ( "6/mmm", "6/mmm"  ,  "Hexagonal"),
+"D3h": ( "-6m2" , "6/mmm"  ,  "Hexagonal"),
+"T"  : ( "23"   , "m3"     ,  "Cubic"),
+"Th" : ( "m3"   , "m3"     ,  "Cubic"),
+"Td" : ( "-43m" , "m-3m"   ,  "Cubic"),
+"O"  : ( "432"  , "m-3m"   ,  "Cubic"),
+"Oh" : ( "m-3m" , "m-3m"   ,  "Cubic") }
 
-def find_number(s, spacegrouptxt=spacegrouptxt):
-    if isinstance(s, int):
-        s = str(s)
-    assert isinstance(
-        s, str), "Internal Error: variable s is of wrong type {}".format(type(s))
+
+def find_hall(s, spacegrouptxt='spacegroups.txt'):
+    print os.path.join(os.path.dirname(__file__), spacegrouptxt)
+    f = open(os.path.join(os.path.dirname(__file__), spacegrouptxt), 'r')
+    spacegrouptxt = f.readlines()
+    f.close()
+    s = str(s).replace(" ", "").lower()
     for i, line in enumerate(spacegrouptxt):
         m = re.search(" "+s+"[: ]+", line)
         if m:
-            return line
+            hall = line[55:]
+            return hall
     raise ValueError("Cannot find space group {}".format(s))
-
-
-def get_standard_setting(number, setting=None):
-    line = find_number(number)
-    number = line[:12].strip()
-    try:
-        number, setting = number.split(':')
-    except ValueError:
-        setting = ""
-    return number, setting
-
-
-def get_symmetry(number, setting):
-    if not setting:
-        number, setting = get_standard_setting(number)
-
-    import importlib
-    drc = 'spacegroup_tables'
-    fn = '{}.{}'.format(drc, number)
-    spgr = importlib.import_module(fn, package='.')
-    return spgr.d[setting]
 
 
 def get_random_cell(spgr):
@@ -330,78 +346,6 @@ def get_random_cell(spgr):
         return (a,)
     else:
         raise ValueError("Invalid system {}".format(system))
-
-
-
-def get_spacegroup_info(string, as_dict=False):
-    if string == "random":
-        import random
-        line = random.choice(spacegrouptxt)
-    else:
-        try:
-            line = find_number(string)
-        except ValueError:
-            raise ValueError("Could not find space group {}".format(string))
-    number = line[:12].strip()
-    schoenflies = line[12:26].strip()
-    hm = line[26:54].strip()
-    hall = line[54:].strip()
-
-    try:
-        number, setting = number.split(':')
-    except ValueError:
-        setting = ""
-    finally:
-        number = int(number)
-
-    if number <= 2:
-        crystal_system = "Triclinic"
-    elif number <= 15:
-        crystal_system = "Monoclinic"
-    elif number <= 74:
-        crystal_system = "Orthorhombic"
-    elif number <= 142:
-        crystal_system = "Tetragonal"
-    elif number <= 167:
-        crystal_system = "Trigonal"
-    elif number <= 194:
-        crystal_system = "Hexagonal"
-    elif number <= 230:
-        crystal_system = "Cubic"
-    else:
-        raise ValueError(
-            "This should not happen, does space group {} not exist?".format(number))
-
-    spgr = get_symmetry(number, setting)
-
-    spgr["crystal_system"] = crystal_system
-
-    if setting:
-        spgr["spgr"] = "{}:{}".format(number, setting)
-    else:
-        spgr["spgr"] = "{}".format(number)
-
-    spgr["setting"] = setting
-    spgr["number"] = number
-    spgr["hall"] = hall
-    spgr["hm"] = hm
-    spgr["schoenflies"] = schoenflies
-
-    if as_dict:
-        return spgr
-    else:
-        return SpaceGroup(spgr)
-
-
-class CVec(tuple):
-
-    """Small class for storing and representing Centering Vectors"""
-
-    def __init__(self, items):
-        super(CVec, self).__init__()
-
-    def __repr__(self):
-        return "+({}  {}  {})".format(*self)
 
 
 def symm2str(r,t=np.zeros([3, 1], dtype=float)):
@@ -440,73 +384,48 @@ def symm2str(r,t=np.zeros([3, 1], dtype=float)):
         string_all.append(string_row)
     return ", ".join(string_all)
 
+
 def str2symm(s):
     """Parses symmetry strings and returns a rotation matrix and translation vector."""
-    rotmat = np.zeros([3, 3], dtype=int)
-    transvec = np.zeros([3, 1], dtype=float)
-    split = s.split(',')
-    i = 0       # determines the row in the matrix
-    for symeq in split:
-        # separate x,y,z,+,-,float,int,fraction
-        q = re.findall('[\+\-xXyYzZ]|[0-9]*[\.\/][0-9]+|[0-9]', symeq)
-        coefficient = 1
-        for r in q:
-            if r == '-':
-                coefficient = -1
-            elif r == '+':
-                coefficient = 1
-            elif r.lower() == 'x':
-                rotmat[i, 0] += coefficient
-            elif r.lower() == 'y':
-                rotmat[i, 1] += coefficient
-            elif r.lower() == 'z':
-                rotmat[i, 2] += coefficient
-            elif '/' in r:          # check for fraction
-                frac = re.findall('[0-9]+', r)
-                num = float(frac[0])
-                denom = float(frac[1])
-                transvec[i, 0] = num/denom
-            else:
-                try:                # check for float or integer
-                    r = float(r)
-                    transvec[i, 0] = coefficient*r
-                except:
-                    pass
-        i += 1
-    return rotmat, transvec
+    sglite.ParseStrXYZ(s, sglite.SRBF, sglite.STBF )
 
 
 class SymOp(object):
 
     """Generate symmetry operations from string"""
 
-    def __init__(self, s):
+    def __init__(self, Mx):
         super(SymOp, self).__init__()
-        self._s = s
-        self.r, self.t = str2symm(self._s)
-
-        string = symm2str(self.r, self.t)
-        assert string == s, "got {}, need {}".format(string, s)
+        self.Mx = Mx
 
     def __repr__(self):
-        return "{}".format(self._s)
+        return sglite.RTMx2XYZ(self.Mx, sglite.SRBF, sglite.STBF)
 
     def __get__(self):
         return self.r, self.t
 
+    @property
+    def r(self):
+        Mx = self.Mx
+        np.array(((Mx[0], Mx[1], Mx[2]),
+                  (Mx[3], Mx[4], Mx[5]),
+                  (Mx[6], Mx[7], Mx[8]))) / float(sglite.SRBF)
+
+    @property
+    def t(self):
+        Mx = self.Mx
+        return np.array((Mx[9 ], Mx[10], Mx[11])) / float(sglite.STBF)
+
+    @classmethod
+    def from_str(cls, s):
+        return cls(str2symm(s))
+
     def getsymm(self, op=None):
-        if not op:
-            op = self._s
         return str2symm(op)
 
     def inverse(self):
         r = np.dot(self.r, -np.eye(3,3))
         t = self.t
-        return SymOp(symm2str(r,t))
-
-    def with_cvec(self, cvec):
-        r = self.r
-        t = self.t + np.array(cvec).reshape(3,1)
         return SymOp(symm2str(r,t))
 
 
@@ -593,42 +512,57 @@ class SpaceGroup(object):
     """SpaceGroup class that takes a spgr dict (get_spacegroup_info)
     Stores all space group info that could be extracted from sginfo"""
 
-    def __init__(self, kwargs):
+    def __init__(self, symbol):
         super(SpaceGroup, self).__init__()
 
-        if isinstance(kwargs, str):
-            kwargs = get_spacegroup_info(kwargs, as_dict=True)
+        try:
+            dct = sglite.SgSymbolLookup(symbol)
+        except ValueError:
+            s = find_hall(symbol)
+            sg = sglite.SgOps()
+            sg.__init__(HallSymbol=s)
+            dct = sg.MatchTabulatedSettings()
 
-        self.hall = kwargs["hall"]
-        self.hermann_mauguin = kwargs["hm"]
-        self.schoenflies = kwargs["schoenflies"]
+        self.number = dct["SgNumber"]
+        self.hall = dct["Hall"]
+        self.spgr_name = self.hermann_mauguin = dct["HM"]
+        self.schoenflies = dct["Schoenfl"]
+        self.qualif = dct["Qualif"]
+        self.setting = dct["Extension"]
 
-        self.point_group = kwargs["point_group"]
-        self.laue_group = kwargs["laue_group"]
+        print dct
 
-        self.crystal_system = kwargs["crystal_system"]
+        sg = sglite.SgOps()
+        sg.__init__(HallSymbol=self.hall)
+        self.sg = sg
 
-        self.number = kwargs["number"]
-        self.setting = kwargs["setting"]
+        self.isChiral = sg.isChiral
+        self.isEnantiomorphic = sg.isEnantiomorphic
 
-        self.spgr_name = self.hermann_mauguin.split(" = ")[0]
+        self._isSysAbsent = sg.isSysAbsMIx   # ([h, k, l])
+        self._isCentric   = sg.isCentricMIx  # ([h, k, l])
+        self._getPhaseRestriction = sg.get_PhaseRestriction   # ([h, k, l])
+        self._getMultiplicity = sg.get_MultMIx # ([h, k, l])
+        self._getEpsilon = sg.get_EpsilonMIx # ([h, k, l])
 
-        self.centering_vectors = [CVec(cv)
-                                  for cv in kwargs["centering_vectors"]]
-        self._symmetry_operations = [SymOp(op) for op in kwargs["symops"]]
+        self.point_group, self.laue_group, self.crystal_system = map_pointgroup2lauegroup[self.schoenflies.split("^")[0]]
 
-        self.reflection_conditions = [
-            ReflCond(rc) for rc in kwargs["reflection_conditions"]]
+        # self.centering_vectors = [CVec(cv)
+        #                           for cv in kwargs["centering_vectors"]]
+        # self._symmetry_operations = [SymOp(op) for op in kwargs["symops"]]
 
-        self.unique_axis = kwargs["unique_axis"]
+        # self.reflection_conditions = [
+        #     ReflCond(rc) for rc in kwargs["reflection_conditions"]]
 
-        self.wyckoff_positions = parse_wyckoff_positions(kwargs["wyckoff_positions"], self)
+        # self.unique_axis = kwargs["unique_axis"]
 
-        assert self.order_p == kwargs["order_p"], "{} {} {}".format(
-            self.space_group, self.order_p, kwargs["order_p"])
-        assert self.order == kwargs["order"], "{} {} {}".format(
-            self.space_group, self.order, kwargs["order"])
-        assert self.is_centrosymmetric == kwargs["centrosymmetric"]
+        # self.wyckoff_positions = parse_wyckoff_positions(kwargs["wyckoff_positions"], self)
+
+        # assert self.order_p == kwargs["order_p"], "{} {} {}".format(
+        #     self.space_group, self.order_p, kwargs["order_p"])
+        # assert self.order == kwargs["order"], "{} {} {}".format(
+        #     self.space_group, self.order, kwargs["order"])
+        # assert self.is_centrosymmetric == kwargs["centrosymmetric"]
 
         # coord = np.array((0, 0.12, 0.5))
         # sp, m = self.is_special(coord)
@@ -647,38 +581,40 @@ class SpaceGroup(object):
 
     @property
     def centering(self):
-        if self.hall[0] == "-":
-            return self.hall[1]
-        else:
-            return self.hall[0]
+        return self.hall[0]
 
     @property
     def symmetry_operations(self):
         """Returns a generator"""
-        for cvec in self.centering_vectors:
-            for symop in self._symmetry_operations:
-                s = symop.with_cvec(cvec)
-                yield s
-            if self.is_centrosymmetric:
-                for symop in self._symmetry_operations:
-                    s = symop.with_cvec(cvec)
-                    yield s.inverse()
+        nLTr = self.sg.get_nLTr() # Centering
+        fInv = self.sg.get_fInv() # inversion symmetry
+        nSMx = self.sg.get_nSMx() # n symops
 
+        for iLTr in xrange(nLTr):
+            for iInv in xrange(fInv):
+                for iSMx in xrange(nSMx):
+                    # print iLTr, iInv, iSMx
+                    Mx = self.sg.getLISMx(iLTr, iInv, iSMx, +1)
+                    if iSMx == 0:
+                        print "# +({} {} {}), Inversion Flag = {}".format(Mx[9]/float(sglite.STBF), Mx[10]/float(sglite.STBF), Mx[11]/float(sglite.STBF), iInv)
+                    yield SymOp(Mx)
     @property
     def is_centrosymmetric(self):
         return self.hall[0] == "-"
 
     @property
     def order_p(self):
-        n = 2 if self.is_centrosymmetric else 1
-        return len(self._symmetry_operations) * n
+        """holds the order of the primitive subgroup of the space group."""
+        return self.sg.get_nSMx() * self.sg.get_fInv()
 
     @property
     def order(self):
-        return self.order_p * len(self.centering_vectors)
+        """holds the order of the space group, i.e. the maximum number of symmetry equivalent positions. For primitive space groups OrderL = OrderP."""
+        return self.sg.get_nLTr() * self.sg.get_nSMx() * self.sg.get_fInv()
 
     @property
     def n_symop(self):
+        """Number of symmetry operations"""
         return self.order
 
     def info(self):
@@ -696,28 +632,20 @@ class SpaceGroup(object):
         if self.is_centrosymmetric:
             print "Centrosymmetric"
 
-        if self.unique_axis:
-            print "Unique axis", self.unique_axis
+        # if self.unique_axis:
+        #     print "Unique axis", self.unique_axis
         print
         print "Order    ", self.order
         print "Order P  ", self.order_p
+        print
 
         # print "\nSymmetry operations"
-        print
-        for cvec in self.centering_vectors:
-            print "#", cvec
-            for symop in self._symmetry_operations:
-                s = symop.with_cvec(cvec)
-                print s
-            if self.is_centrosymmetric:
-                print "# Inversion symmetry"
-                for symop in self._symmetry_operations:
-                    s = symop.with_cvec(cvec)
-                    print s.inverse()
+        for symop in self.symmetry_operations:
+            print symop
 
-        print "\nReflection conditions"
-        for rc in self.reflection_conditions:
-            print rc
+        # print "\nReflection conditions"
+        # for rc in self.reflection_conditions:
+        #     print rc
 
         # print "\nWyckoff positions (experimental, standard setting only!)"
         # for wyck in self.wyckoff_positions:

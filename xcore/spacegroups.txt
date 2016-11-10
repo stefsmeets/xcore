@@ -1,530 +1,530 @@
-   1        C1^1          P1                           P 1
-   2        Ci^1          P-1                         -P 1
-   3:b      C2^1          P2 = P2:b = P121             P 2y
-   3:c      C2^1          P2:c = P112                  P 2
-   3:a      C2^1          P2:a = P211                  P 2x
-   4:b      C2^2          P21 = P21:b = P1211          P 2yb
-   4:c      C2^2          P21:c = P1121                P 2c
-   4:a      C2^2          P21:a = P2111                P 2xa
-   5:b1     C2^3          C2 = C2:b1 = C121            C 2y
-   5:b2     C2^3          C2:b2 = A121 = A2            A 2y
-   5:b3     C2^3          C2:b3 = I121 = I2            I 2y
-   5:c1     C2^3          C2:c1 = A112                 A 2
-   5:c2     C2^3          C2:c2 = B112 = B2            B 2
-   5:c3     C2^3          C2:c3 = I112                 I 2
-   5:a1     C2^3          C2:a1 = B211                 B 2x
-   5:a2     C2^3          C2:a2 = C211                 C 2x
-   5:a3     C2^3          C2:a3 = I211                 I 2x
-   6:b      Cs^1          Pm = Pm:b = P1m1             P -2y
-   6:c      Cs^1          Pm:c = P11m                  P -2
-   6:a      Cs^1          Pm:a = Pm11                  P -2x
-   7:b1     Cs^2          Pc = Pc:b1 = P1c1            P -2yc
-   7:b2     Cs^2          Pc:b2 = P1n1 = Pn            P -2yac
-   7:b3     Cs^2          Pc:b3 = P1a1 = Pa            P -2ya
-   7:c1     Cs^2          Pc:c1 = P11a                 P -2a
-   7:c2     Cs^2          Pc:c2 = P11n                 P -2ab
-   7:c3     Cs^2          Pc:c3 = P11b = Pb            P -2b
-   7:a1     Cs^2          Pc:a1 = Pb11                 P -2xb
-   7:a2     Cs^2          Pc:a2 = Pn11                 P -2xbc
-   7:a3     Cs^2          Pc:a3 = Pc11                 P -2xc
-   8:b1     Cs^3          Cm = Cm:b1 = C1m1            C -2y
-   8:b2     Cs^3          Cm:b2 = A1m1 = Am            A -2y
-   8:b3     Cs^3          Cm:b3 = I1m1 = Im            I -2y
-   8:c1     Cs^3          Cm:c1 = A11m                 A -2
-   8:c2     Cs^3          Cm:c2 = B11m = Bm            B -2
-   8:c3     Cs^3          Cm:c3 = I11m                 I -2
-   8:a1     Cs^3          Cm:a1 = Bm11                 B -2x
-   8:a2     Cs^3          Cm:a2 = Cm11                 C -2x
-   8:a3     Cs^3          Cm:a3 = Im11                 I -2x
-   9:b1     Cs^4          Cc = Cc:b1 = C1c1            C -2yc
-   9:b2     Cs^4          Cc:b2 = A1n1 = An            A -2yac
-   9:b3     Cs^4          Cc:b3 = I1a1 = Ia            I -2ya
-   9:-b1    Cs^4          Cc:-b1 = A1a1 = Aa           A -2ya
-   9:-b2    Cs^4          Cc:-b2 = C1n1 = Cn           C -2ybc
-   9:-b3    Cs^4          Cc:-b3 = I1c1 = Ic           I -2yc
-   9:c1     Cs^4          Cc:c1 = A11a                 A -2a
-   9:c2     Cs^4          Cc:c2 = B11n = Bn            B -2bc
-   9:c3     Cs^4          Cc:c3 = I11b = Ib            I -2b
-   9:-c1    Cs^4          Cc:-c1 = B11b = Bb           B -2b
-   9:-c2    Cs^4          Cc:-c2 = A11n                A -2ac
-   9:-c3    Cs^4          Cc:-c3 = I11a                I -2a
-   9:a1     Cs^4          Cc:a1 = Bb11                 B -2xb
-   9:a2     Cs^4          Cc:a2 = Cn11                 C -2xbc
-   9:a3     Cs^4          Cc:a3 = Ic11                 I -2xc
-   9:-a1    Cs^4          Cc:-a1 = Cc11                C -2xc
-   9:-a2    Cs^4          Cc:-a2 = Bn11                B -2xbc
-   9:-a3    Cs^4          Cc:-a3 = Ib11                I -2xb
-  10:b      C2h^1         P2/m = P2/m:b = P12/m1      -P 2y
-  10:c      C2h^1         P2/m:c = P112/m             -P 2
-  10:a      C2h^1         P2/m:a = P2/m11             -P 2x
-  11:b      C2h^2         P21/m = P21/m:b = P121/m1   -P 2yb
-  11:c      C2h^2         P21/m:c = P1121/m           -P 2c
-  11:a      C2h^2         P21/m:a = P21/m11           -P 2xa
-  12:b1     C2h^3         C2/m = C2/m:b1 = C12/m1     -C 2y
-  12:b2     C2h^3         C2/m:b2 = A12/m1 = A2/m     -A 2y
-  12:b3     C2h^3         C2/m:b3 = I12/m1 = I2/m     -I 2y
-  12:c1     C2h^3         C2/m:c1 = A112/m            -A 2
-  12:c2     C2h^3         C2/m:c2 = B112/m = B2/m     -B 2
-  12:c3     C2h^3         C2/m:c3 = I112/m            -I 2
-  12:a1     C2h^3         C2/m:a1 = B2/m11            -B 2x
-  12:a2     C2h^3         C2/m:a2 = C2/m11            -C 2x
-  12:a3     C2h^3         C2/m:a3 = I2/m11            -I 2x
-  13:b1     C2h^4         P2/c = P2/c:b1 = P12/c1     -P 2yc
-  13:b2     C2h^4         P2/c:b2 = P12/n1 = P2/n     -P 2yac
-  13:b3     C2h^4         P2/c:b3 = P12/a1 = P2/a     -P 2ya
-  13:c1     C2h^4         P2/c:c1 = P112/a            -P 2a
-  13:c2     C2h^4         P2/c:c2 = P112/n            -P 2ab
-  13:c3     C2h^4         P2/c:c3 = P112/b = P2/b     -P 2b
-  13:a1     C2h^4         P2/c:a1 = P2/b11            -P 2xb
-  13:a2     C2h^4         P2/c:a2 = P2/n11            -P 2xbc
-  13:a3     C2h^4         P2/c:a3 = P2/c11            -P 2xc
-  14:b1     C2h^5         P21/c = P21/c:b1 = P121/c1  -P 2ybc
-  14:b2     C2h^5         P21/c:b2 = P121/n1 = P21/n  -P 2yn
-  14:b3     C2h^5         P21/c:b3 = P121/a1 = P21/a  -P 2yab
-  14:c1     C2h^5         P21/c:c1 = P1121/a          -P 2ac
-  14:c2     C2h^5         P21/c:c2 = P1121/n          -P 2n
-  14:c3     C2h^5         P21/c:c3 = P1121/b = P21/b  -P 2bc
-  14:a1     C2h^5         P21/c:a1 = P21/b11          -P 2xab
-  14:a2     C2h^5         P21/c:a2 = P21/n11          -P 2xn
-  14:a3     C2h^5         P21/c:a3 = P21/c11          -P 2xac
-  15:b1     C2h^6         C2/c = C2/c:b1 = C12/c1     -C 2yc
-  15:b2     C2h^6         C2/c:b2 = A12/n1 = A2/n     -A 2yac
-  15:b3     C2h^6         C2/c:b3 = I12/a1 = I2/a     -I 2ya
-  15:-b1    C2h^6         C2/c:-b1 = A12/a1 = A2/a    -A 2ya
-  15:-b2    C2h^6         C2/c:-b2 = C12/n1 = C2/n    -C 2ybc
-  15:-b3    C2h^6         C2/c:-b3 = I12/c1 = I2/c    -I 2yc
-  15:c1     C2h^6         C2/c:c1 = A112/a            -A 2a
-  15:c2     C2h^6         C2/c:c2 = B112/n = B2/n     -B 2bc
-  15:c3     C2h^6         C2/c:c3 = I112/b            -I 2b
-  15:-c1    C2h^6         C2/c:-c1 = B112/b = B2/b    -B 2b
-  15:-c2    C2h^6         C2/c:-c2 = A112/n           -A 2ac
-  15:-c3    C2h^6         C2/c:-c3 = I112/a           -I 2a
-  15:a1     C2h^6         C2/c:a1 = B2/b11            -B 2xb
-  15:a2     C2h^6         C2/c:a2 = C2/n11            -C 2xbc
-  15:a3     C2h^6         C2/c:a3 = I2/c11            -I 2xc
-  15:-a1    C2h^6         C2/c:-a1 = C2/c11           -C 2xc
-  15:-a2    C2h^6         C2/c:-a2 = B2/n11           -B 2xbc
-  15:-a3    C2h^6         C2/c:-a3 = I2/b11           -I 2xb
-  16        D2^1          P222                         P 2 2
-  17        D2^2          P2221                        P 2c 2
-  17:cab    D2^2          P2122                        P 2a 2a
-  17:bca    D2^2          P2212                        P 2 2b
-  18        D2^3          P21212                       P 2 2ab
-  18:cab    D2^3          P22121                       P 2bc 2
-  18:bca    D2^3          P21221                       P 2ac 2ac
-  19        D2^4          P212121                      P 2ac 2ab
-  20        D2^5          C2221                        C 2c 2
-  20:cab    D2^5          A2122                        A 2a 2a
-  20:bca    D2^5          B2212                        B 2 2b
-  21        D2^6          C222                         C 2 2
-  21:cab    D2^6          A222                         A 2 2
-  21:bca    D2^6          B222                         B 2 2
-  22        D2^7          F222                         F 2 2
-  23        D2^8          I222                         I 2 2
-  24        D2^9          I212121                      I 2b 2c
-  25        C2v^1         Pmm2                         P 2 -2
-  25:cab    C2v^1         P2mm                         P -2 2
-  25:bca    C2v^1         Pm2m                         P -2 -2
-  26        C2v^2         Pmc21                        P 2c -2
-  26:ba-c   C2v^2         Pcm21                        P 2c -2c
-  26:cab    C2v^2         P21ma                        P -2a 2a
-  26:-cba   C2v^2         P21am                        P -2 2a
-  26:bca    C2v^2         Pb21m                        P -2 -2b
-  26:a-cb   C2v^2         Pm21b                        P -2b -2
-  27        C2v^3         Pcc2                         P 2 -2c
-  27:cab    C2v^3         P2aa                         P -2a 2
-  27:bca    C2v^3         Pb2b                         P -2b -2b
-  28        C2v^4         Pma2                         P 2 -2a
-  28:ba-c   C2v^4         Pbm2                         P 2 -2b
-  28:cab    C2v^4         P2mb                         P -2b 2
-  28:-cba   C2v^4         P2cm                         P -2c 2
-  28:bca    C2v^4         Pc2m                         P -2c -2c
-  28:a-cb   C2v^4         Pm2a                         P -2a -2a
-  29        C2v^5         Pca21                        P 2c -2ac
-  29:ba-c   C2v^5         Pbc21                        P 2c -2b
-  29:cab    C2v^5         P21ab                        P -2b 2a
-  29:-cba   C2v^5         P21ca                        P -2ac 2a
-  29:bca    C2v^5         Pc21b                        P -2bc -2c
-  29:a-cb   C2v^5         Pb21a                        P -2a -2ab
-  30        C2v^6         Pnc2                         P 2 -2bc
-  30:ba-c   C2v^6         Pcn2                         P 2 -2ac
-  30:cab    C2v^6         P2na                         P -2ac 2
-  30:-cba   C2v^6         P2an                         P -2ab 2
-  30:bca    C2v^6         Pb2n                         P -2ab -2ab
-  30:a-cb   C2v^6         Pn2b                         P -2bc -2bc
-  31        C2v^7         Pmn21                        P 2ac -2
-  31:ba-c   C2v^7         Pnm21                        P 2bc -2bc
-  31:cab    C2v^7         P21mn                        P -2ab 2ab
-  31:-cba   C2v^7         P21nm                        P -2 2ac
-  31:bca    C2v^7         Pn21m                        P -2 -2bc
-  31:a-cb   C2v^7         Pm21n                        P -2ab -2
-  32        C2v^8         Pba2                         P 2 -2ab
-  32:cab    C2v^8         P2cb                         P -2bc 2
-  32:bca    C2v^8         Pc2a                         P -2ac -2ac
-  33        C2v^9         Pna21                        P 2c -2n
-  33:ba-c   C2v^9         Pbn21                        P 2c -2ab
-  33:cab    C2v^9         P21nb                        P -2bc 2a
-  33:-cba   C2v^9         P21cn                        P -2n 2a
-  33:bca    C2v^9         Pc21n                        P -2n -2ac
-  33:a-cb   C2v^9         Pn21a                        P -2ac -2n
-  34        C2v^10        Pnn2                         P 2 -2n
-  34:cab    C2v^10        P2nn                         P -2n 2
-  34:bca    C2v^10        Pn2n                         P -2n -2n
-  35        C2v^11        Cmm2                         C 2 -2
-  35:cab    C2v^11        A2mm                         A -2 2
-  35:bca    C2v^11        Bm2m                         B -2 -2
-  36        C2v^12        Cmc21                        C 2c -2
-  36:ba-c   C2v^12        Ccm21                        C 2c -2c
-  36:cab    C2v^12        A21ma                        A -2a 2a
-  36:-cba   C2v^12        A21am                        A -2 2a
-  36:bca    C2v^12        Bb21m                        B -2 -2b
-  36:a-cb   C2v^12        Bm21b                        B -2b -2
-  37        C2v^13        Ccc2                         C 2 -2c
-  37:cab    C2v^13        A2aa                         A -2a 2
-  37:bca    C2v^13        Bb2b                         B -2b -2b
-  38        C2v^14        Amm2                         A 2 -2
-  38:ba-c   C2v^14        Bmm2                         B 2 -2
-  38:cab    C2v^14        B2mm                         B -2 2
-  38:-cba   C2v^14        C2mm                         C -2 2
-  38:bca    C2v^14        Cm2m                         C -2 -2
-  38:a-cb   C2v^14        Am2m                         A -2 -2
-  39        C2v^15        Abm2                         A 2 -2c
-  39:ba-c   C2v^15        Bma2                         B 2 -2c
-  39:cab    C2v^15        B2cm                         B -2c 2
-  39:-cba   C2v^15        C2mb                         C -2b 2
-  39:bca    C2v^15        Cm2a                         C -2b -2b
-  39:a-cb   C2v^15        Ac2m                         A -2c -2c
-  40        C2v^16        Ama2                         A 2 -2a
-  40:ba-c   C2v^16        Bbm2                         B 2 -2b
-  40:cab    C2v^16        B2mb                         B -2b 2
-  40:-cba   C2v^16        C2cm                         C -2c 2
-  40:bca    C2v^16        Cc2m                         C -2c -2c
-  40:a-cb   C2v^16        Am2a                         A -2a -2a
-  41        C2v^17        Aba2                         A 2 -2ac
-  41:ba-c   C2v^17        Bba2                         B 2 -2bc
-  41:cab    C2v^17        B2cb                         B -2bc 2
-  41:-cba   C2v^17        C2cb                         C -2bc 2
-  41:bca    C2v^17        Cc2a                         C -2bc -2bc
-  41:a-cb   C2v^17        Ac2a                         A -2ac -2ac
-  42        C2v^18        Fmm2                         F 2 -2
-  42:cab    C2v^18        F2mm                         F -2 2
-  42:bca    C2v^18        Fm2m                         F -2 -2
-  43        C2v^19        Fdd2                         F 2 -2d
-  43:cab    C2v^19        F2dd                         F -2d 2
-  43:bca    C2v^19        Fd2d                         F -2d -2d
-  44        C2v^20        Imm2                         I 2 -2
-  44:cab    C2v^20        I2mm                         I -2 2
-  44:bca    C2v^20        Im2m                         I -2 -2
-  45        C2v^21        Iba2                         I 2 -2c
-  45:cab    C2v^21        I2cb                         I -2a 2
-  45:bca    C2v^21        Ic2a                         I -2b -2b
-  46        C2v^22        Ima2                         I 2 -2a
-  46:ba-c   C2v^22        Ibm2                         I 2 -2b
-  46:cab    C2v^22        I2mb                         I -2b 2
-  46:-cba   C2v^22        I2cm                         I -2c 2
-  46:bca    C2v^22        Ic2m                         I -2c -2c
-  46:a-cb   C2v^22        Im2a                         I -2a -2a
-  47        D2h^1         Pmmm                        -P 2 2
-  48:1      D2h^2         Pnnn:1                       P 2 2 -1n
-  48:2      D2h^2         Pnnn:2                      -P 2ab 2bc
-  49        D2h^3         Pccm                        -P 2 2c
-  49:cab    D2h^3         Pmaa                        -P 2a 2
-  49:bca    D2h^3         Pbmb                        -P 2b 2b
-  50:1      D2h^4         Pban:1                       P 2 2 -1ab
-  50:2      D2h^4         Pban:2                      -P 2ab 2b
-  50:1cab   D2h^4         Pncb:1                       P 2 2 -1bc
-  50:2cab   D2h^4         Pncb:2                      -P 2b 2bc
-  50:1bca   D2h^4         Pcna:1                       P 2 2 -1ac
-  50:2bca   D2h^4         Pcna:2                      -P 2a 2c
-  51        D2h^5         Pmma                        -P 2a 2a
-  51:ba-c   D2h^5         Pmmb                        -P 2b 2
-  51:cab    D2h^5         Pbmm                        -P 2 2b
-  51:-cba   D2h^5         Pcmm                        -P 2c 2c
-  51:bca    D2h^5         Pmcm                        -P 2c 2
-  51:a-cb   D2h^5         Pmam                        -P 2 2a
-  52        D2h^6         Pnna                        -P 2a 2bc
-  52:ba-c   D2h^6         Pnnb                        -P 2b 2n
-  52:cab    D2h^6         Pbnn                        -P 2n 2b
-  52:-cba   D2h^6         Pcnn                        -P 2ab 2c
-  52:bca    D2h^6         Pncn                        -P 2ab 2n
-  52:a-cb   D2h^6         Pnan                        -P 2n 2bc
-  53        D2h^7         Pmna                        -P 2ac 2
-  53:ba-c   D2h^7         Pnmb                        -P 2bc 2bc
-  53:cab    D2h^7         Pbmn                        -P 2ab 2ab
-  53:-cba   D2h^7         Pcnm                        -P 2 2ac
-  53:bca    D2h^7         Pncm                        -P 2 2bc
-  53:a-cb   D2h^7         Pman                        -P 2ab 2
-  54        D2h^8         Pcca                        -P 2a 2ac
-  54:ba-c   D2h^8         Pccb                        -P 2b 2c
-  54:cab    D2h^8         Pbaa                        -P 2a 2b
-  54:-cba   D2h^8         Pcaa                        -P 2ac 2c
-  54:bca    D2h^8         Pbcb                        -P 2bc 2b
-  54:a-cb   D2h^8         Pbab                        -P 2b 2ab
-  55        D2h^9         Pbam                        -P 2 2ab
-  55:cab    D2h^9         Pmcb                        -P 2bc 2
-  55:bca    D2h^9         Pcma                        -P 2ac 2ac
-  56        D2h^10        Pccn                        -P 2ab 2ac
-  56:cab    D2h^10        Pnaa                        -P 2ac 2bc
-  56:bca    D2h^10        Pbnb                        -P 2bc 2ab
-  57        D2h^11        Pbcm                        -P 2c 2b
-  57:ba-c   D2h^11        Pcam                        -P 2c 2ac
-  57:cab    D2h^11        Pmca                        -P 2ac 2a
-  57:-cba   D2h^11        Pmab                        -P 2b 2a
-  57:bca    D2h^11        Pbma                        -P 2a 2ab
-  57:a-cb   D2h^11        Pcmb                        -P 2bc 2c
-  58        D2h^12        Pnnm                        -P 2 2n
-  58:cab    D2h^12        Pmnn                        -P 2n 2
-  58:bca    D2h^12        Pnmn                        -P 2n 2n
-  59:1      D2h^13        Pmmn:1                       P 2 2ab -1ab
-  59:2      D2h^13        Pmmn:2                      -P 2ab 2a
-  59:1cab   D2h^13        Pnmm:1                       P 2bc 2 -1bc
-  59:2cab   D2h^13        Pnmm:2                      -P 2c 2bc
-  59:1bca   D2h^13        Pmnm:1                       P 2ac 2ac -1ac
-  59:2bca   D2h^13        Pmnm:2                      -P 2c 2a
-  60        D2h^14        Pbcn                        -P 2n 2ab
-  60:ba-c   D2h^14        Pcan                        -P 2n 2c
-  60:cab    D2h^14        Pnca                        -P 2a 2n
-  60:-cba   D2h^14        Pnab                        -P 2bc 2n
-  60:bca    D2h^14        Pbna                        -P 2ac 2b
-  60:a-cb   D2h^14        Pcnb                        -P 2b 2ac
-  61        D2h^15        Pbca                        -P 2ac 2ab
-  61:ba-c   D2h^15        Pcab                        -P 2bc 2ac
-  62        D2h^16        Pnma                        -P 2ac 2n
-  62:ba-c   D2h^16        Pmnb                        -P 2bc 2a
-  62:cab    D2h^16        Pbnm                        -P 2c 2ab
-  62:-cba   D2h^16        Pcmn                        -P 2n 2ac
-  62:bca    D2h^16        Pmcn                        -P 2n 2a
-  62:a-cb   D2h^16        Pnam                        -P 2c 2n
-  63        D2h^17        Cmcm                        -C 2c 2
-  63:ba-c   D2h^17        Ccmm                        -C 2c 2c
-  63:cab    D2h^17        Amma                        -A 2a 2a
-  63:-cba   D2h^17        Amam                        -A 2 2a
-  63:bca    D2h^17        Bbmm                        -B 2 2b
-  63:a-cb   D2h^17        Bmmb                        -B 2b 2
-  64        D2h^18        Cmca                        -C 2bc 2
-  64:ba-c   D2h^18        Ccmb                        -C 2bc 2bc
-  64:cab    D2h^18        Abma                        -A 2ac 2ac
-  64:-cba   D2h^18        Acam                        -A 2 2ac
-  64:bca    D2h^18        Bbcm                        -B 2 2bc
-  64:a-cb   D2h^18        Bmab                        -B 2bc 2
-  65        D2h^19        Cmmm                        -C 2 2
-  65:cab    D2h^19        Ammm                        -A 2 2
-  65:bca    D2h^19        Bmmm                        -B 2 2
-  66        D2h^20        Cccm                        -C 2 2c
-  66:cab    D2h^20        Amaa                        -A 2a 2
-  66:bca    D2h^20        Bbmb                        -B 2b 2b
-  67        D2h^21        Cmma                        -C 2b 2
-  67:ba-c   D2h^21        Cmmb                        -C 2b 2b
-  67:cab    D2h^21        Abmm                        -A 2c 2c
-  67:-cba   D2h^21        Acmm                        -A 2 2c
-  67:bca    D2h^21        Bmcm                        -B 2 2c
-  67:a-cb   D2h^21        Bmam                        -B 2c 2
-  68:1      D2h^22        Ccca:1                       C 2 2 -1bc
-  68:2      D2h^22        Ccca:2                      -C 2b 2bc
-  68:1ba-c  D2h^22        Cccb:1                       C 2 2 -1bc
-  68:2ba-c  D2h^22        Cccb:2                      -C 2b 2c
-  68:1cab   D2h^22        Abaa:1                       A 2 2 -1ac
-  68:2cab   D2h^22        Abaa:2                      -A 2a 2c
-  68:1-cba  D2h^22        Acaa:1                       A 2 2 -1ac
-  68:2-cba  D2h^22        Acaa:2                      -A 2ac 2c
-  68:1bca   D2h^22        Bbcb:1                       B 2 2 -1bc
-  68:2bca   D2h^22        Bbcb:2                      -B 2bc 2b
-  68:1a-cb  D2h^22        Bbab:1                       B 2 2 -1bc
-  68:2a-cb  D2h^22        Bbab:2                      -B 2b 2bc
-  69        D2h^23        Fmmm                        -F 2 2
-  70:1      D2h^24        Fddd:1                       F 2 2 -1d
-  70:2      D2h^24        Fddd:2                      -F 2uv 2vw
-  71        D2h^25        Immm                        -I 2 2
-  72        D2h^26        Ibam                        -I 2 2c
-  72:cab    D2h^26        Imcb                        -I 2a 2
-  72:bca    D2h^26        Icma                        -I 2b 2b
-  73        D2h^27        Ibca                        -I 2b 2c
-  73:ba-c   D2h^27        Icab                        -I 2a 2b
-  74        D2h^28        Imma                        -I 2b 2
-  74:ba-c   D2h^28        Immb                        -I 2a 2a
-  74:cab    D2h^28        Ibmm                        -I 2c 2c
-  74:-cba   D2h^28        Icmm                        -I 2 2b
-  74:bca    D2h^28        Imcm                        -I 2 2a
-  74:a-cb   D2h^28        Imam                        -I 2c 2
-  75        C4^1          P4                           P 4
-  76        C4^2          P41                          P 4w
-  77        C4^3          P42                          P 4c
-  78        C4^4          P43                          P 4cw
-  79        C4^5          I4                           I 4
-  80        C4^6          I41                          I 4bw
-  81        S4^1          P-4                          P -4
-  82        S4^2          I-4                          I -4
-  83        C4h^1         P4/m                        -P 4
-  84        C4h^2         P42/m                       -P 4c
-  85:1      C4h^3         P4/n:1                       P 4ab -1ab
-  85:2      C4h^3         P4/n:2                      -P 4a
-  86:1      C4h^4         P42/n:1                      P 4n -1n
-  86:2      C4h^4         P42/n:2                     -P 4bc
-  87        C4h^5         I4/m                        -I 4
-  88:1      C4h^6         I41/a:1                      I 4bw -1bw
-  88:2      C4h^6         I41/a:2                     -I 4ad
-  89        D4^1          P422                         P 4 2
-  90        D4^2          P4212                        P 4ab 2ab
-  91        D4^3          P4122                        P 4w 2c
-  92        D4^4          P41212                       P 4abw 2nw
-  93        D4^5          P4222                        P 4c 2
-  94        D4^6          P42212                       P 4n 2n
-  95        D4^7          P4322                        P 4cw 2c
-  96        D4^8          P43212                       P 4nw 2abw
-  97        D4^9          I422                         I 4 2
-  98        D4^10         I4122                        I 4bw 2bw
-  99        C4v^1         P4mm                         P 4 -2
- 100        C4v^2         P4bm                         P 4 -2ab
- 101        C4v^3         P42cm                        P 4c -2c
- 102        C4v^4         P42nm                        P 4n -2n
- 103        C4v^5         P4cc                         P 4 -2c
- 104        C4v^6         P4nc                         P 4 -2n
- 105        C4v^7         P42mc                        P 4c -2
- 106        C4v^8         P42bc                        P 4c -2ab
- 107        C4v^9         I4mm                         I 4 -2
- 108        C4v^10        I4cm                         I 4 -2c
- 109        C4v^11        I41md                        I 4bw -2
- 110        C4v^12        I41cd                        I 4bw -2c
- 111        D2d^1         P-42m                        P -4 2
- 112        D2d^2         P-42c                        P -4 2c
- 113        D2d^3         P-421m                       P -4 2ab
- 114        D2d^4         P-421c                       P -4 2n
- 115        D2d^5         P-4m2                        P -4 -2
- 116        D2d^6         P-4c2                        P -4 -2c
- 117        D2d^7         P-4b2                        P -4 -2ab
- 118        D2d^8         P-4n2                        P -4 -2n
- 119        D2d^9         I-4m2                        I -4 -2
- 120        D2d^10        I-4c2                        I -4 -2c
- 121        D2d^11        I-42m                        I -4 2
- 122        D2d^12        I-42d                        I -4 2bw
- 123        D4h^1         P4/mmm                      -P 4 2
- 124        D4h^2         P4/mcc                      -P 4 2c
- 125:1      D4h^3         P4/nbm:1                     P 4 2 -1ab
- 125:2      D4h^3         P4/nbm:2                    -P 4a 2b
- 126:1      D4h^4         P4/nnc:1                     P 4 2 -1n
- 126:2      D4h^4         P4/nnc:2                    -P 4a 2bc
- 127        D4h^5         P4/mbm                      -P 4 2ab
- 128        D4h^6         P4/mnc                      -P 4 2n
- 129:1      D4h^7         P4/nmm:1                     P 4ab 2ab -1ab
- 129:2      D4h^7         P4/nmm:2                    -P 4a 2a
- 130:1      D4h^8         P4/ncc:1                     P 4ab 2n -1ab
- 130:2      D4h^8         P4/ncc:2                    -P 4a 2ac
- 131        D4h^9         P42/mmc                     -P 4c 2
- 132        D4h^10        P42/mcm                     -P 4c 2c
- 133:1      D4h^11        P42/nbc:1                    P 4n 2c -1n
- 133:2      D4h^11        P42/nbc:2                   -P 4ac 2b
- 134:1      D4h^12        P42/nnm:1                    P 4n 2 -1n
- 134:2      D4h^12        P42/nnm:2                   -P 4ac 2bc
- 135        D4h^13        P42/mbc                     -P 4c 2ab
- 136        D4h^14        P42/mnm                     -P 4n 2n
- 137:1      D4h^15        P42/nmc:1                    P 4n 2n -1n
- 137:2      D4h^15        P42/nmc:2                   -P 4ac 2a
- 138:1      D4h^16        P42/ncm:1                    P 4n 2ab -1n
- 138:2      D4h^16        P42/ncm:2                   -P 4ac 2ac
- 139        D4h^17        I4/mmm                      -I 4 2
- 140        D4h^18        I4/mcm                      -I 4 2c
- 141:1      D4h^19        I41/amd:1                    I 4bw 2bw -1bw
- 141:2      D4h^19        I41/amd:2                   -I 4bd 2
- 142:1      D4h^20        I41/acd:1                    I 4bw 2aw -1bw
- 142:2      D4h^20        I41/acd:2                   -I 4bd 2c
- 143        C3^1          P3                           P 3
- 144        C3^2          P31                          P 31
- 145        C3^3          P32                          P 32
- 146:H      C3^4          R3:H                         R 3
- 146:R      C3^4          R3:R                         P 3*
- 147        C3i^1         P-3                         -P 3
- 148:H      C3i^2         R-3:H                       -R 3
- 148:R      C3i^2         R-3:R                       -P 3*
- 149        D3^1          P312                         P 3 2
- 150        D3^2          P321                         P 3 2"
- 151        D3^3          P3112                        P 31 2c (0 0 1)
- 152        D3^4          P3121                        P 31 2"
- 153        D3^5          P3212                        P 32 2c (0 0 -1)
- 154        D3^6          P3221                        P 32 2"
- 155:H      D3^7          R32:H                        R 3 2"
- 155:R      D3^7          R32:R                        P 3* 2
- 156        C3v^1         P3m1                         P 3 -2"
- 157        C3v^2         P31m                         P 3 -2
- 158        C3v^3         P3c1                         P 3 -2"c
- 159        C3v^4         P31c                         P 3 -2c
- 160:H      C3v^5         R3m:H                        R 3 -2"
- 160:R      C3v^5         R3m:R                        P 3* -2
- 161:H      C3v^6         R3c:H                        R 3 -2"c
- 161:R      C3v^6         R3c:R                        P 3* -2n
- 162        D3d^1         P-31m                       -P 3 2
- 163        D3d^2         P-31c                       -P 3 2c
- 164        D3d^3         P-3m1                       -P 3 2"
- 165        D3d^4         P-3c1                       -P 3 2"c
- 166:H      D3d^5         R-3m:H                      -R 3 2"
- 166:R      D3d^5         R-3m:R                      -P 3* 2
- 167:H      D3d^6         R-3c:H                      -R 3 2"c
- 167:R      D3d^6         R-3c:R                      -P 3* 2n
- 168        C6^1          P6                           P 6
- 169        C6^2          P61                          P 61
- 170        C6^3          P65                          P 65
- 171        C6^4          P62                          P 62
- 172        C6^5          P64                          P 64
- 173        C6^6          P63                          P 6c
- 174        C3h^1         P-6                          P -6
- 175        C6h^1         P6/m                        -P 6
- 176        C6h^2         P63/m                       -P 6c
- 177        D6^1          P622                         P 6 2
- 178        D6^2          P6122                        P 61 2 (0 0 -1)
- 179        D6^3          P6522                        P 65 2 (0 0 1)
- 180        D6^4          P6222                        P 62 2c (0 0 1)
- 181        D6^5          P6422                        P 64 2c (0 0 -1)
- 182        D6^6          P6322                        P 6c 2c
- 183        C6v^1         P6mm                         P 6 -2
- 184        C6v^2         P6cc                         P 6 -2c
- 185        C6v^3         P63cm                        P 6c -2
- 186        C6v^4         P63mc                        P 6c -2c
- 187        D3h^1         P-6m2                        P -6 2
- 188        D3h^2         P-6c2                        P -6c 2
- 189        D3h^3         P-62m                        P -6 -2
- 190        D3h^4         P-62c                        P -6c -2c
- 191        D6h^1         P6/mmm                      -P 6 2
- 192        D6h^2         P6/mcc                      -P 6 2c
- 193        D6h^3         P63/mcm                     -P 6c 2
- 194        D6h^4         P63/mmc                     -P 6c 2c
- 195        T^1           P23                          P 2 2 3
- 196        T^2           F23                          F 2 2 3
- 197        T^3           I23                          I 2 2 3
- 198        T^4           P213                         P 2ac 2ab 3
- 199        T^5           I213                         I 2b 2c 3
- 200        Th^1          Pm-3                        -P 2 2 3
- 201:1      Th^2          Pn-3:1                       P 2 2 3 -1n
- 201:2      Th^2          Pn-3:2                      -P 2ab 2bc 3
- 202        Th^3          Fm-3                        -F 2 2 3
- 203:1      Th^4          Fd-3:1                       F 2 2 3 -1d
- 203:2      Th^4          Fd-3:2                      -F 2uv 2vw 3
- 204        Th^5          Im-3                        -I 2 2 3
- 205        Th^6          Pa-3                        -P 2ac 2ab 3
- 206        Th^7          Ia-3                        -I 2b 2c 3
- 207        O^1           P432                         P 4 2 3
- 208        O^2           P4232                        P 4n 2 3
- 209        O^3           F432                         F 4 2 3
- 210        O^4           F4132                        F 4d 2 3
- 211        O^5           I432                         I 4 2 3
- 212        O^6           P4332                        P 4acd 2ab 3
- 213        O^7           P4132                        P 4bd 2ab 3
- 214        O^8           I4132                        I 4bd 2c 3
- 215        Td^1          P-43m                        P -4 2 3
- 216        Td^2          F-43m                        F -4 2 3
- 217        Td^3          I-43m                        I -4 2 3
- 218        Td^4          P-43n                        P -4n 2 3
- 219        Td^5          F-43c                        F -4c 2 3
- 220        Td^6          I-43d                        I -4bd 2c 3
- 221        Oh^1          Pm-3m                       -P 4 2 3
- 222:1      Oh^2          Pn-3n:1                      P 4 2 3 -1n
- 222:2      Oh^2          Pn-3n:2                     -P 4a 2bc 3
- 223        Oh^3          Pm-3n                       -P 4n 2 3
- 224:1      Oh^4          Pn-3m:1                      P 4n 2 3 -1n
- 224:2      Oh^4          Pn-3m:2                     -P 4bc 2bc 3
- 225        Oh^5          Fm-3m                       -F 4 2 3
- 226        Oh^6          Fm-3c                       -F 4c 2 3
- 227:1      Oh^7          Fd-3m:1                      F 4d 2 3 -1d
- 227:2      Oh^7          Fd-3m:2                     -F 4vw 2vw 3
- 228:1      Oh^8          Fd-3c:1                      F 4d 2 3 -1cd
- 228:2      Oh^8          Fd-3c:2                     -F 4cvw 2vw 3
- 229        Oh^9          Im-3m                       -I 4 2 3
- 230        Oh^10         Ia-3d                       -I 4bd 2c 3
+   1        c1^1          p1                           p 1
+   2        ci^1          p-1                         -p 1
+   3:b      c2^1          p2 = p2:b = p121             p 2y
+   3:c      c2^1          p2:c = p112                  p 2
+   3:a      c2^1          p2:a = p211                  p 2x
+   4:b      c2^2          p21 = p21:b = p1211          p 2yb
+   4:c      c2^2          p21:c = p1121                p 2c
+   4:a      c2^2          p21:a = p2111                p 2xa
+   5:b1     c2^3          c2 = c2:b1 = c121            c 2y
+   5:b2     c2^3          c2:b2 = a121 = a2            a 2y
+   5:b3     c2^3          c2:b3 = i121 = i2            i 2y
+   5:c1     c2^3          c2:c1 = a112                 a 2
+   5:c2     c2^3          c2:c2 = b112 = b2            b 2
+   5:c3     c2^3          c2:c3 = i112                 i 2
+   5:a1     c2^3          c2:a1 = b211                 b 2x
+   5:a2     c2^3          c2:a2 = c211                 c 2x
+   5:a3     c2^3          c2:a3 = i211                 i 2x
+   6:b      cs^1          pm = pm:b = p1m1             p -2y
+   6:c      cs^1          pm:c = p11m                  p -2
+   6:a      cs^1          pm:a = pm11                  p -2x
+   7:b1     cs^2          pc = pc:b1 = p1c1            p -2yc
+   7:b2     cs^2          pc:b2 = p1n1 = pn            p -2yac
+   7:b3     cs^2          pc:b3 = p1a1 = pa            p -2ya
+   7:c1     cs^2          pc:c1 = p11a                 p -2a
+   7:c2     cs^2          pc:c2 = p11n                 p -2ab
+   7:c3     cs^2          pc:c3 = p11b = pb            p -2b
+   7:a1     cs^2          pc:a1 = pb11                 p -2xb
+   7:a2     cs^2          pc:a2 = pn11                 p -2xbc
+   7:a3     cs^2          pc:a3 = pc11                 p -2xc
+   8:b1     cs^3          cm = cm:b1 = c1m1            c -2y
+   8:b2     cs^3          cm:b2 = a1m1 = am            a -2y
+   8:b3     cs^3          cm:b3 = i1m1 = im            i -2y
+   8:c1     cs^3          cm:c1 = a11m                 a -2
+   8:c2     cs^3          cm:c2 = b11m = bm            b -2
+   8:c3     cs^3          cm:c3 = i11m                 i -2
+   8:a1     cs^3          cm:a1 = bm11                 b -2x
+   8:a2     cs^3          cm:a2 = cm11                 c -2x
+   8:a3     cs^3          cm:a3 = im11                 i -2x
+   9:b1     cs^4          cc = cc:b1 = c1c1            c -2yc
+   9:b2     cs^4          cc:b2 = a1n1 = an            a -2yac
+   9:b3     cs^4          cc:b3 = i1a1 = ia            i -2ya
+   9:-b1    cs^4          cc:-b1 = a1a1 = aa           a -2ya
+   9:-b2    cs^4          cc:-b2 = c1n1 = cn           c -2ybc
+   9:-b3    cs^4          cc:-b3 = i1c1 = ic           i -2yc
+   9:c1     cs^4          cc:c1 = a11a                 a -2a
+   9:c2     cs^4          cc:c2 = b11n = bn            b -2bc
+   9:c3     cs^4          cc:c3 = i11b = ib            i -2b
+   9:-c1    cs^4          cc:-c1 = b11b = bb           b -2b
+   9:-c2    cs^4          cc:-c2 = a11n                a -2ac
+   9:-c3    cs^4          cc:-c3 = i11a                i -2a
+   9:a1     cs^4          cc:a1 = bb11                 b -2xb
+   9:a2     cs^4          cc:a2 = cn11                 c -2xbc
+   9:a3     cs^4          cc:a3 = ic11                 i -2xc
+   9:-a1    cs^4          cc:-a1 = cc11                c -2xc
+   9:-a2    cs^4          cc:-a2 = bn11                b -2xbc
+   9:-a3    cs^4          cc:-a3 = ib11                i -2xb
+  10:b      c2h^1         p2/m = p2/m:b = p12/m1      -p 2y
+  10:c      c2h^1         p2/m:c = p112/m             -p 2
+  10:a      c2h^1         p2/m:a = p2/m11             -p 2x
+  11:b      c2h^2         p21/m = p21/m:b = p121/m1   -p 2yb
+  11:c      c2h^2         p21/m:c = p1121/m           -p 2c
+  11:a      c2h^2         p21/m:a = p21/m11           -p 2xa
+  12:b1     c2h^3         c2/m = c2/m:b1 = c12/m1     -c 2y
+  12:b2     c2h^3         c2/m:b2 = a12/m1 = a2/m     -a 2y
+  12:b3     c2h^3         c2/m:b3 = i12/m1 = i2/m     -i 2y
+  12:c1     c2h^3         c2/m:c1 = a112/m            -a 2
+  12:c2     c2h^3         c2/m:c2 = b112/m = b2/m     -b 2
+  12:c3     c2h^3         c2/m:c3 = i112/m            -i 2
+  12:a1     c2h^3         c2/m:a1 = b2/m11            -b 2x
+  12:a2     c2h^3         c2/m:a2 = c2/m11            -c 2x
+  12:a3     c2h^3         c2/m:a3 = i2/m11            -i 2x
+  13:b1     c2h^4         p2/c = p2/c:b1 = p12/c1     -p 2yc
+  13:b2     c2h^4         p2/c:b2 = p12/n1 = p2/n     -p 2yac
+  13:b3     c2h^4         p2/c:b3 = p12/a1 = p2/a     -p 2ya
+  13:c1     c2h^4         p2/c:c1 = p112/a            -p 2a
+  13:c2     c2h^4         p2/c:c2 = p112/n            -p 2ab
+  13:c3     c2h^4         p2/c:c3 = p112/b = p2/b     -p 2b
+  13:a1     c2h^4         p2/c:a1 = p2/b11            -p 2xb
+  13:a2     c2h^4         p2/c:a2 = p2/n11            -p 2xbc
+  13:a3     c2h^4         p2/c:a3 = p2/c11            -p 2xc
+  14:b1     c2h^5         p21/c = p21/c:b1 = p121/c1  -p 2ybc
+  14:b2     c2h^5         p21/c:b2 = p121/n1 = p21/n  -p 2yn
+  14:b3     c2h^5         p21/c:b3 = p121/a1 = p21/a  -p 2yab
+  14:c1     c2h^5         p21/c:c1 = p1121/a          -p 2ac
+  14:c2     c2h^5         p21/c:c2 = p1121/n          -p 2n
+  14:c3     c2h^5         p21/c:c3 = p1121/b = p21/b  -p 2bc
+  14:a1     c2h^5         p21/c:a1 = p21/b11          -p 2xab
+  14:a2     c2h^5         p21/c:a2 = p21/n11          -p 2xn
+  14:a3     c2h^5         p21/c:a3 = p21/c11          -p 2xac
+  15:b1     c2h^6         c2/c = c2/c:b1 = c12/c1     -c 2yc
+  15:b2     c2h^6         c2/c:b2 = a12/n1 = a2/n     -a 2yac
+  15:b3     c2h^6         c2/c:b3 = i12/a1 = i2/a     -i 2ya
+  15:-b1    c2h^6         c2/c:-b1 = a12/a1 = a2/a    -a 2ya
+  15:-b2    c2h^6         c2/c:-b2 = c12/n1 = c2/n    -c 2ybc
+  15:-b3    c2h^6         c2/c:-b3 = i12/c1 = i2/c    -i 2yc
+  15:c1     c2h^6         c2/c:c1 = a112/a            -a 2a
+  15:c2     c2h^6         c2/c:c2 = b112/n = b2/n     -b 2bc
+  15:c3     c2h^6         c2/c:c3 = i112/b            -i 2b
+  15:-c1    c2h^6         c2/c:-c1 = b112/b = b2/b    -b 2b
+  15:-c2    c2h^6         c2/c:-c2 = a112/n           -a 2ac
+  15:-c3    c2h^6         c2/c:-c3 = i112/a           -i 2a
+  15:a1     c2h^6         c2/c:a1 = b2/b11            -b 2xb
+  15:a2     c2h^6         c2/c:a2 = c2/n11            -c 2xbc
+  15:a3     c2h^6         c2/c:a3 = i2/c11            -i 2xc
+  15:-a1    c2h^6         c2/c:-a1 = c2/c11           -c 2xc
+  15:-a2    c2h^6         c2/c:-a2 = b2/n11           -b 2xbc
+  15:-a3    c2h^6         c2/c:-a3 = i2/b11           -i 2xb
+  16        d2^1          p222                         p 2 2
+  17        d2^2          p2221                        p 2c 2
+  17:cab    d2^2          p2122                        p 2a 2a
+  17:bca    d2^2          p2212                        p 2 2b
+  18        d2^3          p21212                       p 2 2ab
+  18:cab    d2^3          p22121                       p 2bc 2
+  18:bca    d2^3          p21221                       p 2ac 2ac
+  19        d2^4          p212121                      p 2ac 2ab
+  20        d2^5          c2221                        c 2c 2
+  20:cab    d2^5          a2122                        a 2a 2a
+  20:bca    d2^5          b2212                        b 2 2b
+  21        d2^6          c222                         c 2 2
+  21:cab    d2^6          a222                         a 2 2
+  21:bca    d2^6          b222                         b 2 2
+  22        d2^7          f222                         f 2 2
+  23        d2^8          i222                         i 2 2
+  24        d2^9          i212121                      i 2b 2c
+  25        c2v^1         pmm2                         p 2 -2
+  25:cab    c2v^1         p2mm                         p -2 2
+  25:bca    c2v^1         pm2m                         p -2 -2
+  26        c2v^2         pmc21                        p 2c -2
+  26:ba-c   c2v^2         pcm21                        p 2c -2c
+  26:cab    c2v^2         p21ma                        p -2a 2a
+  26:-cba   c2v^2         p21am                        p -2 2a
+  26:bca    c2v^2         pb21m                        p -2 -2b
+  26:a-cb   c2v^2         pm21b                        p -2b -2
+  27        c2v^3         pcc2                         p 2 -2c
+  27:cab    c2v^3         p2aa                         p -2a 2
+  27:bca    c2v^3         pb2b                         p -2b -2b
+  28        c2v^4         pma2                         p 2 -2a
+  28:ba-c   c2v^4         pbm2                         p 2 -2b
+  28:cab    c2v^4         p2mb                         p -2b 2
+  28:-cba   c2v^4         p2cm                         p -2c 2
+  28:bca    c2v^4         pc2m                         p -2c -2c
+  28:a-cb   c2v^4         pm2a                         p -2a -2a
+  29        c2v^5         pca21                        p 2c -2ac
+  29:ba-c   c2v^5         pbc21                        p 2c -2b
+  29:cab    c2v^5         p21ab                        p -2b 2a
+  29:-cba   c2v^5         p21ca                        p -2ac 2a
+  29:bca    c2v^5         pc21b                        p -2bc -2c
+  29:a-cb   c2v^5         pb21a                        p -2a -2ab
+  30        c2v^6         pnc2                         p 2 -2bc
+  30:ba-c   c2v^6         pcn2                         p 2 -2ac
+  30:cab    c2v^6         p2na                         p -2ac 2
+  30:-cba   c2v^6         p2an                         p -2ab 2
+  30:bca    c2v^6         pb2n                         p -2ab -2ab
+  30:a-cb   c2v^6         pn2b                         p -2bc -2bc
+  31        c2v^7         pmn21                        p 2ac -2
+  31:ba-c   c2v^7         pnm21                        p 2bc -2bc
+  31:cab    c2v^7         p21mn                        p -2ab 2ab
+  31:-cba   c2v^7         p21nm                        p -2 2ac
+  31:bca    c2v^7         pn21m                        p -2 -2bc
+  31:a-cb   c2v^7         pm21n                        p -2ab -2
+  32        c2v^8         pba2                         p 2 -2ab
+  32:cab    c2v^8         p2cb                         p -2bc 2
+  32:bca    c2v^8         pc2a                         p -2ac -2ac
+  33        c2v^9         pna21                        p 2c -2n
+  33:ba-c   c2v^9         pbn21                        p 2c -2ab
+  33:cab    c2v^9         p21nb                        p -2bc 2a
+  33:-cba   c2v^9         p21cn                        p -2n 2a
+  33:bca    c2v^9         pc21n                        p -2n -2ac
+  33:a-cb   c2v^9         pn21a                        p -2ac -2n
+  34        c2v^10        pnn2                         p 2 -2n
+  34:cab    c2v^10        p2nn                         p -2n 2
+  34:bca    c2v^10        pn2n                         p -2n -2n
+  35        c2v^11        cmm2                         c 2 -2
+  35:cab    c2v^11        a2mm                         a -2 2
+  35:bca    c2v^11        bm2m                         b -2 -2
+  36        c2v^12        cmc21                        c 2c -2
+  36:ba-c   c2v^12        ccm21                        c 2c -2c
+  36:cab    c2v^12        a21ma                        a -2a 2a
+  36:-cba   c2v^12        a21am                        a -2 2a
+  36:bca    c2v^12        bb21m                        b -2 -2b
+  36:a-cb   c2v^12        bm21b                        b -2b -2
+  37        c2v^13        ccc2                         c 2 -2c
+  37:cab    c2v^13        a2aa                         a -2a 2
+  37:bca    c2v^13        bb2b                         b -2b -2b
+  38        c2v^14        amm2                         a 2 -2
+  38:ba-c   c2v^14        bmm2                         b 2 -2
+  38:cab    c2v^14        b2mm                         b -2 2
+  38:-cba   c2v^14        c2mm                         c -2 2
+  38:bca    c2v^14        cm2m                         c -2 -2
+  38:a-cb   c2v^14        am2m                         a -2 -2
+  39        c2v^15        abm2                         a 2 -2c
+  39:ba-c   c2v^15        bma2                         b 2 -2c
+  39:cab    c2v^15        b2cm                         b -2c 2
+  39:-cba   c2v^15        c2mb                         c -2b 2
+  39:bca    c2v^15        cm2a                         c -2b -2b
+  39:a-cb   c2v^15        ac2m                         a -2c -2c
+  40        c2v^16        ama2                         a 2 -2a
+  40:ba-c   c2v^16        bbm2                         b 2 -2b
+  40:cab    c2v^16        b2mb                         b -2b 2
+  40:-cba   c2v^16        c2cm                         c -2c 2
+  40:bca    c2v^16        cc2m                         c -2c -2c
+  40:a-cb   c2v^16        am2a                         a -2a -2a
+  41        c2v^17        aba2                         a 2 -2ac
+  41:ba-c   c2v^17        bba2                         b 2 -2bc
+  41:cab    c2v^17        b2cb                         b -2bc 2
+  41:-cba   c2v^17        c2cb                         c -2bc 2
+  41:bca    c2v^17        cc2a                         c -2bc -2bc
+  41:a-cb   c2v^17        ac2a                         a -2ac -2ac
+  42        c2v^18        fmm2                         f 2 -2
+  42:cab    c2v^18        f2mm                         f -2 2
+  42:bca    c2v^18        fm2m                         f -2 -2
+  43        c2v^19        fdd2                         f 2 -2d
+  43:cab    c2v^19        f2dd                         f -2d 2
+  43:bca    c2v^19        fd2d                         f -2d -2d
+  44        c2v^20        imm2                         i 2 -2
+  44:cab    c2v^20        i2mm                         i -2 2
+  44:bca    c2v^20        im2m                         i -2 -2
+  45        c2v^21        iba2                         i 2 -2c
+  45:cab    c2v^21        i2cb                         i -2a 2
+  45:bca    c2v^21        ic2a                         i -2b -2b
+  46        c2v^22        ima2                         i 2 -2a
+  46:ba-c   c2v^22        ibm2                         i 2 -2b
+  46:cab    c2v^22        i2mb                         i -2b 2
+  46:-cba   c2v^22        i2cm                         i -2c 2
+  46:bca    c2v^22        ic2m                         i -2c -2c
+  46:a-cb   c2v^22        im2a                         i -2a -2a
+  47        d2h^1         pmmm                        -p 2 2
+  48:1      d2h^2         pnnn:1                       p 2 2 -1n
+  48:2      d2h^2         pnnn:2                      -p 2ab 2bc
+  49        d2h^3         pccm                        -p 2 2c
+  49:cab    d2h^3         pmaa                        -p 2a 2
+  49:bca    d2h^3         pbmb                        -p 2b 2b
+  50:1      d2h^4         pban:1                       p 2 2 -1ab
+  50:2      d2h^4         pban:2                      -p 2ab 2b
+  50:1cab   d2h^4         pncb:1                       p 2 2 -1bc
+  50:2cab   d2h^4         pncb:2                      -p 2b 2bc
+  50:1bca   d2h^4         pcna:1                       p 2 2 -1ac
+  50:2bca   d2h^4         pcna:2                      -p 2a 2c
+  51        d2h^5         pmma                        -p 2a 2a
+  51:ba-c   d2h^5         pmmb                        -p 2b 2
+  51:cab    d2h^5         pbmm                        -p 2 2b
+  51:-cba   d2h^5         pcmm                        -p 2c 2c
+  51:bca    d2h^5         pmcm                        -p 2c 2
+  51:a-cb   d2h^5         pmam                        -p 2 2a
+  52        d2h^6         pnna                        -p 2a 2bc
+  52:ba-c   d2h^6         pnnb                        -p 2b 2n
+  52:cab    d2h^6         pbnn                        -p 2n 2b
+  52:-cba   d2h^6         pcnn                        -p 2ab 2c
+  52:bca    d2h^6         pncn                        -p 2ab 2n
+  52:a-cb   d2h^6         pnan                        -p 2n 2bc
+  53        d2h^7         pmna                        -p 2ac 2
+  53:ba-c   d2h^7         pnmb                        -p 2bc 2bc
+  53:cab    d2h^7         pbmn                        -p 2ab 2ab
+  53:-cba   d2h^7         pcnm                        -p 2 2ac
+  53:bca    d2h^7         pncm                        -p 2 2bc
+  53:a-cb   d2h^7         pman                        -p 2ab 2
+  54        d2h^8         pcca                        -p 2a 2ac
+  54:ba-c   d2h^8         pccb                        -p 2b 2c
+  54:cab    d2h^8         pbaa                        -p 2a 2b
+  54:-cba   d2h^8         pcaa                        -p 2ac 2c
+  54:bca    d2h^8         pbcb                        -p 2bc 2b
+  54:a-cb   d2h^8         pbab                        -p 2b 2ab
+  55        d2h^9         pbam                        -p 2 2ab
+  55:cab    d2h^9         pmcb                        -p 2bc 2
+  55:bca    d2h^9         pcma                        -p 2ac 2ac
+  56        d2h^10        pccn                        -p 2ab 2ac
+  56:cab    d2h^10        pnaa                        -p 2ac 2bc
+  56:bca    d2h^10        pbnb                        -p 2bc 2ab
+  57        d2h^11        pbcm                        -p 2c 2b
+  57:ba-c   d2h^11        pcam                        -p 2c 2ac
+  57:cab    d2h^11        pmca                        -p 2ac 2a
+  57:-cba   d2h^11        pmab                        -p 2b 2a
+  57:bca    d2h^11        pbma                        -p 2a 2ab
+  57:a-cb   d2h^11        pcmb                        -p 2bc 2c
+  58        d2h^12        pnnm                        -p 2 2n
+  58:cab    d2h^12        pmnn                        -p 2n 2
+  58:bca    d2h^12        pnmn                        -p 2n 2n
+  59:1      d2h^13        pmmn:1                       p 2 2ab -1ab
+  59:2      d2h^13        pmmn:2                      -p 2ab 2a
+  59:1cab   d2h^13        pnmm:1                       p 2bc 2 -1bc
+  59:2cab   d2h^13        pnmm:2                      -p 2c 2bc
+  59:1bca   d2h^13        pmnm:1                       p 2ac 2ac -1ac
+  59:2bca   d2h^13        pmnm:2                      -p 2c 2a
+  60        d2h^14        pbcn                        -p 2n 2ab
+  60:ba-c   d2h^14        pcan                        -p 2n 2c
+  60:cab    d2h^14        pnca                        -p 2a 2n
+  60:-cba   d2h^14        pnab                        -p 2bc 2n
+  60:bca    d2h^14        pbna                        -p 2ac 2b
+  60:a-cb   d2h^14        pcnb                        -p 2b 2ac
+  61        d2h^15        pbca                        -p 2ac 2ab
+  61:ba-c   d2h^15        pcab                        -p 2bc 2ac
+  62        d2h^16        pnma                        -p 2ac 2n
+  62:ba-c   d2h^16        pmnb                        -p 2bc 2a
+  62:cab    d2h^16        pbnm                        -p 2c 2ab
+  62:-cba   d2h^16        pcmn                        -p 2n 2ac
+  62:bca    d2h^16        pmcn                        -p 2n 2a
+  62:a-cb   d2h^16        pnam                        -p 2c 2n
+  63        d2h^17        cmcm                        -c 2c 2
+  63:ba-c   d2h^17        ccmm                        -c 2c 2c
+  63:cab    d2h^17        amma                        -a 2a 2a
+  63:-cba   d2h^17        amam                        -a 2 2a
+  63:bca    d2h^17        bbmm                        -b 2 2b
+  63:a-cb   d2h^17        bmmb                        -b 2b 2
+  64        d2h^18        cmca                        -c 2bc 2
+  64:ba-c   d2h^18        ccmb                        -c 2bc 2bc
+  64:cab    d2h^18        abma                        -a 2ac 2ac
+  64:-cba   d2h^18        acam                        -a 2 2ac
+  64:bca    d2h^18        bbcm                        -b 2 2bc
+  64:a-cb   d2h^18        bmab                        -b 2bc 2
+  65        d2h^19        cmmm                        -c 2 2
+  65:cab    d2h^19        ammm                        -a 2 2
+  65:bca    d2h^19        bmmm                        -b 2 2
+  66        d2h^20        cccm                        -c 2 2c
+  66:cab    d2h^20        amaa                        -a 2a 2
+  66:bca    d2h^20        bbmb                        -b 2b 2b
+  67        d2h^21        cmma                        -c 2b 2
+  67:ba-c   d2h^21        cmmb                        -c 2b 2b
+  67:cab    d2h^21        abmm                        -a 2c 2c
+  67:-cba   d2h^21        acmm                        -a 2 2c
+  67:bca    d2h^21        bmcm                        -b 2 2c
+  67:a-cb   d2h^21        bmam                        -b 2c 2
+  68:1      d2h^22        ccca:1                       c 2 2 -1bc
+  68:2      d2h^22        ccca:2                      -c 2b 2bc
+  68:1ba-c  d2h^22        cccb:1                       c 2 2 -1bc
+  68:2ba-c  d2h^22        cccb:2                      -c 2b 2c
+  68:1cab   d2h^22        abaa:1                       a 2 2 -1ac
+  68:2cab   d2h^22        abaa:2                      -a 2a 2c
+  68:1-cba  d2h^22        acaa:1                       a 2 2 -1ac
+  68:2-cba  d2h^22        acaa:2                      -a 2ac 2c
+  68:1bca   d2h^22        bbcb:1                       b 2 2 -1bc
+  68:2bca   d2h^22        bbcb:2                      -b 2bc 2b
+  68:1a-cb  d2h^22        bbab:1                       b 2 2 -1bc
+  68:2a-cb  d2h^22        bbab:2                      -b 2b 2bc
+  69        d2h^23        fmmm                        -f 2 2
+  70:1      d2h^24        fddd:1                       f 2 2 -1d
+  70:2      d2h^24        fddd:2                      -f 2uv 2vw
+  71        d2h^25        immm                        -i 2 2
+  72        d2h^26        ibam                        -i 2 2c
+  72:cab    d2h^26        imcb                        -i 2a 2
+  72:bca    d2h^26        icma                        -i 2b 2b
+  73        d2h^27        ibca                        -i 2b 2c
+  73:ba-c   d2h^27        icab                        -i 2a 2b
+  74        d2h^28        imma                        -i 2b 2
+  74:ba-c   d2h^28        immb                        -i 2a 2a
+  74:cab    d2h^28        ibmm                        -i 2c 2c
+  74:-cba   d2h^28        icmm                        -i 2 2b
+  74:bca    d2h^28        imcm                        -i 2 2a
+  74:a-cb   d2h^28        imam                        -i 2c 2
+  75        c4^1          p4                           p 4
+  76        c4^2          p41                          p 4w
+  77        c4^3          p42                          p 4c
+  78        c4^4          p43                          p 4cw
+  79        c4^5          i4                           i 4
+  80        c4^6          i41                          i 4bw
+  81        s4^1          p-4                          p -4
+  82        s4^2          i-4                          i -4
+  83        c4h^1         p4/m                        -p 4
+  84        c4h^2         p42/m                       -p 4c
+  85:1      c4h^3         p4/n:1                       p 4ab -1ab
+  85:2      c4h^3         p4/n:2                      -p 4a
+  86:1      c4h^4         p42/n:1                      p 4n -1n
+  86:2      c4h^4         p42/n:2                     -p 4bc
+  87        c4h^5         i4/m                        -i 4
+  88:1      c4h^6         i41/a:1                      i 4bw -1bw
+  88:2      c4h^6         i41/a:2                     -i 4ad
+  89        d4^1          p422                         p 4 2
+  90        d4^2          p4212                        p 4ab 2ab
+  91        d4^3          p4122                        p 4w 2c
+  92        d4^4          p41212                       p 4abw 2nw
+  93        d4^5          p4222                        p 4c 2
+  94        d4^6          p42212                       p 4n 2n
+  95        d4^7          p4322                        p 4cw 2c
+  96        d4^8          p43212                       p 4nw 2abw
+  97        d4^9          i422                         i 4 2
+  98        d4^10         i4122                        i 4bw 2bw
+  99        c4v^1         p4mm                         p 4 -2
+ 100        c4v^2         p4bm                         p 4 -2ab
+ 101        c4v^3         p42cm                        p 4c -2c
+ 102        c4v^4         p42nm                        p 4n -2n
+ 103        c4v^5         p4cc                         p 4 -2c
+ 104        c4v^6         p4nc                         p 4 -2n
+ 105        c4v^7         p42mc                        p 4c -2
+ 106        c4v^8         p42bc                        p 4c -2ab
+ 107        c4v^9         i4mm                         i 4 -2
+ 108        c4v^10        i4cm                         i 4 -2c
+ 109        c4v^11        i41md                        i 4bw -2
+ 110        c4v^12        i41cd                        i 4bw -2c
+ 111        d2d^1         p-42m                        p -4 2
+ 112        d2d^2         p-42c                        p -4 2c
+ 113        d2d^3         p-421m                       p -4 2ab
+ 114        d2d^4         p-421c                       p -4 2n
+ 115        d2d^5         p-4m2                        p -4 -2
+ 116        d2d^6         p-4c2                        p -4 -2c
+ 117        d2d^7         p-4b2                        p -4 -2ab
+ 118        d2d^8         p-4n2                        p -4 -2n
+ 119        d2d^9         i-4m2                        i -4 -2
+ 120        d2d^10        i-4c2                        i -4 -2c
+ 121        d2d^11        i-42m                        i -4 2
+ 122        d2d^12        i-42d                        i -4 2bw
+ 123        d4h^1         p4/mmm                      -p 4 2
+ 124        d4h^2         p4/mcc                      -p 4 2c
+ 125:1      d4h^3         p4/nbm:1                     p 4 2 -1ab
+ 125:2      d4h^3         p4/nbm:2                    -p 4a 2b
+ 126:1      d4h^4         p4/nnc:1                     p 4 2 -1n
+ 126:2      d4h^4         p4/nnc:2                    -p 4a 2bc
+ 127        d4h^5         p4/mbm                      -p 4 2ab
+ 128        d4h^6         p4/mnc                      -p 4 2n
+ 129:1      d4h^7         p4/nmm:1                     p 4ab 2ab -1ab
+ 129:2      d4h^7         p4/nmm:2                    -p 4a 2a
+ 130:1      d4h^8         p4/ncc:1                     p 4ab 2n -1ab
+ 130:2      d4h^8         p4/ncc:2                    -p 4a 2ac
+ 131        d4h^9         p42/mmc                     -p 4c 2
+ 132        d4h^10        p42/mcm                     -p 4c 2c
+ 133:1      d4h^11        p42/nbc:1                    p 4n 2c -1n
+ 133:2      d4h^11        p42/nbc:2                   -p 4ac 2b
+ 134:1      d4h^12        p42/nnm:1                    p 4n 2 -1n
+ 134:2      d4h^12        p42/nnm:2                   -p 4ac 2bc
+ 135        d4h^13        p42/mbc                     -p 4c 2ab
+ 136        d4h^14        p42/mnm                     -p 4n 2n
+ 137:1      d4h^15        p42/nmc:1                    p 4n 2n -1n
+ 137:2      d4h^15        p42/nmc:2                   -p 4ac 2a
+ 138:1      d4h^16        p42/ncm:1                    p 4n 2ab -1n
+ 138:2      d4h^16        p42/ncm:2                   -p 4ac 2ac
+ 139        d4h^17        i4/mmm                      -i 4 2
+ 140        d4h^18        i4/mcm                      -i 4 2c
+ 141:1      d4h^19        i41/amd:1                    i 4bw 2bw -1bw
+ 141:2      d4h^19        i41/amd:2                   -i 4bd 2
+ 142:1      d4h^20        i41/acd:1                    i 4bw 2aw -1bw
+ 142:2      d4h^20        i41/acd:2                   -i 4bd 2c
+ 143        c3^1          p3                           p 3
+ 144        c3^2          p31                          p 31
+ 145        c3^3          p32                          p 32
+ 146:h      c3^4          r3:h                         r 3
+ 146:r      c3^4          r3:r                         p 3*
+ 147        c3i^1         p-3                         -p 3
+ 148:h      c3i^2         r-3:h                       -r 3
+ 148:r      c3i^2         r-3:r                       -p 3*
+ 149        d3^1          p312                         p 3 2
+ 150        d3^2          p321                         p 3 2"
+ 151        d3^3          p3112                        p 31 2c (0 0 1)
+ 152        d3^4          p3121                        p 31 2"
+ 153        d3^5          p3212                        p 32 2c (0 0 -1)
+ 154        d3^6          p3221                        p 32 2"
+ 155:h      d3^7          r32:h                        r 3 2"
+ 155:r      d3^7          r32:r                        p 3* 2
+ 156        c3v^1         p3m1                         p 3 -2"
+ 157        c3v^2         p31m                         p 3 -2
+ 158        c3v^3         p3c1                         p 3 -2"c
+ 159        c3v^4         p31c                         p 3 -2c
+ 160:h      c3v^5         r3m:h                        r 3 -2"
+ 160:r      c3v^5         r3m:r                        p 3* -2
+ 161:h      c3v^6         r3c:h                        r 3 -2"c
+ 161:r      c3v^6         r3c:r                        p 3* -2n
+ 162        d3d^1         p-31m                       -p 3 2
+ 163        d3d^2         p-31c                       -p 3 2c
+ 164        d3d^3         p-3m1                       -p 3 2"
+ 165        d3d^4         p-3c1                       -p 3 2"c
+ 166:h      d3d^5         r-3m:h                      -r 3 2"
+ 166:r      d3d^5         r-3m:r                      -p 3* 2
+ 167:h      d3d^6         r-3c:h                      -r 3 2"c
+ 167:r      d3d^6         r-3c:r                      -p 3* 2n
+ 168        c6^1          p6                           p 6
+ 169        c6^2          p61                          p 61
+ 170        c6^3          p65                          p 65
+ 171        c6^4          p62                          p 62
+ 172        c6^5          p64                          p 64
+ 173        c6^6          p63                          p 6c
+ 174        c3h^1         p-6                          p -6
+ 175        c6h^1         p6/m                        -p 6
+ 176        c6h^2         p63/m                       -p 6c
+ 177        d6^1          p622                         p 6 2
+ 178        d6^2          p6122                        p 61 2 (0 0 -1)
+ 179        d6^3          p6522                        p 65 2 (0 0 1)
+ 180        d6^4          p6222                        p 62 2c (0 0 1)
+ 181        d6^5          p6422                        p 64 2c (0 0 -1)
+ 182        d6^6          p6322                        p 6c 2c
+ 183        c6v^1         p6mm                         p 6 -2
+ 184        c6v^2         p6cc                         p 6 -2c
+ 185        c6v^3         p63cm                        p 6c -2
+ 186        c6v^4         p63mc                        p 6c -2c
+ 187        d3h^1         p-6m2                        p -6 2
+ 188        d3h^2         p-6c2                        p -6c 2
+ 189        d3h^3         p-62m                        p -6 -2
+ 190        d3h^4         p-62c                        p -6c -2c
+ 191        d6h^1         p6/mmm                      -p 6 2
+ 192        d6h^2         p6/mcc                      -p 6 2c
+ 193        d6h^3         p63/mcm                     -p 6c 2
+ 194        d6h^4         p63/mmc                     -p 6c 2c
+ 195        t^1           p23                          p 2 2 3
+ 196        t^2           f23                          f 2 2 3
+ 197        t^3           i23                          i 2 2 3
+ 198        t^4           p213                         p 2ac 2ab 3
+ 199        t^5           i213                         i 2b 2c 3
+ 200        th^1          pm-3                        -p 2 2 3
+ 201:1      th^2          pn-3:1                       p 2 2 3 -1n
+ 201:2      th^2          pn-3:2                      -p 2ab 2bc 3
+ 202        th^3          fm-3                        -f 2 2 3
+ 203:1      th^4          fd-3:1                       f 2 2 3 -1d
+ 203:2      th^4          fd-3:2                      -f 2uv 2vw 3
+ 204        th^5          im-3                        -i 2 2 3
+ 205        th^6          pa-3                        -p 2ac 2ab 3
+ 206        th^7          ia-3                        -i 2b 2c 3
+ 207        o^1           p432                         p 4 2 3
+ 208        o^2           p4232                        p 4n 2 3
+ 209        o^3           f432                         f 4 2 3
+ 210        o^4           f4132                        f 4d 2 3
+ 211        o^5           i432                         i 4 2 3
+ 212        o^6           p4332                        p 4acd 2ab 3
+ 213        o^7           p4132                        p 4bd 2ab 3
+ 214        o^8           i4132                        i 4bd 2c 3
+ 215        td^1          p-43m                        p -4 2 3
+ 216        td^2          f-43m                        f -4 2 3
+ 217        td^3          i-43m                        i -4 2 3
+ 218        td^4          p-43n                        p -4n 2 3
+ 219        td^5          f-43c                        f -4c 2 3
+ 220        td^6          i-43d                        i -4bd 2c 3
+ 221        oh^1          pm-3m                       -p 4 2 3
+ 222:1      oh^2          pn-3n:1                      p 4 2 3 -1n
+ 222:2      oh^2          pn-3n:2                     -p 4a 2bc 3
+ 223        oh^3          pm-3n                       -p 4n 2 3
+ 224:1      oh^4          pn-3m:1                      p 4n 2 3 -1n
+ 224:2      oh^4          pn-3m:2                     -p 4bc 2bc 3
+ 225        oh^5          fm-3m                       -f 4 2 3
+ 226        oh^6          fm-3c                       -f 4c 2 3
+ 227:1      oh^7          fd-3m:1                      f 4d 2 3 -1d
+ 227:2      oh^7          fd-3m:2                     -f 4vw 2vw 3
+ 228:1      oh^8          fd-3c:1                      f 4d 2 3 -1cd
+ 228:2      oh^8          fd-3c:2                     -f 4cvw 2vw 3
+ 229        oh^9          im-3m                       -i 4 2 3
+ 230        oh^10         ia-3d                       -i 4bd 2c 3

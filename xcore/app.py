@@ -155,7 +155,7 @@ def main():
 
     if options.sysabs_selfcheck:
         for s in range(1, 231):
-            spgr = get_spacegroup_info(s)
+            spgr = SpaceGroup(s)
             cell = get_random_cell(spgr)
 
             print spgr, cell
@@ -187,7 +187,7 @@ def main():
     if not options.spgr:
 
         for arg in args:
-            spgr = get_spacegroup_info(arg)
+            spgr = SpaceGroup(arg)
             if not spgr:
                 continue
             print "# {}\n".format(arg)

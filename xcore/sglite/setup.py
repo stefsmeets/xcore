@@ -1,4 +1,5 @@
-from distutils.core import setup, Extension
+# from distutils.core import setup, Extension
+from setuptools import Command, Extension, find_packages, setup
 
 srclist = ['sgglobal.c','sgcb.c','sgcharmx.c','sgfile.c',
            'sggen.c','sghall.c','sghkl.c','sgltr.c','sgmath.c','sgmetric.c',
