@@ -56,7 +56,7 @@ def calc_structure_factors(cell, atoms, table="xray"):
     hkl = hkl[cell.is_absent_np(hkl) == False]
         
     df = pd.DataFrame(hkl, columns=["h", "k", "l"])
-    df["sitl"] = 1/(2*cell.calc_dspacing_np(hkl))
+    df["sitl"] = 1/(2*cell.calc_dspacing(hkl))
     df.sort_values("sitl", ascending=True, inplace=True)
     
     elements = atoms.symbol.unique()

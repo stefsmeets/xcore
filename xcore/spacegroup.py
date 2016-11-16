@@ -11,15 +11,6 @@ import sglite
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-f = open(os.path.join(os.path.dirname(__file__), 'spacegroups.txt'), 'r')
-spacegrouptxt = f.readlines()
-f.close()
-
-
-from IPython.terminal.embed import InteractiveShellEmbed
-InteractiveShellEmbed.confirm_exit = False
-ipshell = InteractiveShellEmbed(banner1='')
-
 ABSENT = -1
 CENTRIC = 1
 
@@ -66,18 +57,6 @@ reflection_conditions = {
     "No Condition": lambda h, k, l: True
 }
 
-# laue_merge = {
-#     'triclinic' : lambda (h,k,l): (abs(h),k,l),
-#     'monoclinic' : lambda (h,k,l): (abs(h),abs(k),l),
-#     'monoclinicb' : lambda (h,k,l): (abs(h),abs(k),l),
-#     'monoclinicc' : lambda (h,k,l): (abs(h), l,abs(l)),
-#     'orthorhombic' : lambda (h,k,l): (abs(h),abs(k),abs(l))
-#     #'tetragonal' : lambda h,k,l: raise ValueError,
-#     #'hexagonal' : lambda h,k,l: raise ValueError,
-#     #'rhombohedral1' : lambda h,k,l: raise ValueError,
-#     #'rhombohedral2' : lambda h,k,l: raise ValueError,
-#     #'cubic' : lambda h,k,l: raise ValueError
-# }
 
 def asym_1((h,k,l)):
     ret = False
@@ -407,9 +386,9 @@ class SymOp(object):
     @property
     def r(self):
         Mx = self.Mx
-        np.array(((Mx[0], Mx[1], Mx[2]),
-                  (Mx[3], Mx[4], Mx[5]),
-                  (Mx[6], Mx[7], Mx[8]))) / float(sglite.SRBF)
+        return np.array(((Mx[0], Mx[1], Mx[2]),
+                         (Mx[3], Mx[4], Mx[5]),
+                         (Mx[6], Mx[7], Mx[8]))) / float(sglite.SRBF)
 
     @property
     def t(self):
@@ -427,52 +406,6 @@ class SymOp(object):
         r = np.dot(self.r, -np.eye(3,3))
         t = self.t
         return SymOp(symm2str(r,t))
-
-
-def parse_wyckoff_positions(wyckoff_positions, spgr):
-    letters = "abcdefghijklmnopqrstuvwxyz@"
-    ret = []
-    for i, wyckoff_raw in enumerate(wyckoff_positions):
-        letter = letters[i]
-        ret.append(WyckoffPosition(wyckoff_raw, spgr.symmetry_operations, letter=letter))
-
-    return ret
-
-
-class WyckoffPosition(object):
-
-    def __init__(self, wyckoff_raw, symops, letter="?"):
-        super(WyckoffPosition, self).__init__()
-
-        self.multiplicity = int(wyckoff_raw[0])
-        pos_r, pos_t = str2symm(wyckoff_raw[1])
-        self.letter = letter
-
-        # print pos_r, pos_t
-
-        self.special_positions = []
-        self.lst = []
-        for symop in symops:
-            # print symop.r, symop.t
-            new_r = np.dot(pos_r, symop.r)
-            new_t = pos_t + symop.t
-
-            new = symm2str(new_r, new_t)
-
-            if new not in self.lst:
-                self.lst.append(new)
-                self.special_positions.append((new_r, new_t))
-
-    def __repr__(self):
-        # include wyckof letter, and multiplicity here
-        return "{} {}: {}".format(self.multiplicity, self.letter, "  |  ".join(self.lst))
-
-    def is_special(self, coord):
-        for i, (r, t) in enumerate(self.special_positions):
-            x = np.dot(r, coord)+t.reshape(3,)
-            if np.all(coord == x):
-                return self.lst[i]
-        return False
 
 
 class ReflCond(object):
@@ -509,7 +442,7 @@ class ReflCond(object):
 
 class SpaceGroup(object):
 
-    """SpaceGroup class that takes a spgr dict (get_spacegroup_info)
+    """SpaceGroup class that takes a spgr dict (SpaceGroup)
     Stores all space group info that could be extracted from sginfo"""
 
     def __init__(self, symbol):
@@ -518,23 +451,21 @@ class SpaceGroup(object):
         try:
             dct = sglite.SgSymbolLookup(symbol)
         except ValueError:
-            s = find_hall(symbol)
             sg = sglite.SgOps()
-            sg.__init__(HallSymbol=s)
+            sg.__init__(HallSymbol=find_hall(symbol))
             dct = sg.MatchTabulatedSettings()
+        else:
+            sg = sglite.SgOps()
+            sg.__init__(HallSymbol=dct["Hall"])
+        finally:
+            self.sg = sg
 
         self.number = dct["SgNumber"]
         self.hall = dct["Hall"]
-        self.spgr_name = self.hermann_mauguin = dct["HM"]
+        self.spgr_name = self.hermann_mauguin = dct["HM"].replace(" ", "")
         self.schoenflies = dct["Schoenfl"]
         self.qualif = dct["Qualif"]
         self.setting = dct["Extension"]
-
-        print dct
-
-        sg = sglite.SgOps()
-        sg.__init__(HallSymbol=self.hall)
-        self.sg = sg
 
         self.isChiral = sg.isChiral
         self.isEnantiomorphic = sg.isEnantiomorphic
@@ -547,59 +478,70 @@ class SpaceGroup(object):
 
         self.point_group, self.laue_group, self.crystal_system = map_pointgroup2lauegroup[self.schoenflies.split("^")[0]]
 
-        # self.centering_vectors = [CVec(cv)
-        #                           for cv in kwargs["centering_vectors"]]
-        # self._symmetry_operations = [SymOp(op) for op in kwargs["symops"]]
+        if self.crystal_system == "Monoclinic":
+            self.unique_axis = {"a":"x","b":"y", "c":"z"}[self.qualif.replace("-", "")[0]]
+        else:
+            self.unique_axis = ""
 
         # self.reflection_conditions = [
         #     ReflCond(rc) for rc in kwargs["reflection_conditions"]]
 
-        # self.unique_axis = kwargs["unique_axis"]
-
-        # self.wyckoff_positions = parse_wyckoff_positions(kwargs["wyckoff_positions"], self)
-
-        # assert self.order_p == kwargs["order_p"], "{} {} {}".format(
-        #     self.space_group, self.order_p, kwargs["order_p"])
-        # assert self.order == kwargs["order"], "{} {} {}".format(
-        #     self.space_group, self.order, kwargs["order"])
-        # assert self.is_centrosymmetric == kwargs["centrosymmetric"]
-
-        # coord = np.array((0, 0.12, 0.5))
-        # sp, m = self.is_special(coord)
-        # print coord, sp, m
-
 
     def __repr__(self):
-        return self.spgr_name
+        return "SpaceGroup('{}'')".format(self.spgr_name)
 
     @property
     def space_group(self):
         if self.setting:
             return "{}:{}".format(self.number, self.setting)
+        elif self.qualif:
+            return "{}:{}".format(self.number, self.qualif)
         else:
             return "{}".format(self.number)
 
     @property
-    def centering(self):
-        return self.hall[0]
+    def centering_symbol(self):
+        return self.hermann_mauguin[0]
 
     @property
-    def symmetry_operations(self):
-        """Returns a generator"""
+    def symmetry_operations(self, verbose=False):
+        """Returns a generator with symmetry operations"""
         nLTr = self.sg.get_nLTr() # Centering
         fInv = self.sg.get_fInv() # inversion symmetry
         nSMx = self.sg.get_nSMx() # n symops
 
-        for iLTr in xrange(nLTr):
-            for iInv in xrange(fInv):
-                for iSMx in xrange(nSMx):
-                    # print iLTr, iInv, iSMx
-                    Mx = self.sg.getLISMx(iLTr, iInv, iSMx, +1)
-                    if iSMx == 0:
-                        print "# +({} {} {}), Inversion Flag = {}".format(Mx[9]/float(sglite.STBF), Mx[10]/float(sglite.STBF), Mx[11]/float(sglite.STBF), iInv)
+        for i in xrange(nLTr):           # lattice centering
+            for j in xrange(fInv):       # inversion flag
+                for k in xrange(nSMx):   # symmetry operators
+                    Mx = self.sg.getLISMx(i, j, k, +1)
+                    if verbose and (k == 0):
+                        print "# +({} {} {}), Inversion Flag = {}".format(Mx[9]/float(sglite.STBF), Mx[10]/float(sglite.STBF), Mx[11]/float(sglite.STBF), j)
                     yield SymOp(Mx)
+
     @property
-    def is_centrosymmetric(self):
+    def symmetry_operations_p(self, verbose=False):
+        """Returns a generator with primitive symmetry operations
+        (excluding centering vectors)"""
+        fInv = self.sg.get_fInv() # inversion symmetry
+        nSMx = self.sg.get_nSMx() # n symops
+
+        for j in xrange(fInv):       # inversion flag
+            for k in xrange(nSMx):   # symmetry operators
+                Mx = self.sg.getLISMx(0, j, k, +1)
+                if verbose and (k == 0):
+                    print "# +({} {} {}), Inversion Flag = {}".format(Mx[9]/float(sglite.STBF), Mx[10]/float(sglite.STBF), Mx[11]/float(sglite.STBF), j)
+                yield SymOp(Mx)
+
+    def centering_vectors(self):
+        """Returns generator with centering vectors"""
+        nLTr = self.sg.get_nLTr() # Centering
+        j = 0
+        k = 0
+        for i in xrange(nLTr):           # lattice centering
+            Mx = self.sg.getLISMx(i, j, k, +1)
+            yield SymOp(Mx).t
+
+    def isCentrosymmetric(self):
         return self.hall[0] == "-"
 
     @property
@@ -623,17 +565,24 @@ class SpaceGroup(object):
         print "    Number      ", self.space_group
         print "    Schoenflies ", self.schoenflies
         print "    Hall        ", self.hall
-        print "    H-M symbol  ", self.hermann_mauguin
+        if self.setting:
+            print "    H-M symbol   {}:{}".format(self.hermann_mauguin, self.setting)
+        else:
+            print "    H-M symbol  ", self.hermann_mauguin
         print
         print "Laue  group ", self.laue_group
         print "Point group ", self.point_group
 
         print self.crystal_system
-        if self.is_centrosymmetric:
+        if self.isCentrosymmetric():
             print "Centrosymmetric"
+        if self.isChiral():
+            print "Chiral"
+        if self.isEnantiomorphic():
+            print "Enantiomorphic"
 
-        # if self.unique_axis:
-        #     print "Unique axis", self.unique_axis
+        if self.unique_axis:
+            print "Unique axis", self.unique_axis
         print
         print "Order    ", self.order
         print "Order P  ", self.order_p
@@ -651,47 +600,42 @@ class SpaceGroup(object):
         # for wyck in self.wyckoff_positions:
         #     print wyck
 
+    def _apply_along_index(self, arr, func):
+        """Expects tuple/list of 3 elements or iterable
+
+        return 1/0"""
+        if isinstance(arr, pd.Index):
+            return arr.map(func)
+        elif isinstance(arr, pd.DataFrame):
+            return arr.index.map(func)
+        elif len(arr[0]) == 3:
+            # assume nested list
+            return map(func, arr)
+        else:
+            return func(arr)
+
     def is_absent(self, index):
-        """Expects tuple/list of 3 elements
+        return self._apply_along_index(index, self._isSysAbsent)
 
-        return True/False"""
-        return any(c.is_absent(index) for c in self.reflection_conditions)
-    
-    def is_absent_np(self, index):
-        """Efficient function to run on (n by 3) numpy arrays
+    def is_centric(self, index):
+        return self._apply_along_index(index, self._isCentric)
 
-        Return boolean array"""
-        h = index[:, 0]
-        k = index[:, 1]
-        l = index[:, 2]
-        return np.any([c.is_absent((h, k, l)) for c in self.reflection_conditions], axis=0)
+    def multiplicity(self, index):
+        return self._apply_along_index(index, self._getMultiplicity)
 
-    def is_absent_pd(self, index):
-        """Efficient function to run on pandas index objects
+    def phaserestriction(self, index):
+        return self._apply_along_index(index, self._getPhaseRestriction)
 
-        Return boolean array"""
-        return index.map(self.is_absent)
-
-    def is_special(self, coord):
-        raise NotImplementedError
-        for wp in self.wyckoff_positions:
-            is_special = wp.is_special(coord)
-            if is_special:
-                return is_special, wp.multiplicity
-        return False
-
-    def unique_set(self, index):
-        """Take list of reflections, use laue symmetry to merge to unique set"""
-        raise NotImplementedError
+    def epsilon(self, index):
+        return self._apply_along_index(index, self._getEpsilon)
 
     def filter_systematic_absences(self, df):
         """Takes a reflection list and filters reflections that are absent"""
-        conditions = self.reflection_conditions
         try:
             index = df.index
         except AttributeError:
             index = df
-        sel = self.is_absent_pd(index)
+        sel = self.is_absent(index)
         return df[~sel]  # use binary not operator ~
 
     def merge(self, df, remove_sysabs=True, key="F"):
@@ -700,388 +644,124 @@ class SpaceGroup(object):
     def completeness(self, df):
         return completeness(df, self)
 
+    def _getHKLsBySS(self, ss):
+        """Return a list of HKLs with a given sum of squares'
+    
+        ss - (int) sum of squares
+    
+        https://github.com/praxes/hexrd/blob/master/hexrd/xrd/spacegroup.py
+        """
+        #
+        #  NOTE:  the loop below could be speeded up by requiring
+        #         h >= k > = l, and then applying all permutations
+        #         and sign changes.  Could possibly save up to
+        #         a factor of 48.
+        #
+        from math import floor, sqrt
+        pmrange = lambda n: range(n, -(n+1), -1) # plus/minus range
+        iroot   = lambda n: int(floor(sqrt(n)))  # integer square root
+    
+        hkls = []
+        hmax = iroot(ss)
+        for h in pmrange(hmax):
+            ss2 = ss - h*h
+            kmax = iroot(ss2)
+            for k in pmrange(kmax):
+                rem   = ss2 - k*k
+                if rem == 0:
+                    hkls.append((h, k, 0))
+                else:
+                    l = iroot(rem)
+                    if l*l == rem:
+                        hkls += [(h, k, l), (h, k, -l)]
+        return hkls
+    
+    def generate_hkl(self, ssmax):
+        """Return a list of HKLs with a cutoff sum of square
 
-def is_absent(index, conditions):
-    """Expects tuple/list of 3 elements
+        INPUTS
+        ssmax -- cutoff sum of squares
 
-    return True/False"""
-    return any(c.is_absent(index) for c in conditions)
+        OUTPUTS
+        hkls -- a list of all HKLs with sum of squares less than
+                or equal to the cutoff, excluding systematic
+                absences and symmetrically equivalent hkls
 
-
-def is_absent_np(index, conditions):
-    """Efficient function to run on (n by 3) numpy arrays
-
-    Return boolean array"""
-    h = index[:, 0]
-    k = index[:, 1]
-    l = index[:, 2]
-    return np.any([c.is_absent((h, k, l)) for c in conditions], axis=0)
-
-
-def filter_systematic_absences(index, conditions):
-    """Takes a reflection list and filters reflections that are absent"""
-    sel = is_absent_np(index, conditions)
-    return index[~sel]  # use binary not operator ~
-
-
-def test_sysabs_against_cctbx():
-    """Test reflection conditions for all space groups, and verify
-    them with CCTBX"""
-    from cctbx import sgtbx
-    from sysabs import refset
-    import time
-
-    time_numpy = 0
-    time_cctbx_np = 0
-    time_python = 0
-    time_cctbx_loop = 0
-
-    for i, row in enumerate(spacegrouptxt):
-        print i
-
-        number = row[:12].strip()
-        spgr = get_spacegroup_info(number)
-
-        sg = sgtbx.space_group(spgr["hall"])
-        is_sys_absent = sg.is_sys_absent
-
-        refconds = spgr["reflection_conditions"]
-        refconds = [ReflCond(s) for s in refconds]
-
-        t1 = time.time()
-        a1 = is_absent_np(refset, refconds)
-        t2 = time.time()
-        a2 = np.apply_along_axis(is_sys_absent, axis=1, arr=refset)
-        t3 = time.time()
-
-        if not a1.shape == a2.shape:
-            print refconds
-
-        assert np.all(a1 == a2)
-        assert sum(a1) == sum(a2)
-
-        time_numpy += t2-t1
-        time_cctbx_np += t3-t2
-
-        t1 = time.time()
-        a3 = [is_absent(ref, refconds) for ref in refset]
-        t2 = time.time()
-        a4 = [is_sys_absent(ref) for ref in refset]
-        t3 = time.time()
-
-        assert np.all(np.array(a3) == np.array(a4))
-        assert sum(a3) == sum(a4)
-
-        time_python += t2-t1
-        time_cctbx_loop += t3-t2
-
-    print "Numpy: {} s".format(time_numpy)
-    print "CCTBX np.apply_along_axis: {} s".format(time_cctbx_np)
-    print "Pure Python: {} s".format(time_python)
-    print "CCTBX loop: {} s".format(time_cctbx_loop)
+        https://github.com/praxes/hexrd/blob/master/hexrd/xrd/spacegroup.py
+        """
+        cutp  = self.sg.getCutParameters(0)  # arg = 'FriedelSymmetry'
+        myHKLs = []
+        for ssm in range(1, ssmax + 1):
+            #  find all HKLs of a given magnitude (ssm)
+            for hkl in self._getHKLsBySS(ssm):  
+                if self.sg.isSysAbsMIx(hkl):
+                    continue
+                master, mate = self.sg.get_MasterMIx_and_MateID(cutp, hkl)
+                if master == hkl:
+                    myHKLs.append(hkl)
+        return myHKLs
 
 
 def test_print_all():
     """Parse and print all space groups"""
+    f = open(os.path.join(os.path.dirname(__file__), 'spacegroups.txt'), 'r')
+    spacegrouptxt = f.readlines()
+    f.close()
     for i, row in enumerate(spacegrouptxt):
         print "====="*16
         number = row[:12].strip()
-        spgr = get_spacegroup_info(number)
+        spgr = SpaceGroup(number)
         spgr.info()
 
 
-def generate_hkl_listing_old(cell, dmin=1.0):
+def generate_hkl_listing(cell, dmin=1.0, as_type=None):
     """Generate hkllisting up to the specified dspacing.
 
     Based on the routine described by:
     Le Page and Gabe, J. Appl. Cryst. 1979, 12, 464-466
     """
 
-    # if not cell.is_centrosymmetric:
-    #     raise RuntimeError("Only centric structures can be used")
+    ax = np.argmax([cell.a, cell.b, cell.c])
+    idx = [0,0,0]
+    i = 1
+    while True:
+        idx[ax] = i
+        ss = cell._calc_dspacing(idx)
+        print idx, ss
+        if ss < dmin:
+            break
+        ssmax = i**2 + 1
+        i += 1
 
-    lauegr = cell.laue_group
-    system = cell.crystal_system
-    uniq_axis = cell.unique_axis
-    reflconds = cell.reflection_conditions
-    setting = cell.setting
+    indices = np.array(cell.generate_hkl(ssmax))
+    d = np.array(cell.calc_dspacing(indices))
+    
+    sel = d > dmin
+    indices = indices[sel]
+    d = d[sel]
 
-    if system == "Triclinic":  # "-1"
-        segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
-                             [[-1, 0, 1], [-1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
-                             [[-1, 1, 0], [-1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]],
-                             [[ 0, 1,-1], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]]])
-    elif system == "Monoclinic":  # "2/m"
-        if uniq_axis == "x":
-            segments = np.array([[[ 0, 0, 0], [ 0, 1, 0], [1, 0, 0], [ 0, 0, 1]],
-                                 [[ 0,-1, 1], [ 0,-1, 0], [1, 0, 0], [ 0, 0, 1]]])
-        elif uniq_axis == "y":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
-                                 [[-1, 0, 1], [-1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]]])
-        elif uniq_axis == "z":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 0, 1], [ 0, 1, 0]],
-                                 [[-1, 1, 0], [-1, 0, 0], [ 0, 0, 1], [ 0, 1, 0]]])
-    elif system == "Orthorhombic":  # mmm
-        segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]]])
-    elif system == "Tetragonal":
-        if lauegr == "4/mmm":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]]])
-        elif lauegr == "4/m":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
-                                 [[ 1, 2, 0], [ 1, 1, 0], [ 0, 1, 0], [ 0, 0, 1]]])
-    elif system == "Trigonal":
-        if setting == "R":
-            if lauegr == "-3m":
-                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 0,-1], [ 1, 1, 1]],
-                                     [[ 1, 1, 0], [ 1, 0,-1], [ 0, 0,-1], [ 1, 1, 1]]])
-            elif lauegr == "-3":
-                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 0,-1], [ 1, 1, 1]],
-                                     [[ 1, 1, 0], [ 1, 0,-1], [ 0, 0,-1], [ 1, 1, 1]],
-                                     [[ 0,-1,-2], [ 1, 0, 0], [ 1, 0,-1], [-1,-1,-1]],
-                                     [[ 1, 0,-2], [ 1, 0,-1], [ 0, 0,-1], [-1,-1,-1]]])
-        else:
-            if lauegr == "-3m1":
-                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
-                                     [[ 0, 1, 1], [ 0, 1, 0], [ 1, 1, 0], [ 0, 0, 1]]])
-            elif lauegr == "-31m":
-                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
-                                     [[ 1, 1,-1], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0,-1]]])
-            elif lauegr == "-3":
-                segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
-                                     [[ 1, 2, 0], [ 1, 1, 0], [ 0, 1, 0], [ 0, 0, 1]],
-                                     [[ 0, 1, 1], [ 0, 1, 0], [-1, 1, 0], [ 0, 0, 1]]])
-    elif system == "Hexagonal":
-        if lauegr == "6/mmm":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]]])
-        elif lauegr == "6/m":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 0, 1]],
-                                 [[ 1, 2, 0], [ 0, 1, 0], [ 1, 1, 0], [ 0, 0, 1]]])
-    elif system == "Cubic":
-        # TODO: Paper states lauegr m3m and 3m, typo? difference to m-3m/-3m??
-        # if lauegr == "m3m":
-        if lauegr == "m-3m":
-            segments = np.array(
-                [[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 1, 1, 1]]])
-        # elif lauegr == "m3":
-        elif lauegr == "m-3":
-            segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 1, 1, 1]],
-                                 [[ 1, 2, 0], [ 0, 1, 0], [ 1, 1, 0], [ 1, 1, 1]]])
-    else:
-        raise ValueError, "Could not find crystal system {}".format(system)
+    i = d.argsort()[::-1]
+    d = d[i].reshape(-1, 1)
+    indices = indices[i]
 
-    indices = []
-
-    for row in segments:
-        loop_h = True
-        loop_k = True
-        loop_l = True
-        apex = row[0, :]
-
-        index_stored = apex
-
-        if sum(np.abs(apex)) == 0:
-            dsp = 0.0  # prevent RuntimeWarning divide by zero
-        else:
-            dsp = cell.calc_dspacing(apex)
-
-        while loop_l:
-            while loop_k:
-                while loop_h:
-                    if dsp >= dmin:
-                        indices.append(list(apex))
-                    index_new = apex + row[1, :]
-
-                    dsp = cell.calc_dspacing(index_new)
-
-                    if dsp >= dmin:
-                        apex = index_new
-                    else:
-                        loop_h = False
-
-                apex[0] = index_stored[0]
-                apex += row[2, :]
-                index_new = apex
-                dsp = cell.calc_dspacing(index_new)
-                if dsp < dmin:
-                    loop_k = False
-                loop_h = True
-
-            apex[1] = index_stored[1]
-            apex += row[3, :]
-            index_new = apex
-            dsp = cell.calc_dspacing(index_new)
-            if dsp < dmin:
-                loop_l = False
-            loop_k = True
-
-    indices = np.array(indices)
-    assert indices.dtype.kind == 'i', "Wrong datatype {}, need 'i'".format(x.dtype.kind)
-    return indices
-
-
-def generate_hkl_listing(cell, dmin=1.0, full_sphere=False, as_type=None):
-    """Generate hkllisting up to the specified dspacing.
-
-    Based on the routine described by:
-    Le Page and Gabe, J. Appl. Cryst. 1979, 12, 464-466
-    """
-
-    # if not cell.is_centrosymmetric:
-    #     raise RuntimeError("Only centric structures can be used")
-
-    lauegr = cell.laue_group
-    system = cell.crystal_system
-    uniq_axis = cell.unique_axis
-    reflconds = cell.reflection_conditions
-    setting = cell.setting
-
-    segments = np.array([[[ 0, 0, 0], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
-                         [[-1, 0, 1], [-1, 0, 0], [ 0, 1, 0], [ 0, 0, 1]],
-                         [[-1, 1, 0], [-1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]],
-                         [[ 0, 1,-1], [ 1, 0, 0], [ 0, 1, 0], [ 0, 0,-1]]])
-
-    if system == "Trigonal":
-        if setting == "R":
-            lauegr += ":R"
-        else:
-            lauegr += ":H"
-
-    if lauegr == "2/m":
-        if uniq_axis == "y":
-            lauegr += ":b"
-        elif uniq_axis == "z":
-            lauegr += ":c"
-        elif uniq_axis == "x":
-            lauegr += ":a"
-
-    func = laue_asymmetry[lauegr]
-    fraction = laue_fraction[lauegr]
-
-    if full_sphere:
-        func = lambda (h,k,l): True
-
-    total = 0
-    indices = []
-
-    for row in segments:
-        loop_h = True
-        loop_k = True
-        loop_l = True
-        apex = row[0, :]
-
-        index_stored = apex
-
-        if sum(np.abs(apex)) == 0:
-            dsp = np.inf  # prevent RuntimeWarning divide by zero
-        else:
-            dsp = cell.calc_dspacing(apex)
-
-        while loop_l:
-            while loop_k:
-                while loop_h:
-                    if dsp >= dmin:
-                        if func(apex):
-                            indices.append(list(apex))
-                        else:
-                            total += 1
-                        if func(-apex):
-                            indices.append(list(-apex))
-                        else:
-                            total += 1
-                    index_new = apex + row[1, :]
-
-                    dsp = cell.calc_dspacing(index_new)
-
-                    if dsp >= dmin:
-                        apex = index_new
-                    else:
-                        loop_h = False
-
-                apex[0] = index_stored[0]
-                apex += row[2, :]
-                index_new = apex
-                dsp = cell.calc_dspacing(index_new)
-                if dsp < dmin:
-                    loop_k = False
-                loop_h = True
-
-            apex[1] = index_stored[1]
-            apex += row[3, :]
-            index_new = apex
-            dsp = cell.calc_dspacing(index_new)
-            if dsp < dmin:
-                loop_l = False
-            loop_k = True
-
-    indices = np.array(indices[2:]) # ignore double [0, 0, 0]
-    # print indices
-    # print "Generated {} indices, {} in asymmetric unit for laue group {} ({:.1f}%)".format(total, len(indices), lauegr, 100*len(indices)/float(total))
-    # print "Kept {} / {} indices for lauegr {} ({:.1f}%). Fraction {}".format(len(indices), 
-                                                                             # len(indices)+total,
-                                                                             # lauegr, 
-                                                                             # 100.0*float(len(indices))/(len(indices)+total), 
-                                                                             # fraction)
-
-    assert indices.dtype.kind == 'i', "Wrong datatype {}, need 'i'".format(indices.dtype.kind)
     if as_type == "pd.Index":
         return pd.Index([tuple(idx) for idx in indices])
     if as_type == "pd.DataFrame":
         return pd.DataFrame(index=[tuple(idx) for idx in indices])
+    if as_type == "np.array":
+        return np.array(indices)
     else:
         return indices
+
 
 def get_laue_symops(key):
     from laue_symops import symops
     return (SymOp(op) for op in symops[key])
 
+
 def get_merge_dct(cell, dmin=1.0):
-    raise DeprecationWarning, "New merging algorithm no longer uses get_merge_dct, will be removed soon."
-    if isinstance(dmin, pd.DataFrame):
-        df = dmin
-        if 'd' not in df:
-            df['d'] = df.index.map(cell.calc_dspacing)
-        dmin = df['d'].min()
+    raise RuntimeError("New merging algorithm no longer uses get_merge_dct, will be removed soon. Use cell.merge(df) instead.")
 
-    try:
-        if dmin > cell.merge_dct_dmin:
-            # print "Returning merge_dct saved on cell ({} > {})".format(dmin, cell.merge_dct_dmin)
-            return cell.merge_dct
-    except AttributeError:
-        pass
-
-    unique_set = generate_hkl_listing(cell, dmin=dmin)
-
-    lauegr = cell.laue_group
-    setting = cell.setting
-    uniq_axis = cell.unique_axis
-
-    if lauegr == "2/m":
-        if uniq_axis == "y":
-            lauegr += ":b"
-        elif uniq_axis == "z":
-            lauegr += ":c"
-        elif uniq_axis == "x":
-            lauegr += ":a"
-    symops = get_laue_symops(lauegr)
-    
-    merge_dct = {(0, 0, 0): (0, 0, 0)}
-    for op in symops:
-        for idx in unique_set:
-            new = tuple(np.dot(idx, op.r))
-            if new not in merge_dct:
-                merge_dct[new] = tuple(idx)
-
-    try:
-        if dmin < cell.merge_dct_dmin:
-            print "Saving new merge_dct on cell (dmin: {} < {})".format(dmin, cell.merge_dct_dmin)
-            cell.merge_dct = merge_dct
-            cell.merge_dct_dmin = dmin
-    except AttributeError:
-        print "Saving new merge_dct on cell (dmin: {})".format(dmin)
-        cell.merge_dct_dmin = dmin
-        cell.merge_dct = merge_dct
-
-    return merge_dct
 
 def expand(df, cell):
     lauegr = cell.laue_group
@@ -1106,33 +786,6 @@ def expand(df, cell):
     return ret
 
 
-def is_centric_or_absent(idx, stacked_symops, transops):
-    """This fails for a large number of space groups:
-        Cc, C2/c, C2221, I212121, Pmc21, Pca21, Pmn21, Pna21, Cmc21, Ccc2, Abm2, 
-        Ama2, Aba2, Fdd2, Iba2, Ima2, Pmma, Pnna, Pmna, Pcca, Pbam, Pccn, Pbcm, Pnnm,
-        Pmmn:1, Pbcn, Pbca, Pnma, Cmcm, Cmca, Cccm, Cmma, Ccca:1, Fddd:1, Ibam, Ibca,
-        Imma, I41, I41/a:1, I4122, P42cm, P42nm, P42mc, P42bc, I4cm, I41md, I41cd, 
-        I-4c2, I-42d, P4/mbm, P4/mnc, P4/nmm:1, P4/ncc:1, P42/mmc, P42/mcm, P42/nbc:1, 
-        P42/nnm:1, P42/mbc, P42/mnm, P42/nmc:1, P42/ncm:1, I4/mcm, I41/amd:1, I41/acd:1, 
-        R3:H, R-3:H, P3112, R32:H, R3m:H, R3c:H, R-3m:H, R-3c:H, P6522, P6222, P63cm,
-        P63mc, P63/mcm, P63/mmc, I213, Pn-3:1, Fd-3:1, Pa-3, Ia-3, P4232, F4132, P4332,
-        P4132, I4132, F-43c, I-43d, Pm-3n, Pn-3m:1, Fm-3c, Fd-3m:1, Fd-3c:1, Ia-3d
-
-        And is slower than cell.is_absent_pd()
-    """
-    ret = 0
-    u,v,w = idx
-    for i,k,l in np.dot(idx, stacked_symops[1:]):
-        if i != u or k != v or l != w:
-            if -i == u and -k == v and -l == w:
-                ret = 1
-        else:
-            for t in transops:
-                if 12*(t[0]*u+t[1]*v+t[2]*w) % 12.0 != 0:
-                    return -1
-    return ret
-
-
 def standardize_indices(df, cell):
     """
     Standardizes reflection indices
@@ -1140,12 +793,12 @@ def standardize_indices(df, cell):
     http://www.iucr.org/resources/commissions/crystallographic-computing/schools
         /siena-2005-crystallographic-computing-school/speakers-notes
     """
-    stacked_symops = np.stack([s.r for s in cell.symmetry_operations])
+    stacked_symops = np.stack([s.r for s in cell.symmetry_operations_p])
     
     if not "esd" in df:
         df["esd"] = 1.0
 
-    m = np.dot(np.array(df.index.tolist()), stacked_symops)
+    m = np.dot(np.array(df.index.tolist()), stacked_symops).astype(int)
     m = np.hstack([m, -m])
     i = np.lexsort(m.transpose((2,0,1)))
     merged =  m[np.arange(len(m)), i[:,-1]] # there must be a better way to index this, but this works and is quite fast
@@ -1168,11 +821,10 @@ def merge(df, cell, remove_sysabs=True, key="F"):
     """
 
     df = standardize_indices(df, cell)
-    
+
+    # print len(set(map(tuple, pd.Index(df.index))))
+
     hkl = ["h","k","l"]
-    symops = list(cell.symmetry_operations)
-    stacked_symops = np.stack([s.r for s in symops])
-    transops = [s.t.reshape(-1,) for s in symops]
 
     gb = df.groupby(hkl)
     df["sqrt"] = 1/df.esd**2
@@ -1188,7 +840,7 @@ def merge(df, cell, remove_sysabs=True, key="F"):
         # merged = merged[merged.flag != ABSENT]
         # print " >> Merged {} to {} reflections (centric: {}, absent: {})".format(len(df), nmerged, ncentric, nabsent)
 
-        merged["flag"] = cell.is_absent_pd(merged.index)
+        merged["flag"] = cell.is_absent(merged.index)
         nabsent = merged["flag"].sum()
         merged = merged[merged["flag"] == False]
         print " >> Merged {} to {} reflections (absent: {})".format(len(df), len(merged), nabsent)

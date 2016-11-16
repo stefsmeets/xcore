@@ -13,7 +13,7 @@ else:
     TINYARRAY = True
 
 import spacegroup
-from spacegroup import SpaceGroup, get_spacegroup_info
+from spacegroup import SpaceGroup
 
 
 from IPython.terminal.embed import InteractiveShellEmbed
@@ -21,17 +21,8 @@ InteractiveShellEmbed.confirm_exit = False
 ipshell = InteractiveShellEmbed(banner1='')
 
 
-def get_unitcell(parameters, spgr):
-    spgr = get_spacegroup_info(spgr, as_dict=True)
-    cell = UnitCell(parameters, spgr)
-    return cell
-
-
 def dict2uc(d):
-    cell_params = [d[key] for key in "a", "b", "c", "al", "be", "ga"]
-    spgr = d["spgr"]
-    name = d.get("name", "")
-    return UnitCell(cell_params=cell_params, spgr=spgr, name=name)
+    raise RuntimeError("Use unitcell.fromdict instead --> UnitCell.from_dict(d)")
 
 
 class UnitCell(SpaceGroup):
@@ -39,9 +30,10 @@ class UnitCell(SpaceGroup):
     """Class for unit cell/space group functions"""
 
     def __init__(self, cell_params, spgr, name=""):
-        if isinstance(spgr, str):
-            spgr = get_spacegroup_info(spgr, as_dict=True)
-        super(UnitCell, self).__init__(spgr)
+        if isinstance(spgr, SpaceGroup):
+            self.__dict__.update(spgr.__dict__)
+        else:
+            super(UnitCell, self).__init__(spgr)
 
         self.name = name
         
@@ -87,7 +79,7 @@ class UnitCell(SpaceGroup):
     def ga(self):
         return self.parameters[5]
 
-    def as_dict(self):
+    def to_dict(self):
         return {"name": self.name, 
                 "spgr": self.spgr_name, 
                 "a": self.a, 
@@ -96,6 +88,14 @@ class UnitCell(SpaceGroup):
                 "al": self.al, 
                 "be": self.be, 
                 "ga": self.ga }
+
+    @classmethod
+    def from_dict(cls, d):
+        """Create UnitCell instance from dict"""
+        cell_params = [d[key] for key in "a", "b", "c", "al", "be", "ga"]
+        spgr = d["spgr"]
+        name = d.get("name", "")
+        return cls(cell_params=cell_params, spgr=spgr, name=name)
 
     def info(self):
         print "Cell {}".format(self.name)
@@ -231,24 +231,11 @@ class UnitCell(SpaceGroup):
         else:
             raise ValueError("Unknown crystal system {}, fallback to Triclinic".format(kind))
 
-        return idsq
+        return np.power(idsq, -0.5, where=idsq!=0)
 
     def calc_dspacing(self, idx):
         """When passing a single index [h, k, l]"""
-        idsq = self._calc_dspacing(idx)
-        if idsq == 0:
-            # prevent RuntimeWarning: divide by zero
-            return np.inf
-        else:
-            return idsq**-0.5
-
-    def calc_dspacing_np(self, idx):
-        """When passing a numpy array [[h, k, l], [...], ...]"""
-        h = idx[:,0]
-        k = idx[:,1]
-        l = idx[:,2]
-        idsq = self._calc_dspacing((h,k,l))
-        return idsq**-0.5
+        return self._apply_along_index(idx, self._calc_dspacing)
 
     @property
     def volume(self):
@@ -339,8 +326,8 @@ class UnitCell(SpaceGroup):
         return parameters
 
     def get_dmin(self, indices):
-        ipshell();exit()
-        return np.min(self.calc_dspacing_np(indices))
+        # ipshell();exit()
+        return np.min(self.calc_dspacing(indices))
 
 
 if __name__ == '__main__':
@@ -348,7 +335,6 @@ if __name__ == '__main__':
 
     spgr =  spacegroup.get_spacegroup(arg)
 
-    from unitcell import UnitCell
     cell = spacegroup.get_random_cell(spgr)
     cell = UnitCell(cell, spgr.space_group)
 

@@ -13,9 +13,15 @@ __version__ = "2015-12-10"
 
 def load_hkl(fn):
     df = pd.read_table(fn, sep="\s+", header=None)
-    
     df.columns = ("h", "k", "l", "F", "esd", "frame")[:df.columns.size]
+    # try:
+    #     df.frame = df.frame.astype(int) 
+    # except:
+    #     pass
     df = df.set_index(["h", "k", "l"])
+    # df.h = df.h.astype(int) 
+    # df.k = df.k.astype(int) 
+    # df.l = df.l.astype(int)
 
     # df.index = pd.Index(df.index) # 08-09-2016 - Do not merge MultiIndex
     return df
@@ -55,7 +61,7 @@ def write_hkl(df, cols=None, out=None, no_hkl=False, pre=None, post=None, data_f
     if not data_fmt:
         ifmt = '{:4d}'
         dfmt = ' {:5d}'
-        ffmt = ' {:12.3f}'
+        ffmt = ' {:7.2f}'
         bfmt = ' {:4}'
 
         data_fmt = ''
@@ -160,9 +166,9 @@ def main():
 
             print spgr, cell
 
-            cell = get_unitcell(cell, spgr.space_group)
-            indices = generate_hkl_listing(cell, dmin=options.dmin)
-            d = cell.calc_dspacing_np(indices)
+            cell = UnitCell(cell, spgr)
+            indices = generate_hkl_listing(cell, dmin=options.dmin, as_type="np.array")
+            d = cell.calc_dspacing(indices)
             i = d.argsort()[::-1]
             d = d[i].reshape(-1, 1)
             indices = indices[i]
@@ -196,7 +202,7 @@ def main():
                 cell = options.cell
                 if cell[0] < 0:
                     cell = get_random_cell(spgr)
-                cell = get_unitcell(cell, spgr.space_group)
+                cell = UnitCell(cell, spgr)
                 cell.info()
     
             spgr.info()
@@ -205,30 +211,28 @@ def main():
                 if not options.cell and options.maxhkl:
                     # bit hacky, but works! :)
                     cell = (1, 1, 1, 90, 90, 90)
-                    cell = get_unitcell(cell, spgr.space_group)
+                    cell = UnitCell(cell, spgr)
                     options.dmin = 1/float(options.maxhkl)
 
-                indices = generate_hkl_listing(cell, dmin=options.dmin)
-                d = cell.calc_dspacing_np(indices)
-                i = d.argsort()[::-1]
-                d = d[i].reshape(-1, 1)
-                indices = indices[i]
+                indices = np.array(generate_hkl_listing(cell, dmin=options.dmin, as_type="np.array"))
+                d = np.array(cell.calc_dspacing(indices)).reshape(-1,1)
+
                 if len(args) > 1:
                     out = 'out_{}.hkl'.format(cell.spgr)
                 else:
                     out = 'out.hkl'
-                np.savetxt(out, np.hstack([indices, d]), fmt="%4d %4d %4d %10.4f")
+                np.savetxt(out, np.hstack([indices, d]), fmt="%4d%4d%4d %7.2f     1.0")
 
     if options.spgr:
         spgr = options.spgr
         cell = options.cell
-        cell = get_unitcell(cell, spgr)
+        cell = UnitCell(cell, spgr)
         for arg in args:
             # print arg, spgr
             df = load_hkl(arg)
 
             if options.dmin:
-                d =  df.index.map(cell.calc_dspacing)
+                d =  cell.calc_dspacing(df.index)
                 sel = d > options.dmin
                 df = df[sel]
 
@@ -242,7 +246,7 @@ def main():
 
             root, ext = os.path.splitext(arg)
             out = root+"_out"+ext
-            write_hkl(df, out=out)
+            write_hkl(df, out=out, data_fmt="shelx")
 
 
 if __name__ == '__main__':

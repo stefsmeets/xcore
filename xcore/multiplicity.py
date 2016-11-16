@@ -12,7 +12,7 @@ def calc_multiplicity(atoms, spgr, precision=5):
     # checking if it is a dataframe, so we have more than 1 atom
     # a single atom is supplied as a series object
     if isinstance(atoms, pd.DataFrame):
-        return atoms.apply(calc_multiplicity, args=(spgr,precision), axis=1) # recursion like a boss
+        return atoms.apply(calc_multiplicity, args=(spgr, precision), axis=1) # recursion like a boss
     arr = []
     for i, symop in enumerate(spgr.symmetry_operations):
         x, y, z = np.dot(symop.r, [atoms.x, atoms.y, atoms.z]) + symop.t.reshape(3,)

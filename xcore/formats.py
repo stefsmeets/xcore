@@ -194,6 +194,70 @@ def write_hkl(df, out=None):
         print >> out, "{:4d} {:4d} {:4d} {:12.4f} {:12.4f}".format(h, k, l, row["inty"], row["esd"])
 
 
+def write_shelx_ins(cell, wavelength=1.0000, out='shelx.ins', tr_mat=None):
+    """Simple function that writes a basic shelx input file
+
+    cell: UnitCell class
+    tr_mat: Matrix to put in TRMX card"""
+    if isinstance(out,str):
+        out = open(out,'w')
+
+    params = cell.parameters
+    Z = cell.order
+
+    print >> out, "TITL", cell.name
+    print >> out, "CELL {} {} {} {} {} {} {}".format(wavelength,*params)
+    print >> out, "ZERR {}  0  0  0  0  0  0".format(Z)
+    C = cell.centering_symbol
+    LATT = {"P": 1, "I": 2, "R": 3, "F": 4, "A": 5, "B": 6, "C": 7}[C]
+
+    if cell.isCentrosymmetric():
+        LATT = -LATT
+
+    print >> out, "LATT {}".format(LATT)
+    from xcore.spacegroup import SymOp
+    nSMx = cell.sg.get_nSMx()
+    for k in xrange(1,nSMx):   # symmetry operators
+        Mx = cell.sg.getLISMx(0, 0, k, +1)
+        print >> out, "SYMM", repr(SymOp(Mx)).upper()
+
+    print >> out
+    if tr_mat:
+        print >> out, 'TRMX {} {} {} {} {} {} {} {} {} 0 0 0'.format(*tr_mat)
+        print >> out
+    print >> out, 'HKLF 4'
+    print >> out, 'END'
+
+
+def write_sir2014_inp(cell, hklfile, wavelength=1.000, out="sir2014.sir", radiation=None, formula=None, hklfmt="(3i4,f8.0,f8.1)"):
+    """Simple function that writes a basic sir2014 input file
+
+    cell: UnitCell class
+    hklfile: path to hkl file"""
+
+    import time
+    if isinstance(out,str):
+        out = open(out,'w')
+    
+    params = cell.parameters
+
+    print >> out, "%Structure", cell.name
+    print >> out, "%Job", cell.name,  time.strftime("%d-%m-%Y")
+    print >> out, "%Data"
+
+    print >> out, "    Cell", " ".join(map(str, params))
+    print >> out, "    Space", cell.hermann_mauguin
+    if formula:
+        print >> out, "    Formula", formula
+    if radiation:
+        print >> out, "    {}".format(radiation.capitalize())
+    print >> out, "    Reflections", hklfile
+    print >> out, "    Format", hklfmt
+    print >> out, "    Fosq"
+    print >> out, "%Phase"
+    print >> out, "%%End"
+
+
 def write_focus_inp(cell, df=None, out="foc.inp", key="amplitude"):
     if isinstance(out, str):
         out = open(out, "w")
