@@ -488,7 +488,7 @@ class SpaceGroup(object):
 
 
     def __repr__(self):
-        return "SpaceGroup('{}'')".format(self.spgr_name)
+        return "SpaceGroup('{}')".format(self.spgr_name)
 
     @property
     def space_group(self):
@@ -503,12 +503,11 @@ class SpaceGroup(object):
     def centering_symbol(self):
         return self.hermann_mauguin[0]
 
-    @property
-    def symmetry_operations(self, verbose=False):
+    def _symmetry_operations(self, verbose=False, **kwargs):
         """Returns a generator with symmetry operations"""
-        nLTr = self.sg.get_nLTr() # Centering
-        fInv = self.sg.get_fInv() # inversion symmetry
-        nSMx = self.sg.get_nSMx() # n symops
+        nLTr = kwargs.get( "nLTr", self.sg.get_nLTr() ) # Centering
+        fInv = kwargs.get( "fInv", self.sg.get_fInv() ) # inversion symmetry
+        nSMx = kwargs.get( "nSMx", self.sg.get_nSMx() ) # n symops
 
         for i in xrange(nLTr):           # lattice centering
             for j in xrange(fInv):       # inversion flag
@@ -517,29 +516,25 @@ class SpaceGroup(object):
                     if verbose and (k == 0):
                         print "# +({} {} {}), Inversion Flag = {}".format(Mx[9]/float(sglite.STBF), Mx[10]/float(sglite.STBF), Mx[11]/float(sglite.STBF), j)
                     yield SymOp(Mx)
+    
+    @property
+    def symmetry_operations(self):
+        """Returns a generator with primitive symmetry operations"""
+        for item in self._symmetry_operations():
+            yield item
 
     @property
-    def symmetry_operations_p(self, verbose=False):
+    def symmetry_operations_p(self):
         """Returns a generator with primitive symmetry operations
         (excluding centering vectors)"""
-        fInv = self.sg.get_fInv() # inversion symmetry
-        nSMx = self.sg.get_nSMx() # n symops
+        for item in self._symmetry_operations(nLTr=1):
+            yield item
 
-        for j in xrange(fInv):       # inversion flag
-            for k in xrange(nSMx):   # symmetry operators
-                Mx = self.sg.getLISMx(0, j, k, +1)
-                if verbose and (k == 0):
-                    print "# +({} {} {}), Inversion Flag = {}".format(Mx[9]/float(sglite.STBF), Mx[10]/float(sglite.STBF), Mx[11]/float(sglite.STBF), j)
-                yield SymOp(Mx)
-
+    @property
     def centering_vectors(self):
         """Returns generator with centering vectors"""
-        nLTr = self.sg.get_nLTr() # Centering
-        j = 0
-        k = 0
-        for i in xrange(nLTr):           # lattice centering
-            Mx = self.sg.getLISMx(i, j, k, +1)
-            yield SymOp(Mx).t
+        for item in self._symmetry_operations(fInv=1, nSMx=1):
+            yield item.t
 
     def isCentrosymmetric(self):
         return self.hall[0] == "-"
@@ -560,7 +555,7 @@ class SpaceGroup(object):
         return self.order
 
     def info(self):
-        print "Space group ", self
+        print "Space group", self.spgr_name
         print
         print "    Number      ", self.space_group
         print "    Schoenflies ", self.schoenflies
@@ -589,7 +584,7 @@ class SpaceGroup(object):
         print
 
         # print "\nSymmetry operations"
-        for symop in self.symmetry_operations:
+        for symop in self._symmetry_operations(verbose=True):
             print symop
 
         # print "\nReflection conditions"
