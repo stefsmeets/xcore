@@ -1,11 +1,23 @@
 #!/usr/bin/env python
 
-from setuptools import setup, find_packages
-from os import path
+from setuptools import setup, find_packages, Extension
+import os, sys
+
+srclist = ['sgglobal.c','sgcb.c','sgcharmx.c','sgfile.c',
+           'sggen.c','sghall.c','sghkl.c','sgltr.c','sgmath.c','sgmetric.c',
+           'sgnorm.c','sgprop.c','sgss.c','sgstr.c','sgsymbols.c',
+           'sgtidy.c','sgtype.c','sgutil.c','runtests.c','sglitemodule.c']
+
+srclist = [os.path.join('src/sglite', f) for f in srclist]
+sglite_ext = Extension(
+    'xcore.sglite',
+    sources=srclist,
+    define_macros=[('PythonTypes', 1)]
+    )
 
 setup(
     name="xcore",
-    version="0.4.0",
+    version="0.5.0",
     description="Simple python crystallography library",
 
     author="Stef Smeets",
@@ -17,7 +29,9 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
 
-    packages=["xcore", "xcore.scattering", "xcore.spacegroup_tables"],
+    packages=["xcore", "xcore.scattering"],
+
+    ext_modules = [sglite_ext],
 
     install_requires=["numpy", "pandas"],
 
