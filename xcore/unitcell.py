@@ -16,9 +16,9 @@ import spacegroup
 from spacegroup import SpaceGroup
 
 
-from IPython.terminal.embed import InteractiveShellEmbed
-InteractiveShellEmbed.confirm_exit = False
-ipshell = InteractiveShellEmbed(banner1='')
+# from IPython.terminal.embed import InteractiveShellEmbed
+# InteractiveShellEmbed.confirm_exit = False
+# ipshell = InteractiveShellEmbed(banner1='')
 
 
 def dict2uc(d):

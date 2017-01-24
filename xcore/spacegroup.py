@@ -636,8 +636,8 @@ class SpaceGroup(object):
     def merge(self, df, remove_sysabs=True, key="F"):
         return merge(df, self, remove_sysabs=remove_sysabs, key=key)
 
-    def completeness(self, df):
-        return completeness(df, self)
+    def completeness(self, df, dmin=None):
+        return completeness(df, self, dmin=dmin)
 
     def _getHKLsBySS(self, ss):
         """Return a list of HKLs with a given sum of squares'
