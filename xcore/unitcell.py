@@ -25,17 +25,35 @@ def dict2uc(d):
     raise RuntimeError("Use unitcell.fromdict instead --> UnitCell.from_dict(d)")
 
 
+def comp2dict(composition):
+    """Takes composition: Si20 O10, returns dict of atoms {'Si':20,'O':10}"""
+    import re
+    pat = re.compile('([A-z]+|[0-9]+)')
+    m = re.findall(pat,composition)
+    return dict(zip(m[::2],map(int,m[1::2])))
+
+
+def dict2comp(d):
+    """Takes a composition dictionary and turns it into a string"""
+    return " ".join(["{}{}".format(*item) for item in d.items()])
+
+
 class UnitCell(SpaceGroup):
 
     """Class for unit cell/space group functions"""
 
-    def __init__(self, cell_params, spgr, name=""):
+    def __init__(self, cell_params, spgr, name="", composition={}):
         if isinstance(spgr, SpaceGroup):
             self.__dict__.update(spgr.__dict__)
         else:
             super(UnitCell, self).__init__(spgr)
 
         self.name = name
+
+        if isinstance(composition, str):
+            composition = comp2dict(composition)
+
+        self.composition = composition
         
         if len(cell_params) != 6:
             cell_params = self.parse_cellparams(cell_params)
@@ -80,22 +98,24 @@ class UnitCell(SpaceGroup):
         return self.parameters[5]
 
     def to_dict(self):
-        return {"name": self.name, 
-                "spgr": self.spgr_name, 
-                "a": self.a, 
-                "b": self.b, 
-                "c": self.c, 
-                "al": self.al, 
-                "be": self.be, 
-                "ga": self.ga }
+        d = {"name": self.name, 
+             "spgr": self.spgr_name,
+             "params": self.parameters }
+        if self.composition:
+            d["composition"] = dict2comp(self.composition)
+        return d
 
     @classmethod
     def from_dict(cls, d):
         """Create UnitCell instance from dict"""
-        cell_params = [d[key] for key in "a", "b", "c", "al", "be", "ga"]
+        if "params" in d:
+            cell_params = d["params"]
+        else:
+            cell_params = [d[key] for key in "a", "b", "c", "al", "be", "ga"]
         spgr = d["spgr"]
-        name = d.get("name", "")
-        return cls(cell_params=cell_params, spgr=spgr, name=name)
+        name = d.get("name", "NoName")
+        composition = d.get("composition", None)
+        return cls(cell_params=cell_params, spgr=spgr, name=name, composition=composition)
 
     def info(self):
         print "Cell {}".format(self.name)
@@ -105,7 +125,6 @@ class UnitCell(SpaceGroup):
         print "Vol. {:10.2f}".format(self.volume)
         print "Spgr {}".format(self.spgr_name)
         print
-
 
     def metric_tensor(self, inverse=False):
         """Returns the metric tensor
