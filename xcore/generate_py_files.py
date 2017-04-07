@@ -4,12 +4,14 @@ import os
 import subprocess as sp
 import time
 import re
-from spacegroup import spacegrouptxt
 
 from wyckoff import general_position_multiplicities, wyckofftable
 
 get_centering = re.compile("\((.*)\)")
 
+f = open(os.path.join(os.path.dirname(__file__), 'spacegroups.txt'), 'r')
+spacegrouptxt = f.readlines()
+f.close()
 
 def get_transvec(string):
     transvec = []
