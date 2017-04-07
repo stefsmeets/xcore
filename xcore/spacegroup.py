@@ -366,7 +366,7 @@ def symm2str(r,t=np.zeros([3, 1], dtype=float)):
 
 def str2symm(s):
     """Parses symmetry strings and returns a rotation matrix and translation vector."""
-    sglite.ParseStrXYZ(s, sglite.SRBF, sglite.STBF )
+    return sglite.ParseStrXYZ(s, sglite.SRBF, sglite.STBF )
 
 
 class SymOp(object):
@@ -605,7 +605,7 @@ class SpaceGroup(object):
             return arr.index.map(func)
         elif len(arr[0]) == 3:
             # assume nested list
-            return map(func, arr)
+            return np.array(map(func, arr))
         else:
             return func(arr)
 
@@ -635,6 +635,9 @@ class SpaceGroup(object):
 
     def merge(self, df, remove_sysabs=True, key="F"):
         return merge(df, self, remove_sysabs=remove_sysabs, key=key)
+
+    def standardize(self, df, key=None):
+        return standardize_indices(df, self, key=key)
 
     def completeness(self, df, dmin=None):
         return completeness(df, self, dmin=dmin)
@@ -709,8 +712,16 @@ def test_print_all():
         spgr.info()
 
 
-def generate_hkl_listing(cell, dmin=1.0, as_type=None):
+def generate_hkl_listing(cell, dmin=1.0, dmax=np.inf, as_type=None, expand=False):
     """Generate hkllisting up to the specified dspacing.
+
+    cell: instance of unitcell.UnitCell
+    expand: bool
+        expand to P1 symmetry
+    dmin: float
+        minimum d-spacing cut-off value
+    as_type: str
+        pd.Index, pd.DataFrame, np.array (default)
 
     Based on the routine described by:
     Le Page and Gabe, J. Appl. Cryst. 1979, 12, 464-466
@@ -722,7 +733,7 @@ def generate_hkl_listing(cell, dmin=1.0, as_type=None):
     while True:
         idx[ax] = i
         ss = cell._calc_dspacing(idx)
-        print idx, ss
+        # print idx, ss
         if ss < dmin:
             break
         ssmax = i**2 + 1
@@ -731,13 +742,16 @@ def generate_hkl_listing(cell, dmin=1.0, as_type=None):
     indices = np.array(cell.generate_hkl(ssmax))
     d = np.array(cell.calc_dspacing(indices))
     
-    sel = d > dmin
+    sel = (d < dmax) & (d > dmin)
     indices = indices[sel]
     d = d[sel]
 
     i = d.argsort()[::-1]
     d = d[i].reshape(-1, 1)
     indices = indices[i]
+
+    if expand:
+        indices = expand_to_p1(indices, cell)
 
     if as_type == "pd.Index":
         return pd.Index([tuple(idx) for idx in indices])
@@ -750,38 +764,29 @@ def generate_hkl_listing(cell, dmin=1.0, as_type=None):
 
 
 def get_laue_symops(key):
+    """take laue group and return list of symmetry operators (instances of SymOp)"""
     from laue_symops import symops
-    return (SymOp(op) for op in symops[key])
+    return (SymOp.from_str(op) for op in symops[key])
 
 
 def get_merge_dct(cell, dmin=1.0):
     raise RuntimeError("New merging algorithm no longer uses get_merge_dct, will be removed soon. Use cell.merge(df) instead.")
 
 
-def expand(df, cell):
-    lauegr = cell.laue_group
-    setting = cell.setting
-    uniq_axis = cell.unique_axis
+def expand_to_p1(arr, cell):
+    """Expand hkl indices in (M, 3) array to P1"""
+    stacked_symops = np.stack([s.r for s in cell.symmetry_operations_p]) # laue symops
 
-    if lauegr == "2/m":
-        if uniq_axis == "y":
-            lauegr += ":b"
-        elif uniq_axis == "z":
-            lauegr += ":c"
-        elif uniq_axis == "x":
-            lauegr += ":a"
-    symops = get_laue_symops(lauegr)
+    expanded = np.vstack(np.dot(arr, stacked_symops).astype(int))
 
-    ret = []
-    for op in symops:
-        for idx in df.index:
-            new = tuple(np.dot(idx, op.r))
-            if new not in ret:
-                ret.append(idx)
-    return ret
+    hkl_p1 = np.vstack({tuple(row) for row in expanded})
+    # this also works (about 15x faster), but is a bit wtf (http://stackoverflow.com/a/16973510)
+    # hkl_p1 = np.unique(expanded.view(np.dtype((np.void, expanded.dtype.itemsize*expanded.shape[1])))).view(expanded.dtype).reshape(-1, expanded.shape[1])
+    
+    return hkl_p1
 
 
-def standardize_indices(df, cell):
+def standardize_indices(df, cell, key=None):
     """
     Standardizes reflection indices
     From Siena Computing School 2005, Reciprocal Space Tutorial (G. Sheldrick)
@@ -790,10 +795,10 @@ def standardize_indices(df, cell):
     """
     stacked_symops = np.stack([s.r for s in cell.symmetry_operations_p])
     
-    if not "esd" in df:
-        df["esd"] = 1.0
-
-    m = np.dot(np.array(df.index.tolist()), stacked_symops).astype(int)
+    if not key:
+        m = np.dot(np.array(df.index.tolist()), stacked_symops).astype(int)
+    else:
+        m = np.dot(df[key], stacked_symops).astype(int)
     m = np.hstack([m, -m])
     i = np.lexsort(m.transpose((2,0,1)))
     merged =  m[np.arange(len(m)), i[:,-1]] # there must be a better way to index this, but this works and is quite fast
@@ -816,6 +821,9 @@ def merge(df, cell, remove_sysabs=True, key="F"):
     """
 
     df = standardize_indices(df, cell)
+
+    if not "esd" in df:
+        df["esd"] = 1.0
 
     # print len(set(map(tuple, pd.Index(df.index))))
 
