@@ -29,6 +29,16 @@ def line_iterator(f):
     # return None to cleanly excit loop
     yield None
 
+def extract_symbol(s):
+    """Extract element symbol from atom label"""
+    symbol = ""
+    for letter in s:
+        if not letter.isdigit():
+            symbol += letter
+        else:
+            break
+    return symbol
+
 def read_cif(f, verbose=True):
     if isinstance(f, str):
         f = open(f, "r")
@@ -137,14 +147,13 @@ def read_cif(f, verbose=True):
         # "_atom_site_aniso_U_12"
     
     atoms = pd.DataFrame([list(row) for row in zip(*vals)], columns=[cif2simple[key] for key in cols])
-    
+
     for col in ["x", "y", "z", "occ", "biso", "uiso"]:
         if col in atoms:
             atoms[col] = atoms[col].apply(parse_float)
-    
+
     if "uiso" in atoms:
         atoms["biso"] = 8*np.pi**2*atoms["uiso"]
-    
     if not "m" in atoms:
         atoms["m"] = atoms.apply(calc_multiplicity, args=(cell,), axis=1)
     else:
@@ -159,6 +168,13 @@ def read_cif(f, verbose=True):
             print mults[sel]
             raise AssertionError("{} -> multiplicities from cif and calculated are different".format(f.name))
     
+    if "occ" not in atoms:
+        atoms["occ"] = 1.0
+    if "biso" not in atoms:
+        atoms["biso"] = 1.5
+    if "symbol" not in atoms:
+        atoms["symbol"] = atoms["label"].apply(extract_symbol)
+
     atoms = atoms[["label", "symbol", "m", "x", "y", "z", "occ", "biso"]]
   
     cell.info()
