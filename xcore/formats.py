@@ -210,7 +210,7 @@ def write_hkl(df, out=None):
         print >> out, "{:4d} {:4d} {:4d} {:12.4f} {:12.4f}".format(h, k, l, row["inty"], row["esd"])
 
 
-def write_shelx_ins(cell, wavelength=1.0000, out='shelx.ins', tr_mat=None):
+def write_shelx_ins(cell, wavelength=1.0000, out='shelx.ins', composition={}, tr_mat=None):
     """Simple function that writes a basic shelx input file
 
     cell: UnitCell class
@@ -227,7 +227,7 @@ def write_shelx_ins(cell, wavelength=1.0000, out='shelx.ins', tr_mat=None):
     C = cell.centering_symbol
     LATT = {"P": 1, "I": 2, "R": 3, "F": 4, "A": 5, "B": 6, "C": 7}[C]
 
-    if cell.isCentrosymmetric():
+    if not cell.isCentrosymmetric():
         LATT = -LATT
 
     print >> out, "LATT {}".format(LATT)
@@ -238,9 +238,17 @@ def write_shelx_ins(cell, wavelength=1.0000, out='shelx.ins', tr_mat=None):
         print >> out, "SYMM", repr(SymOp(Mx)).upper()
 
     print >> out
+    if composition:
+        for key in composition:
+            print >> out, "SFAC {}".format(key)
+        print >> out, "UNIT", " ".join([str(composition[key]) for key in composition])
+        print >> out
+
     if tr_mat:
         print >> out, 'TRMX {} {} {} {} {} {} {} {} {} 0 0 0'.format(*tr_mat)
         print >> out
+
+    print >> out, 'TREF 500'
     print >> out, 'HKLF 4'
     print >> out, 'END'
 
