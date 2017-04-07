@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from spacegroup import generate_hkl_listing
+from spacegroup import generate_hkl_listing, standardize_indices
 import numpy as np
 import pandas as pd
 
@@ -53,9 +53,11 @@ def calc_formfactor(element, sitl, table="xray"):
 
 def calc_structure_factors(cell, atoms, table="xray"):
     hkl = generate_hkl_listing(cell)
-    hkl = hkl[cell.is_absent_np(hkl) == False]
-        
+    hkl = hkl[cell.is_absent(hkl) == False]
+
     df = pd.DataFrame(hkl, columns=["h", "k", "l"])
+    df = standardize_indices(df, cell, key=["h", "k", "l"])
+
     df["sitl"] = 1/(2*cell.calc_dspacing(hkl))
     df.sort_values("sitl", ascending=True, inplace=True)
     
