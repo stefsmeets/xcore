@@ -1,4 +1,7 @@
-#name  Z    dZ     a1      a2      a3      a4       a5      b1      b2      b4       b4        b5
+from collections import namedtuple
+Table = namedtuple("Table_IT_4323", ("Z dZ a1 a2 a3 a4 a5 b1 b2 b3 b4 b5"))
+
+#name  Z    dZ     a1      a2      a3      a4       a5      b1      b2      b3       b4        b5
 table  =    dict([
 ['H',  [1,  0,     0.0088, 0.0449, 0.1481, 0.2356,  0.0914, 0.1152, 1.0867, 4.9755,  16.5591,  43.2743]],
 ['He', [2,  0,     0.0084, 0.0443, 0.1314, 0.1671,  0.0666, 0.0596, 0.5360, 2.4274,  7.7852,   20.3126]],
