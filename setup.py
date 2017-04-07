@@ -17,7 +17,7 @@ sglite_ext = Extension(
 
 setup(
     name="xcore",
-    version="0.5.0",
+    version="0.6.0",
     description="Simple python crystallography library",
 
     author="Stef Smeets",
