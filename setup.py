@@ -45,6 +45,7 @@ setup(
             'spgr    = xcore.app:main',
             'cif2hkl = xcore.formats:cif2hkl_entry',
             'make_focus = xcore.formats:make_focus_entry'
+            'make_superflip = xcore.formats:make_superflip_entry'
         ]
     }
 

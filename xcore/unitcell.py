@@ -118,7 +118,8 @@ class UnitCell(SpaceGroup):
         return cls(cell_params=cell_params, spgr=spgr, name=name, composition=composition)
 
     def info(self):
-        print "Cell {}".format(self.name)
+        comp = " ({})".format(dict2comp(self.composition)) if self.composition else ""
+        print "Cell {}{}".format(self.name, comp)
         print "   a {:12.4f}       al {:12.2f}".format(self.a, self.al)
         print "   b {:12.4f}       be {:12.2f}".format(self.b, self.be)
         print "   c {:12.4f}       ga {:12.2f}".format(self.c, self.ga)

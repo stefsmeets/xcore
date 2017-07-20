@@ -514,7 +514,7 @@ class SpaceGroup(object):
                 for k in xrange(nSMx):   # symmetry operators
                     Mx = self.sg.getLISMx(i, j, k, +1)
                     if verbose and (k == 0):
-                        print "# +({} {} {}), Inversion Flag = {}".format(Mx[9]/float(sglite.STBF), Mx[10]/float(sglite.STBF), Mx[11]/float(sglite.STBF), j)
+                        yield "# +({} {} {}), Inversion Flag = {}".format(Mx[9]/float(sglite.STBF), Mx[10]/float(sglite.STBF), Mx[11]/float(sglite.STBF), j)
                     yield SymOp(Mx)
     
     @property
@@ -698,6 +698,29 @@ class SpaceGroup(object):
                 if master == hkl:
                     myHKLs.append(hkl)
         return myHKLs
+
+    def standardize_indices(self, arr):
+        """
+        Standardizes reflection indices
+        From Siena Computing School 2005, Reciprocal Space Tutorial (G. Sheldrick)
+        http://www.iucr.org/resources/commissions/crystallographic-computing/schools
+            /siena-2005-crystallographic-computing-school/speakers-notes
+
+        Input:
+            arr: (N, 3) np.array,
+                reflection list as numpy array
+        Returns:
+            (N, 3) np.array: merged reflection list as numpy array
+
+        """
+        stacked_symops = np.stack([s.r for s in self.symmetry_operations_p])
+        
+        m = np.dot(arr, stacked_symops).astype(int)
+        m = np.hstack([m, -m])
+        i = np.lexsort(m.transpose((2,0,1)))
+        merged =  m[np.arange(len(m)), i[:,-1]] # there must be a better way to index this, but this works and is quite fast
+    
+        return merged
 
 
 def test_print_all():

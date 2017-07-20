@@ -282,6 +282,76 @@ def write_sir2014_inp(cell, hklfile, wavelength=1.000, out="sir2014.sir", radiat
     print >> out, "%%End"
 
 
+def write_superflip_inp(cell, wavelength, composition, datafile, dataformat, filename='sf.inflip'):
+    if isinstance(composition, dict):
+        composition = unitcell.dict2comp(composition)
+
+    fout = open(filename, 'w')
+
+    print >> fout, 'title', filename.split('.')[0]
+    print >> fout
+    print >> fout, 'dimension 3'
+    print >> fout, 'voxel',
+    for p in cell.parameters[0:3]:
+        print >> fout, int(((p*4) // 6 + 1) * 6),
+    print >> fout
+    print >> fout, 'cell',
+    for p in cell.parameters:
+        print >> fout, p,
+    print >> fout, '  # vol = {:.4f} A3 \n'.format(cell.volume)
+
+    print >> fout, 'centers'
+    for cvec in cell.centering_vectors:
+        print >> fout, "    {} {} {}".format(*cvec)
+    print >> fout, 'endcenters\n'
+
+    print >> fout, 'symmetry #', cell.hermann_mauguin
+    for symop in cell._symmetry_operations(verbose=True):
+        print >> fout, symop
+
+    print >> fout, 'endsymmetry\n'
+    print >> fout, 'derivesymmetry yes'
+    print >> fout, 'searchsymmetry average'
+    print >> fout
+    print >> fout, 'delta AUTO'
+    print >> fout, 'weakratio 0.00'
+    print >> fout, 'biso 2.0'
+    print >> fout, 'randomseed AUTO'
+    print >> fout
+    if composition:
+        print >> fout, 'composition {}'.format(composition)
+        print >> fout, 'histogram composition'
+        print >> fout, 'hmparameters 10 5'
+    else:
+        print >> fout, '#composition #composition goes here'
+        print >> fout, '#histogram composition'
+        print >> fout, '#hmparameters 10 5'
+    print >> fout
+    print >> fout, 'fwhmseparation 0.3'
+    print >> fout, 'lambda {}'.format(wavelength)
+    print >> fout
+    print >> fout, 'maxcycles 200'
+    print >> fout, 'bestdensities 10'
+    print >> fout, 'repeatmode 100'
+    print >> fout
+    print >> fout, 'polish yes'
+    print >> fout, 'convergencemode never'
+    print >> fout
+    print >> fout, '#referencefile filename.cif'
+    print >> fout, '#modelfile filename.cif 0.2'
+    print >> fout
+    print >> fout, 'terminal yes'
+    print >> fout, 'expandedlog yes'
+    outputfile = "superflip"
+    print >> fout, 'outputfile {}.xplor {}.ccp4'.format(outputfile, outputfile)
+    print >> fout, 'outputformat xplor ccp4'
+    print >> fout
+    print >> fout, 'dataformat', dataformat
+    print >> fout, 'fbegin {}\n'.format(datafile)
+
+    print "\n >> Wrote superflip input file {}".format(filename)
+
+
 def write_focus_inp(cell, df=None, out="foc.inp", key="amplitude"):
     if isinstance(out, str):
         out = open(out, "w")
@@ -346,9 +416,12 @@ ReflectionUsage  200
 {data}
 End
 """
-    
-    nSi = int(20 * cell.volume / 1000.0) / 2 * 2 # make divisible by 2
-    nO  = 2*nSi
+    if cell.composition:
+        nSi = cell.composition["Si"]
+        nO  = cell.composition["O"]
+    else:
+        nSi = int(20 * cell.volume / 1000.0) / 2 * 2 # make divisible by 2
+        nO  = 2*nSi
     
     mpa = int(nSi)
     mra = int(2*nSi)
@@ -391,6 +464,51 @@ End
         data=data
     )
     print "\n >> Wrote focus input file {}".format(out.name)
+
+
+def make_superflip_entry(filename='sf.inflip'):
+    """Creates a basic superflip input file for structure solution by asking a few simple questions"""
+
+    for x in xrange(3):
+        cell = raw_input("Enter cell parameters:\n >> ")
+
+        cell = cell.split()
+        if len(cell) != 6:
+            print 'Expecting 6 parameters: a b c alpha beta gamma'
+            continue
+        else:
+            try:
+                cell = tuple(map(float, cell))
+            except ValueError, e:
+                print 'ValueError:', e
+                continue
+            else:
+                break
+
+    for x in xrange(3):
+        spgr = raw_input('Enter space group:\n >> ')
+
+        if not spgr.split():
+            continue
+        else:
+            break
+
+    wavelength = raw_input('Enter wavelength\n >> [1.54056] ') or '1.54056'
+    composition = raw_input('Enter composition:\n >> [skip] ') or ''
+    datafile = raw_input('Enter datafile:\n >> [fobs.out] ') or 'fobs.out'
+
+    for x in xrange(3):
+        dataformat = raw_input(
+            'Enter dataformat:\n >> [intensity fwhm] ') or 'intensity fwhm'
+        if not all(i in ('intensity', 'amplitude', 'amplitude difference', 'a', 'b', 'phase', 'group', 'dummy', 'fwhm', 'm91', 'm90', 'shelx')
+                   for i in dataformat.split()):
+            print 'Unknown dataformat, please enter any of\n intensity/amplitude/amplitude difference/a/b/phase/group/dummy/fwhm/m91/m90/shelx\n'
+            continue
+        else:
+            break
+
+    make_superflip(
+        cell, spgr, wavelength, composition, datafile, dataformat, filename=filename)
 
 
 def make_focus_entry():
