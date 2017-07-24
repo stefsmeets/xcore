@@ -2,23 +2,27 @@
 
 from setuptools import setup, find_packages, Extension
 import os, sys
+import glob
 
-srclist = ['sgglobal.c','sgcb.c','sgcharmx.c','sgfile.c',
+src_drc = "src\sglite"
+headers = glob.glob(os.path.join(src_drc, "*.h"))
+
+src_files = ['sgglobal.c','sgcb.c','sgcharmx.c','sgfile.c',
            'sggen.c','sghall.c','sghkl.c','sgltr.c','sgmath.c','sgmetric.c',
            'sgnorm.c','sgprop.c','sgss.c','sgstr.c','sgsymbols.c',
            'sgtidy.c','sgtype.c','sgutil.c','runtests.c','sglitemodule.c']
 
-srclist = [os.path.join('src/sglite', f) for f in srclist]
+src_files = [os.path.join(src_drc, f) for f in src_files]
 sglite_ext = Extension(
     'xcore.sglite',
-    sources=srclist,
+    sources=src_files,
     define_macros=[('PythonTypes', 1)]
     )
 
 setup(
     name="xcore",
     version="0.6.0",
-    description="Simple python crystallography library",
+    description="Crystallographic space group library in Python",
 
     author="Stef Smeets",
     author_email="stef.smeets@mmk.su.se",
@@ -32,6 +36,7 @@ setup(
     packages=["xcore", "xcore.scattering"],
 
     ext_modules = [sglite_ext],
+    headers = headers,
 
     install_requires=["numpy", "pandas"],
 
