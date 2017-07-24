@@ -39,7 +39,7 @@ def extract_symbol(s):
             break
     return symbol
 
-def read_cif(f, verbose=True):
+def read_cif(f, verbose=False):
     if isinstance(f, str):
         f = open(f, "r")
     d = {}
@@ -182,7 +182,7 @@ def read_cif(f, verbose=True):
     if verbose:
         print atoms
     else:
-        print "{} atoms loaded".format(len(atoms))
+        print "Read {} atom positions from file {} ({}: {})".format(len(atoms), f.name, name, cell.hermann_mauguin)
     
     return cell, atoms
 

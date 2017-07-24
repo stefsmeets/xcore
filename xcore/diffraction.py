@@ -52,6 +52,11 @@ def calc_formfactor(element, sitl, table="xray"):
 
 
 def calc_structure_factors(cell, atoms, table="xray"):
+    """Calculate structure factors
+
+    Returns:
+        pandas.DataFrame with h, k, l, amplitude (F), phases (-pi to pi)
+    """
     hkl = generate_hkl_listing(cell)
     hkl = hkl[cell.is_absent(hkl) == False]
 
