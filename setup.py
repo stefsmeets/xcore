@@ -3,6 +3,10 @@
 from setuptools import setup, find_packages, Extension
 import os, sys
 import glob
+from xcore import __version__
+
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 src_drc = "src\sglite"
 headers = glob.glob(os.path.join(src_drc, "*.h"))
@@ -21,8 +25,10 @@ sglite_ext = Extension(
 
 setup(
     name="xcore",
-    version="0.6.0",
+    version=__version__,
     description="Crystallographic space group library in Python",
+    long_description=read('README.rst'),
+    description_file = "README.md",
 
     author="Stef Smeets",
     author_email="stef.smeets@mmk.su.se",

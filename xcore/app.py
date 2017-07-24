@@ -8,7 +8,7 @@ import pandas as pd
 
 import argparse
 
-__version__ = "2015-12-10"
+from __init__ import __version__
 
 
 def load_hkl(fn):
@@ -101,7 +101,7 @@ def write_hkl(df, cols=None, out=None, no_hkl=False, pre=None, post=None, data_f
 def main():
     description = """"""
 
-    epilog = 'Updated: {}'.format(__version__)
+    epilog = 'Version: {}'.format(__version__)
 
     parser = argparse.ArgumentParser(description=description,
                                      epilog=epilog,
