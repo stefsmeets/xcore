@@ -9,6 +9,11 @@ execfile('xcore/version.py')  # grab __version__
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+try:
+    long_description = read('README.rst')
+except IOError:
+    long_description = read('README.md')
+
 src_drc = "src\sglite"
 headers = glob.glob(os.path.join(src_drc, "*.h"))
 
@@ -28,8 +33,8 @@ setup(
     name="xcore",
     version=__version__,
     description="Crystallographic space group library in Python",
-    long_description=read('README.rst'),
-    description_file = "README.md",
+    long_description=long_description,
+    description_file="README.md",
 
     author="Stef Smeets",
     author_email="stef.smeets@mmk.su.se",
@@ -48,7 +53,7 @@ setup(
     install_requires=["numpy", "pandas"],
 
     package_data={
-        "": ["LICENCE", "readme.md"],
+        "": ["LICENCE", "readme.md", "readme.rst"],
         "xcore": ["*.py", "spacegroups.txt"]
     },
 
