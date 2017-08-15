@@ -3,7 +3,8 @@
 from setuptools import setup, find_packages, Extension
 import os, sys
 import glob
-from xcore import __version__
+
+execfile('xcore/version.py')  # grab __version__
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
