@@ -4,7 +4,7 @@ from setuptools import setup, find_packages, Extension
 import os, sys
 import glob
 
-execfile('xcore/version.py')  # grab __version__
+execfile(os.path.join('xcore', 'version.py'))  # grab __version__
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -14,7 +14,7 @@ try:
 except IOError:
     long_description = read('README.md')
 
-src_drc = "src\sglite"
+src_drc = os.path.join('src', 'sglite')
 headers = glob.glob(os.path.join(src_drc, "*.h"))
 
 src_files = ['sgglobal.c','sgcb.c','sgcharmx.c','sgfile.c',
