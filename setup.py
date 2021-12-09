@@ -37,12 +37,12 @@ setup(
     description_file="README.md",
 
     author="Stef Smeets",
-    author_email="stef.smeets@mmk.su.se",
-    license="GPL",
+    author_email="s.smeets@esciencecenter.nl",
     url="https://github.com/stefsmeets/xcore",
 
     classifiers=[
         'Programming Language :: Python :: 2.7',
+        'License :: OSI Approved :: MIT License',
     ],
 
     packages=["xcore", "xcore.scattering"],
